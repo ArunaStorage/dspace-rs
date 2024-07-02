@@ -10,7 +10,7 @@ All URIs are relative to the base path of the server
 
 ## add_entry
 
-> edc_client::dataplane_selector::add_entry(data_plane_instance_schema)
+> edc_client::dataplane_selector_api::add_entry(data_plane_instance_schema)
 
 
 Adds one datatplane instance to the internal database of the selector
@@ -40,7 +40,7 @@ No authorization required
 
 ## find
 
-> edc_client::dataplane_selector::find(selection_request_schema)
+> edc_client::dataplane_selector_api::find(selection_request_schema)
 
 
 Finds the best fitting data plane instance for a particular query
