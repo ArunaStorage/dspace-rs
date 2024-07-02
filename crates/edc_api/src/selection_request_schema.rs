@@ -18,7 +18,7 @@ pub struct SelectionRequestSchema {
     #[serde(rename = "source", skip_serializing_if = "Option::is_none")]
     pub source: Option<Box<crate::DataAddress>>,
     #[serde(rename = "strategy", skip_serializing_if = "Option::is_none")]
-    pub last_active: Option<String>,
+    pub strategy: Option<String>,
     #[serde(rename = "transferType", skip_serializing_if = "Option::is_none")]
     pub transfer_type: Option<String>,
 }
@@ -26,13 +26,13 @@ pub struct SelectionRequestSchema {
 impl SelectionRequestSchema {
 
     pub fn new(context: std::collections::HashMap<String, serde_json::Value>, at_type: Option<String>, destination: Option<Box<crate::DataAddress>>,
-               source: Option<Box<crate::DataAddress>>, last_active: Option<String>, transfer_type: Option<String>) -> SelectionRequestSchema {
+               source: Option<Box<crate::DataAddress>>, strategy: Option<String>, transfer_type: Option<String>) -> SelectionRequestSchema {
         SelectionRequestSchema {
             context,
             at_type,
             destination,
             source,
-            last_active,
+            strategy,
             transfer_type,
         }
     }
@@ -43,7 +43,7 @@ impl SelectionRequestSchema {
             at_type: Some("SelectionRequest".to_string()),
             destination: None,
             source: None,
-            last_active: None,
+            strategy: None,
             transfer_type: None,
         }
     }
