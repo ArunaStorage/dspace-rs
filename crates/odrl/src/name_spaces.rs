@@ -1,0 +1,13 @@
+pub const RDF_NS: &'static str = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+pub const RDFS_NS: &'static str = "http://www.w3.org/2000/01/rdf-schema#";
+pub const OWL_NS: &'static str = "http://www.w3.org/2002/07/owl#";
+pub const XSD_NS: &'static str = "http://www.w3.org/2001/XMLSchema#";
+pub const SKOS_NS: &'static str = "http://www.w3.org/2004/02/skos/core#";
+pub const DCTERMS_NS: &'static str = "http://purl.org/dc/terms/";
+pub const VCARD_NS: &'static str = "http://www.w3.org/2006/vcard/ns#";
+pub const FOAF_NS: &'static str = "http://xmlns.com/foaf/0.1/";
+pub const SCHEMA_NS: &'static str = "http://schema.org/";
+pub const CC_NS: &'static str = "https://creativecommons.org/ns#";
+pub const LD_NS: &'static str = "http://www.w3.org/ns/odrl.jsonld#";
+pub const ODRL_NS: &'static str = "http://www.w3.org/ns/odrl/2/";
+pub const EDC_NS: &'static str = "https://w3id.org/edc/v0.0.1/ns/";

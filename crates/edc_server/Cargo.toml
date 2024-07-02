@@ -1,0 +1,11 @@
+[package]
+name = "edc_server"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
+
+[lib]
+path = "./lib.rs"
+crate-type = ["lib"]

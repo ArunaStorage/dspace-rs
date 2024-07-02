@@ -1,0 +1,30 @@
+[package]
+name = "odrl"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
+
+[lib]
+path = "./src/lib.rs"
+crate-type = ["lib"]
+
+[dependencies]
+serde_json = "1.0.111"
+serde = { version = "1.0.195", features = ["derive"] }
+serde_derive = "^1.0"
+uuid = { version = "1.7.0", features = ["v4"] }
+url = "2.5.0"
+sophia = "0.8.0"
+sophia_jsonld = "0.8.0"
+sophia_term = "0.8.0"
+rust-fsm = "0.6.1"
+chrono = "0.4.37"
+tokio = { version = "1.38.0", features = ["rt", "rt-multi-thread", "macros"] }
+edc_api = { path = "../edc_api" }
+edc_client = { path = "../edc_client" }
+edc_server = { path = "../edc_server" }
+[dependencies.reqwest]
+version = "^0.12.5"
+features = ["json", "multipart"]

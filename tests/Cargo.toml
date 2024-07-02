@@ -1,0 +1,31 @@
+[package]
+name = "dspace-rs_tests"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
+
+[dev-dependencies]
+serde_json = "1.0.111"
+serde = { version = "1.0.195", features = ["derive"] }
+serde_derive = "^1.0"
+url = "2.5.0"
+tokio = { version = "1.38.0", features = ["rt", "rt-multi-thread", "macros"] }
+uuid = { version = "1.7.0", features = ["v4"] }
+sophia = "0.8.0"
+sophia_jsonld = "0.8.0"
+sophia_term = "0.8.0"
+rust-fsm = "0.6.1"
+chrono = "0.4.37"
+edc_api = { path = "../crates/edc_api" }
+edc_client = { path = "../crates/edc_client" }
+edc_server = { path = "../crates/edc_server" }
+odrl = { path = "../crates/odrl" }
+[dependencies.reqwest]
+version = "^0.12.5"
+features = ["json", "multipart"]
+
+[[test]]
+name = "edc_api_test"
+path = "edc_api_test.rs"

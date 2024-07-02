@@ -1,0 +1,16 @@
+[workspace]
+members = ["crates/*", "tests"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Maria Hansen <Maria.Hansen@computational.bio.uni-giessen.de>",]
+repository = "https://github.com/ArunaStorage/dspace-rs"
+license = "MIT"
+
+[workspace.dependencies]
+serde_json = "1.0.111"
+serde = { version = "1.0.195", features = ["derive"] }
+serde_derive = "^1.0"
+url = "2.5.0"
