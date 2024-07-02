@@ -19,8 +19,8 @@ use super::{Error, configuration};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum UpdateSecretError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -28,8 +28,8 @@ pub enum UpdateSecretError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreateSecretError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status409(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status409(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -37,8 +37,8 @@ pub enum CreateSecretError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetSecretError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -46,14 +46,14 @@ pub enum GetSecretError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DeleteSecretError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
 
 /// Updates a secret with the given ID if it exists. If the secret is not found, no further action is taken.
-pub async fn update_secret(configuration: &configuration::Configuration, secret_input: Option<crate::SecretInput>) -> Result<(), Error<UpdateSecretError>> {
+pub async fn update_secret(configuration: &configuration::Configuration, secret_input: Option<edc_api::SecretInput>) -> Result<(), Error<UpdateSecretError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -82,7 +82,7 @@ pub async fn update_secret(configuration: &configuration::Configuration, secret_
 }
 
 /// Removes an EDR entry given the transfer process ID
-pub async fn create_secret(configuration: &configuration::Configuration, secret_input: Option<crate::SecretInput>) -> Result<crate::IdResponse, Error<CreateSecretError>> {
+pub async fn create_secret(configuration: &configuration::Configuration, secret_input: Option<edc_api::SecretInput>) -> Result<edc_api::IdResponse, Error<CreateSecretError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -113,7 +113,7 @@ pub async fn create_secret(configuration: &configuration::Configuration, secret_
 }
 
 /// Gets the EDR data address with the given transfer process ID
-pub async fn get_secret(configuration: &configuration::Configuration, secret_id: &str) -> Result<crate::SecretOutput, Error<GetSecretError>> {
+pub async fn get_secret(configuration: &configuration::Configuration, secret_id: &str) -> Result<edc_api::SecretOutput, Error<GetSecretError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;

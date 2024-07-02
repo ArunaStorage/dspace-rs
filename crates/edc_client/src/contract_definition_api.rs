@@ -18,8 +18,8 @@ use super::{Error, configuration};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreateContractDefinitionError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status409(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status409(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -27,8 +27,8 @@ pub enum CreateContractDefinitionError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DeleteContractDefinitionError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -36,8 +36,8 @@ pub enum DeleteContractDefinitionError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetContractDefinitionError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -45,7 +45,7 @@ pub enum GetContractDefinitionError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum QueryAllContractDefinitionsError {
-    Status400(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -53,14 +53,14 @@ pub enum QueryAllContractDefinitionsError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum UpdateContractDefinitionError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
 
 /// Creates a new contract definition
-pub async fn create_contract_definition(configuration: &configuration::Configuration, contract_definition_input: Option<crate::ContractDefinitionInput>) -> Result<crate::IdResponse, Error<CreateContractDefinitionError>> {
+pub async fn create_contract_definition(configuration: &configuration::Configuration, contract_definition_input: Option<edc_api::ContractDefinitionInput>) -> Result<edc_api::IdResponse, Error<CreateContractDefinitionError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -119,7 +119,7 @@ pub async fn delete_contract_definition(configuration: &configuration::Configura
 }
 
 /// Gets an contract definition with the given ID
-pub async fn get_contract_definition(configuration: &configuration::Configuration, id: &str) -> Result<crate::ContractDefinitionOutput, Error<GetContractDefinitionError>> {
+pub async fn get_contract_definition(configuration: &configuration::Configuration, id: &str) -> Result<edc_api::ContractDefinitionOutput, Error<GetContractDefinitionError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -149,7 +149,7 @@ pub async fn get_contract_definition(configuration: &configuration::Configuratio
 }
 
 /// Returns all contract definitions according to a query
-pub async fn query_all_contract_definitions(configuration: &configuration::Configuration, query_spec: Option<crate::QuerySpec>) -> Result<Vec<crate::ContractDefinitionOutput>, Error<QueryAllContractDefinitionsError>> {
+pub async fn query_all_contract_definitions(configuration: &configuration::Configuration, query_spec: Option<edc_api::QuerySpec>) -> Result<Vec<edc_api::ContractDefinitionOutput>, Error<QueryAllContractDefinitionsError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -180,7 +180,7 @@ pub async fn query_all_contract_definitions(configuration: &configuration::Confi
 }
 
 /// Updated a contract definition with the given ID. The supplied JSON structure must be a valid JSON-LD object
-pub async fn update_contract_definition(configuration: &configuration::Configuration, contract_definition_input: Option<crate::ContractDefinitionInput>) -> Result<(), Error<UpdateContractDefinitionError>> {
+pub async fn update_contract_definition(configuration: &configuration::Configuration, contract_definition_input: Option<edc_api::ContractDefinitionInput>) -> Result<(), Error<UpdateContractDefinitionError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;

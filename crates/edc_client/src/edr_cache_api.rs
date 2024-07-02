@@ -19,7 +19,7 @@ use super::{Error, configuration};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum QueryEDRsError {
-    Status400(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -27,8 +27,8 @@ pub enum QueryEDRsError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DeleteEDRError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -36,14 +36,14 @@ pub enum DeleteEDRError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetEDRDataAddressError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
 
 /// Request all Edr entries according to a particular query
-pub async fn query_edrs(configuration: &configuration::Configuration, query_spec: Option<crate::QuerySpec>) -> Result<Vec<crate::EndpointDataReferenceEntry>, Error<QueryEDRsError>> {
+pub async fn query_edrs(configuration: &configuration::Configuration, query_spec: Option<edc_api::QuerySpec>) -> Result<Vec<edc_api::EndpointDataReferenceEntry>, Error<QueryEDRsError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -102,7 +102,7 @@ pub async fn delete_edr(configuration: &configuration::Configuration, transfer_p
 }
 
 /// Gets the EDR data address with the given transfer process ID
-pub async fn get_edr_data_address(configuration: &configuration::Configuration, transfer_process_id: &str) -> Result<crate::DataAddress, Error<GetEDRDataAddressError>> {
+pub async fn get_edr_data_address(configuration: &configuration::Configuration, transfer_process_id: &str) -> Result<edc_api::DataAddress, Error<GetEDRDataAddressError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;

@@ -19,8 +19,8 @@ use super::{Error, configuration};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DeprovisionTransferProcessError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -28,8 +28,8 @@ pub enum DeprovisionTransferProcessError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ResumeTransferProcessError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -37,9 +37,9 @@ pub enum ResumeTransferProcessError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum SuspendTransferProcessError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
-    Status409(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
+    Status409(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -47,8 +47,8 @@ pub enum SuspendTransferProcessError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetTransferProcessError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -56,8 +56,8 @@ pub enum GetTransferProcessError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetTransferProcessStateError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -65,7 +65,7 @@ pub enum GetTransferProcessStateError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum InitiateTransferProcessError {
-    Status400(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -73,7 +73,7 @@ pub enum InitiateTransferProcessError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum QueryTransferProcessesError {
-    Status400(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -81,9 +81,9 @@ pub enum QueryTransferProcessesError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum TerminateTransferProcessError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
-    Status409(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
+    Status409(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -173,7 +173,7 @@ pub async fn suspend_transfer_process(configuration: &configuration::Configurati
 }
 
 /// Gets an transfer process with the given ID
-pub async fn get_transfer_process(configuration: &configuration::Configuration, id: &str) -> Result<crate::TransferProcess, Error<GetTransferProcessError>> {
+pub async fn get_transfer_process(configuration: &configuration::Configuration, id: &str) -> Result<edc_api::TransferProcess, Error<GetTransferProcessError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -203,7 +203,7 @@ pub async fn get_transfer_process(configuration: &configuration::Configuration, 
 }
 
 /// Gets the state of a transfer process with the given ID
-pub async fn get_transfer_process_state(configuration: &configuration::Configuration, id: &str) -> Result<crate::TransferState, Error<GetTransferProcessStateError>> {
+pub async fn get_transfer_process_state(configuration: &configuration::Configuration, id: &str) -> Result<edc_api::TransferState, Error<GetTransferProcessStateError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -233,7 +233,7 @@ pub async fn get_transfer_process_state(configuration: &configuration::Configura
 }
 
 /// Initiates a data transfer with the given parameters. Due to the asynchronous nature of transfers, a successful response only indicates that the request was successfully received. This may take a long time, so clients must poll the /{id}/state endpoint to track the state.
-pub async fn initiate_transfer_process(configuration: &configuration::Configuration, transfer_request: Option<crate::TransferRequest>) -> Result<crate::IdResponse, Error<InitiateTransferProcessError>> {
+pub async fn initiate_transfer_process(configuration: &configuration::Configuration, transfer_request: Option<edc_api::TransferRequest>) -> Result<edc_api::IdResponse, Error<InitiateTransferProcessError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -264,7 +264,7 @@ pub async fn initiate_transfer_process(configuration: &configuration::Configurat
 }
 
 /// Returns all transfer process according to a query
-pub async fn query_transfer_processes(configuration: &configuration::Configuration, query_spec: Option<crate::QuerySpec>) -> Result<Vec<crate::TransferProcess>, Error<QueryTransferProcessesError>> {
+pub async fn query_transfer_processes(configuration: &configuration::Configuration, query_spec: Option<edc_api::QuerySpec>) -> Result<Vec<edc_api::TransferProcess>, Error<QueryTransferProcessesError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -295,7 +295,7 @@ pub async fn query_transfer_processes(configuration: &configuration::Configurati
 }
 
 /// Requests the termination of a transfer process. Due to the asynchronous nature of transfers, a successful response only indicates that the request was successfully received. This may take a long time, so clients must poll the /{id}/state endpoint to track the state.
-pub async fn terminate_transfer_process(configuration: &configuration::Configuration, id: &str, terminate_transfer: Option<crate::TerminateTransfer>) -> Result<(), Error<TerminateTransferProcessError>> {
+pub async fn terminate_transfer_process(configuration: &configuration::Configuration, id: &str, terminate_transfer: Option<edc_api::TerminateTransfer>) -> Result<(), Error<TerminateTransferProcessError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;

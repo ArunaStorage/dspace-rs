@@ -19,8 +19,8 @@ use super::{Error, configuration};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetAgreementForNegotiationError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -28,8 +28,8 @@ pub enum GetAgreementForNegotiationError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetNegotiationError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -37,8 +37,8 @@ pub enum GetNegotiationError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetNegotiationStateError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -46,7 +46,7 @@ pub enum GetNegotiationStateError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum InitiateContractNegotiationError {
-    Status400(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -54,7 +54,7 @@ pub enum InitiateContractNegotiationError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum QueryNegotiationsError {
-    Status400(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -62,14 +62,14 @@ pub enum QueryNegotiationsError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum TerminateNegotiationError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
 
 /// Gets a contract agreement for a contract negotiation with the given ID
-pub async fn get_agreement_for_negotiation(configuration: &configuration::Configuration, id: &str) -> Result<crate::ContractAgreement, Error<GetAgreementForNegotiationError>> {
+pub async fn get_agreement_for_negotiation(configuration: &configuration::Configuration, id: &str) -> Result<edc_api::ContractAgreement, Error<GetAgreementForNegotiationError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -99,7 +99,7 @@ pub async fn get_agreement_for_negotiation(configuration: &configuration::Config
 }
 
 /// Gets a contract negotiation with the given ID
-pub async fn get_negotiation(configuration: &configuration::Configuration, id: &str) -> Result<crate::ContractNegotiation, Error<GetNegotiationError>> {
+pub async fn get_negotiation(configuration: &configuration::Configuration, id: &str) -> Result<edc_api::ContractNegotiation, Error<GetNegotiationError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -129,7 +129,7 @@ pub async fn get_negotiation(configuration: &configuration::Configuration, id: &
 }
 
 /// Gets the state of a contract negotiation with the given ID
-pub async fn get_negotiation_state(configuration: &configuration::Configuration, id: &str) -> Result<crate::NegotiationState, Error<GetNegotiationStateError>> {
+pub async fn get_negotiation_state(configuration: &configuration::Configuration, id: &str) -> Result<edc_api::NegotiationState, Error<GetNegotiationStateError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -159,7 +159,7 @@ pub async fn get_negotiation_state(configuration: &configuration::Configuration,
 }
 
 /// Initiates a contract negotiation for a given offer and with the given counter part. Please note that successfully invoking this endpoint only means that the negotiation was initiated. Clients must poll the /{id}/state endpoint to track the state
-pub async fn initiate_contract_negotiation(configuration: &configuration::Configuration, contract_request: Option<crate::ContractRequest>) -> Result<crate::IdResponse, Error<InitiateContractNegotiationError>> {
+pub async fn initiate_contract_negotiation(configuration: &configuration::Configuration, contract_request: Option<edc_api::ContractRequest>) -> Result<edc_api::IdResponse, Error<InitiateContractNegotiationError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -190,7 +190,7 @@ pub async fn initiate_contract_negotiation(configuration: &configuration::Config
 }
 
 /// Returns all contract negotiations according to a query
-pub async fn query_negotiations(configuration: &configuration::Configuration, query_spec: Option<crate::QuerySpec>) -> Result<Vec<crate::ContractNegotiation>, Error<QueryNegotiationsError>> {
+pub async fn query_negotiations(configuration: &configuration::Configuration, query_spec: Option<edc_api::QuerySpec>) -> Result<Vec<edc_api::ContractNegotiation>, Error<QueryNegotiationsError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -221,7 +221,7 @@ pub async fn query_negotiations(configuration: &configuration::Configuration, qu
 }
 
 /// Terminates the contract negotiation.
-pub async fn terminate_negotiation(configuration: &configuration::Configuration, id: &str, terminate_negotiation_schema: Option<crate::TerminateNegotiationSchema>) -> Result<(), Error<TerminateNegotiationError>> {
+pub async fn terminate_negotiation(configuration: &configuration::Configuration, id: &str, terminate_negotiation_schema: Option<edc_api::TerminateNegotiationSchema>) -> Result<(), Error<TerminateNegotiationError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;

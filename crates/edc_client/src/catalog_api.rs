@@ -33,7 +33,7 @@ pub enum RequestCatalogError {
 
 
 /// Gets single dataset from a connector
-pub async fn get_dataset(configuration: &configuration::Configuration, dataset_request: Option<crate::DatasetRequest>) -> Result<serde_json::Value, Error<GetDatasetError>> {
+pub async fn get_dataset(configuration: &configuration::Configuration, dataset_request: Option<edc_api::DatasetRequest>) -> Result<serde_json::Value, Error<GetDatasetError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -64,7 +64,7 @@ pub async fn get_dataset(configuration: &configuration::Configuration, dataset_r
 }
 
 /// Gets contract offers (=catalog) of a single connector
-pub async fn request_catalog(configuration: &configuration::Configuration, catalog_request: Option<crate::CatalogRequest>) -> Result<serde_json::Value, Error<RequestCatalogError>> {
+pub async fn request_catalog(configuration: &configuration::Configuration, catalog_request: Option<edc_api::CatalogRequest>) -> Result<serde_json::Value, Error<RequestCatalogError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;

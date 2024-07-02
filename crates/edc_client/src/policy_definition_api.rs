@@ -19,8 +19,8 @@ use super::{Error, configuration};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreatePolicyDefinitionError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status409(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status409(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -28,9 +28,9 @@ pub enum CreatePolicyDefinitionError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DeletePolicyDefinitionError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
-    Status409(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
+    Status409(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -38,8 +38,8 @@ pub enum DeletePolicyDefinitionError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetPolicyDefinitionError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -47,7 +47,7 @@ pub enum GetPolicyDefinitionError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum QueryPolicyDefinitionsError {
-    Status400(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -55,14 +55,14 @@ pub enum QueryPolicyDefinitionsError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum UpdatePolicyDefinitionError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(crate::ApiErrorDetail),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(edc_api::ApiErrorDetail),
     UnknownValue(serde_json::Value),
 }
 
 
 /// Creates a new policy definition
-pub async fn create_policy_definition(configuration: &configuration::Configuration, policy_definition_input: Option<crate::PolicyDefinitionInput>) -> Result<crate::IdResponse, Error<CreatePolicyDefinitionError>> {
+pub async fn create_policy_definition(configuration: &configuration::Configuration, policy_definition_input: Option<edc_api::PolicyDefinitionInput>) -> Result<edc_api::IdResponse, Error<CreatePolicyDefinitionError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -121,7 +121,7 @@ pub async fn delete_policy_definition(configuration: &configuration::Configurati
 }
 
 /// Gets a policy definition with the given ID
-pub async fn get_policy_definition(configuration: &configuration::Configuration, id: &str) -> Result<crate::PolicyDefinitionOutput, Error<GetPolicyDefinitionError>> {
+pub async fn get_policy_definition(configuration: &configuration::Configuration, id: &str) -> Result<edc_api::PolicyDefinitionOutput, Error<GetPolicyDefinitionError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -151,7 +151,7 @@ pub async fn get_policy_definition(configuration: &configuration::Configuration,
 }
 
 /// Returns all policy definitions according to a query
-pub async fn query_policy_definitions(configuration: &configuration::Configuration, query_spec: Option<crate::QuerySpec>) -> Result<Vec<crate::PolicyDefinitionOutput>, Error<QueryPolicyDefinitionsError>> {
+pub async fn query_policy_definitions(configuration: &configuration::Configuration, query_spec: Option<edc_api::QuerySpec>) -> Result<Vec<edc_api::PolicyDefinitionOutput>, Error<QueryPolicyDefinitionsError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -182,7 +182,7 @@ pub async fn query_policy_definitions(configuration: &configuration::Configurati
 }
 
 /// Updates an existing Policy, If the Policy is not found, an error is reported
-pub async fn update_policy_definition(configuration: &configuration::Configuration, id: &str, policy_definition_input: Option<crate::PolicyDefinitionInput>) -> Result<(), Error<UpdatePolicyDefinitionError>> {
+pub async fn update_policy_definition(configuration: &configuration::Configuration, id: &str, policy_definition_input: Option<edc_api::PolicyDefinitionInput>) -> Result<(), Error<UpdatePolicyDefinitionError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;

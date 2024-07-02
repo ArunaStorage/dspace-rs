@@ -44,7 +44,7 @@ pub enum GetStartupError {
 
 /// Performs a liveness probe to determine whether the runtime is working properly.
 #[deprecated(note = "This endpoint is deprecated since management api version 0.5.2-SNAPSHOT")]
-pub async fn check_health(configuration: &configuration::Configuration) -> Result<crate::HealthStatus, Error<CheckHealthError>> {
+pub async fn check_health(configuration: &configuration::Configuration) -> Result<edc_api::HealthStatus, Error<CheckHealthError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -73,7 +73,7 @@ pub async fn check_health(configuration: &configuration::Configuration) -> Resul
 
 /// Performs a liveness probe to determine whether the runtime is working properly.
 #[deprecated(note = "This endpoint is deprecated since management api version 0.5.2-SNAPSHOT")]
-pub async fn get_liveness(configuration: &configuration::Configuration) -> Result<crate::HealthStatus, Error<GetLivenessError>> {
+pub async fn get_liveness(configuration: &configuration::Configuration) -> Result<edc_api::HealthStatus, Error<GetLivenessError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -102,7 +102,7 @@ pub async fn get_liveness(configuration: &configuration::Configuration) -> Resul
 
 /// Performs a readiness probe to determine whether the runtime is able to accept requests.
 #[deprecated(note = "This endpoint is deprecated since management api version 0.5.2-SNAPSHOT")]
-pub async fn get_readiness(configuration: &configuration::Configuration) -> Result<crate::HealthStatus, Error<GetReadinessError>> {
+pub async fn get_readiness(configuration: &configuration::Configuration) -> Result<edc_api::HealthStatus, Error<GetReadinessError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -131,7 +131,7 @@ pub async fn get_readiness(configuration: &configuration::Configuration) -> Resu
 
 /// Performs a startup probe to determine whether the runtime has completed startup.
 #[deprecated(note = "This endpoint is deprecated since management api version 0.5.2-SNAPSHOT")]
-pub async fn get_startup(configuration: &configuration::Configuration) -> Result<crate::HealthStatus, Error<GetStartupError>> {
+pub async fn get_startup(configuration: &configuration::Configuration) -> Result<edc_api::HealthStatus, Error<GetStartupError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;

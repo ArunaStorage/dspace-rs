@@ -31,7 +31,7 @@ pub enum CallProvisionWebhookError {
 }
 
 
-pub async fn call_deprovision_webhook(configuration: &configuration::Configuration, process_id: &str, deprovisioned_resource: Option<crate::DeprovisionedResource>) -> Result<(), Error<CallDeprovisionWebhookError>> {
+pub async fn call_deprovision_webhook(configuration: &configuration::Configuration, process_id: &str, deprovisioned_resource: Option<edc_api::DeprovisionedResource>) -> Result<(), Error<CallDeprovisionWebhookError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -59,7 +59,7 @@ pub async fn call_deprovision_webhook(configuration: &configuration::Configurati
     }
 }
 
-pub async fn call_provision_webhook(configuration: &configuration::Configuration, process_id: &str, provisioner_webhook_request: Option<crate::ProvisionerWebhookRequest>) -> Result<(), Error<CallProvisionWebhookError>> {
+pub async fn call_provision_webhook(configuration: &configuration::Configuration, process_id: &str, provisioner_webhook_request: Option<edc_api::ProvisionerWebhookRequest>) -> Result<(), Error<CallProvisionWebhookError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;

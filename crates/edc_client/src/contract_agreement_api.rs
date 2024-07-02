@@ -19,8 +19,8 @@ use super::{Error, configuration};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetAgreementByIdError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -28,8 +28,8 @@ pub enum GetAgreementByIdError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetNegotiationByAgreementIdError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -37,13 +37,13 @@ pub enum GetNegotiationByAgreementIdError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum QueryAllAgreementsError {
-    Status400(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
 
 /// Gets an contract agreement with the given ID
-pub async fn get_agreement_by_id(configuration: &configuration::Configuration, id: &str) -> Result<crate::ContractAgreement, Error<GetAgreementByIdError>> {
+pub async fn get_agreement_by_id(configuration: &configuration::Configuration, id: &str) -> Result<edc_api::ContractAgreement, Error<GetAgreementByIdError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -73,7 +73,7 @@ pub async fn get_agreement_by_id(configuration: &configuration::Configuration, i
 }
 
 /// Gets a contract negotiation with the given contract agreement ID
-pub async fn get_negotiation_by_agreement_id(configuration: &configuration::Configuration, id: &str) -> Result<crate::ContractNegotiation, Error<GetNegotiationByAgreementIdError>> {
+pub async fn get_negotiation_by_agreement_id(configuration: &configuration::Configuration, id: &str) -> Result<edc_api::ContractNegotiation, Error<GetNegotiationByAgreementIdError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -103,7 +103,7 @@ pub async fn get_negotiation_by_agreement_id(configuration: &configuration::Conf
 }
 
 /// Gets all contract agreements according to a particular query
-pub async fn query_all_agreements(configuration: &configuration::Configuration, query_spec: Option<crate::QuerySpec>) -> Result<Vec<crate::ContractAgreement>, Error<QueryAllAgreementsError>> {
+pub async fn query_all_agreements(configuration: &configuration::Configuration, query_spec: Option<edc_api::QuerySpec>) -> Result<Vec<edc_api::ContractAgreement>, Error<QueryAllAgreementsError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;

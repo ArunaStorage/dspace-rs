@@ -19,8 +19,8 @@ use super::{Error, configuration};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreateAssetError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status409(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status409(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -28,8 +28,8 @@ pub enum CreateAssetError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetAssetError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -37,9 +37,9 @@ pub enum GetAssetError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum RemoveAssetError {
-    Status400(Vec<crate::ApiErrorDetail>),
-    Status404(Vec<crate::ApiErrorDetail>),
-    Status409(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
+    Status404(Vec<edc_api::ApiErrorDetail>),
+    Status409(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -47,7 +47,7 @@ pub enum RemoveAssetError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum RequestAssetsError {
-    Status400(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -55,14 +55,14 @@ pub enum RequestAssetsError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum UpdateAssetError {
-    Status400(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
     Status404(),
     UnknownValue(serde_json::Value),
 }
 
 
 /// Creates a new asset together with a data address
-pub async fn create_asset(configuration: &configuration::Configuration, asset_entry: Option<crate::AssetInput>) -> Result<crate::IdResponse, Error<CreateAssetError>> {
+pub async fn create_asset(configuration: &configuration::Configuration, asset_entry: Option<edc_api::AssetInput>) -> Result<edc_api::IdResponse, Error<CreateAssetError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -95,7 +95,7 @@ pub async fn create_asset(configuration: &configuration::Configuration, asset_en
 }
 
 /// Gets an asset with the given ID
-pub async fn get_asset(configuration: &configuration::Configuration, id: &str) -> Result<crate::AssetOutput, Error<GetAssetError>> {
+pub async fn get_asset(configuration: &configuration::Configuration, id: &str) -> Result<edc_api::AssetOutput, Error<GetAssetError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -158,7 +158,7 @@ pub async fn remove_asset(configuration: &configuration::Configuration, id: &str
 }
 
 /// Request all assets according to a particular query
-pub async fn request_assets(configuration: &configuration::Configuration, query_spec: Option<crate::QuerySpec>) -> Result<Vec<crate::AssetOutput>, Error<RequestAssetsError>> {
+pub async fn request_assets(configuration: &configuration::Configuration, query_spec: Option<edc_api::QuerySpec>) -> Result<Vec<edc_api::AssetOutput>, Error<RequestAssetsError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -189,7 +189,7 @@ pub async fn request_assets(configuration: &configuration::Configuration, query_
 }
 
 /// Updates an asset with the given ID if it exists. If the asset is not found, no further action is taken. DANGER ZONE: Note that updating assets can have unexpected results, especially for contract offers that have been sent out or are ongoing in contract negotiations.
-pub async fn update_asset(configuration: &configuration::Configuration, asset: Option<crate::AssetInput>) -> Result<(), Error<UpdateAssetError>> {
+pub async fn update_asset(configuration: &configuration::Configuration, asset: Option<edc_api::AssetInput>) -> Result<(), Error<UpdateAssetError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;

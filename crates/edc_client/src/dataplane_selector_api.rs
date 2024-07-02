@@ -19,7 +19,7 @@ use super::{Error, configuration};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum AddEntryError {
-    Status400(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -27,7 +27,7 @@ pub enum AddEntryError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FindError {
-    Status400(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
@@ -35,14 +35,14 @@ pub enum FindError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetAllError {
-    Status400(Vec<crate::ApiErrorDetail>),
+    Status400(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
 
 
 /// Adds one dataplane instance to the internal database of the selector. DEPRECATED: dataplanes should register themselves through control-api
 #[deprecated(note="Deprecated since management api version 0.6.5-SNAPSHOT; Dataplanes should register themselves through control-api")]
-pub async fn add_entry(configuration: &configuration::Configuration, data_plane_instance_schema: Option<crate::DataPlaneInstanceSchema>) -> Result<(), Error<AddEntryError>> {
+pub async fn add_entry(configuration: &configuration::Configuration, data_plane_instance_schema: Option<edc_api::DataPlaneInstanceSchema>) -> Result<(), Error<AddEntryError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -72,7 +72,7 @@ pub async fn add_entry(configuration: &configuration::Configuration, data_plane_
 
 /// Finds the best fitting data plane instance for a particular query
 #[deprecated(note="Deprecated since management api version 0.6.5-SNAPSHOT")]
-pub async fn find(configuration: &configuration::Configuration, selection_request_schema: Option<crate::SelectionRequestSchema>) -> Result<crate::DataPlaneInstanceSchema, Error<FindError>> {
+pub async fn find(configuration: &configuration::Configuration, selection_request_schema: Option<edc_api::SelectionRequestSchema>) -> Result<edc_api::DataPlaneInstanceSchema, Error<FindError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
