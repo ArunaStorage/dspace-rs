@@ -1,8 +1,9 @@
 /*
  * management-api
  *
- * REST API documentation for the Eclipse EDC management-api. This does not include endpoints of the sovity EDC API Wrapper.
+ * REST API documentation for the Eclipse EDC management-api.
  * https://app.swaggerhub.com/apis/eclipse-edc-bot/management-api/
+ * Version: 0.7.0
  *
  */
 
@@ -33,15 +34,16 @@ pub struct ApiKey {
 
 
 impl Configuration {
-    pub fn new() -> Configuration {
+    pub fn new(base_path: String, user_agent: Option<String>, client: reqwest::Client, basic_auth: Option<BasicAuth>, oauth_access_token: Option<String>,
+               bearer_access_token: Option<String>, api_key: Option<ApiKey>) -> Configuration {
         Configuration {
-            base_path: "".to_owned(),
-            user_agent: None,
-            client: reqwest::Client::new(),
-            basic_auth: None,
-            oauth_access_token: None,
-            bearer_access_token: None,
-            api_key: None,
+            base_path,
+            user_agent,
+            client,
+            basic_auth,
+            oauth_access_token,
+            bearer_access_token,
+            api_key,
         }
     }
 
