@@ -32,7 +32,7 @@ Please read the [`CODE OF CONDUCT`](CODE_OF_CONDUCT.md) to learn more about our 
 
 ## License
 
-This project is licensed under the MIT License. For more information, see the `LICENSE` file.
+This project is licensed under the MIT License. For more information, see the [`LICENSE`](LICENSE) file.
 
 ## Contact
 
