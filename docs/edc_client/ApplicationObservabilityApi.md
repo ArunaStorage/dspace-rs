@@ -11,7 +11,7 @@ All URIs are relative to the base path of the server
 
 ## check_health
 
-> edc_client::application_observability::check_health()
+> edc_client::application_observability_api::check_health()
 
 
 Performs a liveness probe to determine whether the runtime is working properly.
@@ -38,7 +38,7 @@ No authorization required
 
 ## get_liveness
 
-> edc_client::application_observability::get_liveness()
+> edc_client::application_observability_api::get_liveness()
 
 
 Performs a liveness probe to determine whether the runtime is working properly.
@@ -65,7 +65,7 @@ No authorization required
 
 ## get_readiness
 
-> edc_client::application_observability::get_readiness()
+> edc_client::application_observability_api::get_readiness()
 
 
 Performs a readiness probe to determine whether the runtime is able to accept requests.
@@ -92,7 +92,7 @@ No authorization required
 
 ## get_startup
 
-> edc_client::application_observability::get_startup()
+> edc_client::application_observability_api::get_startup()
 
 
 Performs a startup probe to determine whether the runtime has completed startup.
