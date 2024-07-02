@@ -17,6 +17,8 @@ pub struct DatasetRequest {
     pub at_id: Option<String>,
     #[serde(rename = "counterPartyAddress", skip_serializing_if = "Option::is_none")]
     pub counter_party_address: Option<String>,
+    #[serde(rename = "counterPartyId", skip_serializing_if = "Option::is_none")]
+    pub counter_party_id: Option<String>,
     #[serde(rename = "protocol", skip_serializing_if = "Option::is_none")]
     pub protocol: Option<String>,
     #[serde(rename = "querySpec", skip_serializing_if = "Option::is_none")]
@@ -26,12 +28,13 @@ pub struct DatasetRequest {
 impl DatasetRequest {
 
     pub fn new(context: std::collections::HashMap<String, serde_json::Value>, at_type: Option<String>, at_id: Option<String>, counter_party_address: Option<String>,
-               protocol: Option<String>, query_spec: Option<crate::QuerySpec>) -> DatasetRequest {
+               counter_party_id: Option<String>, protocol: Option<String>, query_spec: Option<crate::QuerySpec>) -> DatasetRequest {
         DatasetRequest {
             context,
             at_type,
             at_id,
             counter_party_address,
+            counter_party_id,
             protocol,
             query_spec,
         }
@@ -43,6 +46,7 @@ impl DatasetRequest {
             at_type: Some("DatasetRequest".to_string()),
             at_id: None,
             counter_party_address: None,
+            counter_party_id: None,
             protocol: None,
             query_spec: None,
         }
