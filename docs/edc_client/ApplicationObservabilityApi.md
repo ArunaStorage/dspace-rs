@@ -1,6 +1,6 @@
 # ApplicationObservabilityApi
 
-All URIs are relative to *http://localhost:11002/api/management*
+All URIs are relative to the base path of the server
 
 | Method                                                            | HTTP request             | Note       |
 |-------------------------------------------------------------------|--------------------------|------------|
