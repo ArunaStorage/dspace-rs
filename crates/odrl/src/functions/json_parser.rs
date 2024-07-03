@@ -10,6 +10,22 @@ use crate::model::rule::{Duty, Obligation, Permission, Prohibition, Rule};
 use crate::model::type_alias::IRI;
 
 
+#[derive(Debug, Deserialize)]
+pub struct ParsedData {
+    pub parsed_policies: Vec<Policy>,
+    pub parsed_constraints: Vec<Constraint>,
+}
+
+impl ParsedData {
+    pub fn new(parsed_policies: Vec<Policy>, parsed_constraints: Vec<Constraint>) -> ParsedData {
+        ParsedData {
+            parsed_policies,
+            parsed_constraints,
+        }
+    }
+}
+
+
 fn parse_policy(policy: &Value) -> Result<Policy> {
 
     /* fields of policies:
@@ -398,7 +414,7 @@ fn parse_constraint(constraint: &Value) -> Result<Constraint> {
     Ok(constraint_obj)
 }
 
-pub fn parse_logical_constraint(logical_constraint: &Value) -> Result<LogicalConstraint> {
+fn parse_logical_constraint(logical_constraint: &Value) -> Result<LogicalConstraint> {
 
     let mut operator: LogicalOperator = LogicalOperator::And;
     let mut constraint_vec: Vec<IRI> = vec![];
@@ -433,37 +449,54 @@ pub fn parse_logical_constraint(logical_constraint: &Value) -> Result<LogicalCon
 }
 
 
-pub fn main(json_data: &str) -> Result<()> {
+pub fn parse(json_data: &str) -> Result<ParsedData> {
 
     // Deserialize JSON data into serde_json::Value
     let v: Value = serde_json::from_str(json_data)?;
 
-    for entry in v.as_array().unwrap() {
-        /*
-        let policy = &entry["policy"];
-        let parsed_policy = parse_policy(policy)?;
-        println!("Parsed Policy: {:#?}\n", parsed_policy);*/
-        if let Some(policy) = entry.get("policy") {
-            let parsed_policy = parse_policy(policy)?;
-            println!("Parsed Policy: {:#?}\n", parsed_policy);
-        }
+    let mut parsed_policies = Vec::new();
+    let mut parsed_constraints = Vec::new();
 
-        // JsonLD-representation
-        if let Some(object_type) = entry.get("@type").and_then(|x| x.as_str()) {
-            if object_type.to_lowercase() == "constraint" {
-                let parsed_constraint = parse_constraint(entry)?;
-                println!("Parsed Constraint: {:#?}\n", parsed_constraint);
-            } else if object_type.to_lowercase() == "set" || object_type.to_lowercase() == "offer" || object_type.to_lowercase() == "agreement" {
-                let parsed_policy = parse_policy(entry)?;
-                println!("Parsed Policy: {:#?}\n", parsed_policy);
+    if v.is_array() {
+        for entry in v.as_array().unwrap() {
+            if let Some(policy) = entry.get("policy") {
+                let parsed_policy = parse_policy(policy)?;
+                parsed_policies.push(parsed_policy);
+                //println!("Parsed Policy: {:#?}\n", parsed_policy);
+            }
 
+            // JsonLD-representation
+            if let Some(object_type) = entry.get("@type").and_then(|x| x.as_str()) {
+                if object_type.to_lowercase() == "constraint" {
+                    let parsed_constraint = parse_constraint(entry)?;
+                    parsed_constraints.push(parsed_constraint);
+                    //println!("Parsed Constraint: {:#?}\n", parsed_constraint);
+                } else if object_type.to_lowercase() == "set" || object_type.to_lowercase() == "offer" || object_type.to_lowercase() == "agreement" {
+                    let parsed_policy = parse_policy(entry)?;
+                    parsed_policies.push(parsed_policy);
+                    //println!("Parsed Policy: {:#?}\n", parsed_policy);
+                }
             }
         }
-
-
-
+    } else if v.is_object() {
+        let obj = v.as_object().unwrap();
+        if obj.contains_key("policy") {
+            let parsed_policy = parse_policy(obj.get("policy").unwrap())?;
+            parsed_policies.push(parsed_policy);
+        }
+        if let Some(object_type) = obj.get("@type").and_then(|x| x.as_str()) {
+            if object_type.to_lowercase() == "constraint" {
+                let parsed_constraint = parse_constraint(&v)?;
+                parsed_constraints.push(parsed_constraint);
+            } else if object_type.to_lowercase() == "set" || object_type.to_lowercase() == "offer" || object_type.to_lowercase() == "agreement" {
+                let parsed_policy = parse_policy(&v)?;
+                parsed_policies.push(parsed_policy);
+            }
+        }
     }
 
-    Ok(())
+    let parsed_data = ParsedData::new(parsed_policies, parsed_constraints);
+
+    Ok(parsed_data)
 
 }
