@@ -5,7 +5,7 @@ use crate::model::constraint::Constraint;
 use crate::model::type_alias::IRI;
 
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Rule {
 
     Permission(Permission),
@@ -22,7 +22,7 @@ impl Default for Rule {
 }
 
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct Permission {
 
     pub uid: Option<IRI>,
@@ -59,7 +59,7 @@ impl Permission {
 }
 
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct Prohibition {
 
     pub uid: Option<IRI>,
@@ -95,7 +95,7 @@ impl Prohibition {
 }
 
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct Duty {
 
     pub uid: Option<IRI>,
@@ -134,7 +134,7 @@ impl Duty {
 
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct Obligation {
 
     pub uid: Option<IRI>,
