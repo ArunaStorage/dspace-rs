@@ -275,8 +275,6 @@ mod json_parser_test {
         let mut policies: Vec<policy::Policy> = Vec::new();
 
         // First Policy
-        println!("{:#?}", parsed_data.parsed_policies[0]);
-
         let first_policy_first_permission = rule::Permission {
             target: asset::Asset {
                 uid: Option::from("https://example.com/asset:9898.movie".to_string()),
