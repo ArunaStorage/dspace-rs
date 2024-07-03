@@ -28,4 +28,8 @@ features = ["json", "multipart"]
 
 [[test]]
 name = "edc_api_test"
-path = "edc_api_test.rs"
+path = "edc_api/edc_api_test.rs"
+
+[[test]]
+name = "odrl_json_parser_test"
+path = "odrl/json_parser_test.rs"
