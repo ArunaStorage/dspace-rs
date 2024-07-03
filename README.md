@@ -8,9 +8,9 @@ dspace-rs is a Rust-based framework for managing and utilizing dataspaces. It co
 
 The `crates/` directory contains the individual Rust crates of the project:
 
-- **edc_api**: Provides the API for the European Data Portal (EDC).
+- **edc_api**: Provides the API for the Eclipse Dataspace Components (EDC).
 - **edc_client**: Implements the client for communicating with the EDC API.
-- **edc_server**: Implements the server that provides the EDC API.
+- **edc_server**: Implements the server that provides the EDC API. (**Coming**)
 - **odrl**: Offers support for the Open Digital Rights Language (ODRL) specification.
 
 ### docs/
