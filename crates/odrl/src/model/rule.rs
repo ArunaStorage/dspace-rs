@@ -15,8 +15,14 @@ pub enum Rule {
 
 }
 
+impl Default for Rule {
+    fn default() -> Self {
+        Rule::Permission(Permission::default())
+    }
+}
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Permission {
 
     pub uid: Option<IRI>,
@@ -53,7 +59,7 @@ impl Permission {
 }
 
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Prohibition {
 
     pub uid: Option<IRI>,
@@ -89,7 +95,7 @@ impl Prohibition {
 }
 
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Duty {
 
     pub uid: Option<IRI>,
@@ -128,7 +134,7 @@ impl Duty {
 
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Obligation {
 
     pub uid: Option<IRI>,

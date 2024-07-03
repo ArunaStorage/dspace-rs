@@ -8,7 +8,7 @@ use crate::model::type_alias::IRI;
 
 
 /// Default Policy of type Set
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct SetPolicy {
 
     pub uid: IRI,
@@ -35,7 +35,7 @@ impl SetPolicy {
 
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct OfferPolicy {
 
     pub uid: IRI,
@@ -64,7 +64,7 @@ impl OfferPolicy {
 
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct AgreementPolicy {
 
     pub uid: IRI,
@@ -108,6 +108,6 @@ pub enum Policy {
 impl Default for Policy {
     fn default() -> Self {
         // Default to SetPolicy
-        Policy::SetPolicy(SetPolicy::new("default_policy".to_string(), vec![], vec![], vec![], None, vec![]))
+        Policy::SetPolicy(SetPolicy::default())
     }
 }

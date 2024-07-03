@@ -10,7 +10,13 @@ pub enum Function {
 
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+impl Default for Function {
+    fn default() -> Function {
+        Function::Assigner
+    }
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Party {
 
     pub uid: Option<IRI>,
@@ -32,7 +38,7 @@ impl Party {
 }
 
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct PartyCollection {
 
     pub source: Option<IRI>,

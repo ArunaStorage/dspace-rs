@@ -9,6 +9,12 @@ pub enum LeftOperand {
 
 }
 
+impl Default for LeftOperand {
+    fn default() -> Self {
+        LeftOperand::Literal("".to_string())
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Operator {
 
@@ -21,6 +27,12 @@ pub enum Operator {
 
 }
 
+impl Default for Operator {
+    fn default() -> Self {
+        Operator::Equal
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum RightOperand {
 
@@ -30,7 +42,13 @@ pub enum RightOperand {
 
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+impl Default for RightOperand {
+    fn default() -> Self {
+        RightOperand::Literal("".to_string())
+    }
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Constraint {
 
     pub uid: Option<IRI>,
@@ -78,7 +96,13 @@ pub enum LogicalOperator {
     // Add other logical operators as needed
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+impl Default for LogicalOperator {
+    fn default() -> Self {
+        LogicalOperator::Or
+    }
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct LogicalConstraint {
 
     pub uid: Option<IRI>,

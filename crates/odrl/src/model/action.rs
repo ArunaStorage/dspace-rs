@@ -7,7 +7,13 @@ pub enum Refinements {
     LogicalConstraints(Vec<LogicalConstraint>),
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+impl Default for Refinements {
+    fn default() -> Refinements {
+        Refinements::Constraints(vec![])
+    }
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Action {
 
     pub name: String,

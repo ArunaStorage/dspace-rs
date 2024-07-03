@@ -7,3 +7,9 @@ pub enum ConflictTerm {
 
 }
 
+impl Default for ConflictTerm {
+    fn default() -> Self {
+        ConflictTerm::Perm
+    }
+}
+
