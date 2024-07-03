@@ -5,7 +5,7 @@ use crate::model::type_alias::IRI;
 extern crate edc_api as api;
 
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct Relation {
 
     pub target: Option<Box<Asset>>,
@@ -25,7 +25,7 @@ impl Relation {
 
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct AssetCollection {
 
     #[serde(rename = "@id", skip_serializing_if = "Option::is_none")]
@@ -49,7 +49,7 @@ impl AssetCollection {
 
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct Asset {
 
     // Based on the ODRL model

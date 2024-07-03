@@ -1,6 +1,6 @@
 use crate::model::type_alias::IRI;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum LeftOperand {
 
     Literal(String),
@@ -15,7 +15,7 @@ impl Default for LeftOperand {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Operator {
 
     Equal,
@@ -33,7 +33,7 @@ impl Default for Operator {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum RightOperand {
 
     Literal(String),
@@ -48,7 +48,7 @@ impl Default for RightOperand {
     }
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct Constraint {
 
     pub uid: Option<IRI>,
@@ -86,7 +86,7 @@ impl Constraint {
 
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum LogicalOperator {
 
     Or, // at least one of the Constraints MUST be satisfied
@@ -102,7 +102,7 @@ impl Default for LogicalOperator {
     }
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct LogicalConstraint {
 
     pub uid: Option<IRI>,

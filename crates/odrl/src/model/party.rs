@@ -2,7 +2,7 @@ use crate::model::constraint::Constraint;
 use crate::model::type_alias::IRI;
 
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Function {
 
     Assigner,
@@ -16,7 +16,7 @@ impl Default for Function {
     }
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct Party {
 
     pub uid: Option<IRI>,
@@ -38,7 +38,7 @@ impl Party {
 }
 
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct PartyCollection {
 
     pub source: Option<IRI>,

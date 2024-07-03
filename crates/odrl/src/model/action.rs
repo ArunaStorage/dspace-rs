@@ -1,7 +1,7 @@
 use crate::model::constraint::Constraint;
 use crate::model::constraint::LogicalConstraint;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Refinements {
     Constraints(Vec<Constraint>),
     LogicalConstraints(Vec<LogicalConstraint>),
@@ -13,7 +13,7 @@ impl Default for Refinements {
     }
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct Action {
 
     pub name: String,
