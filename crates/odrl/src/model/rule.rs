@@ -25,16 +25,24 @@ impl Default for Rule {
 #[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct Permission {
 
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub uid: Option<IRI>,
     pub action: Action,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub relation: Option<Asset>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub function: Vec<Party>,
+    #[serde(rename = "failure", skip_serializing_if = "Vec::is_empty")]
     pub failures: Vec<Rule>,
+    #[serde(rename = "constraint", skip_serializing_if = "Vec::is_empty")]
     pub constraints: Vec<Constraint>,
 
     pub target: Asset,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub assigner: Option<Party>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub assignee: Option<Party>,
+    #[serde(rename = "duty", skip_serializing_if = "Vec::is_empty")]
     pub duties: Vec<Duty>,
 
 }
@@ -62,16 +70,24 @@ impl Permission {
 #[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct Prohibition {
 
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub uid: Option<IRI>,
     pub action: Action,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub relation: Option<Asset>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub function: Vec<Party>,
+    #[serde(rename = "failure", skip_serializing_if = "Vec::is_empty")]
     pub failures: Vec<Rule>,
+    #[serde(rename = "constraint", skip_serializing_if = "Vec::is_empty")]
     pub constraints: Vec<Constraint>,
 
     pub target: Asset,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub assigner: Option<Party>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub assignee: Option<Party>,
+    #[serde(rename = "remedy", skip_serializing_if = "Vec::is_empty")]
     pub remedies: Vec<Duty>,
 
 }
@@ -98,17 +114,27 @@ impl Prohibition {
 #[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct Duty {
 
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub uid: Option<IRI>,
     pub action: Action,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub relation: Option<Asset>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub function: Vec<Party>,
+    #[serde(rename = "failure", skip_serializing_if = "Vec::is_empty")]
     pub failures: Vec<Rule>,
+    #[serde(rename = "constraint", skip_serializing_if = "Vec::is_empty")]
     pub constraints: Vec<Constraint>,
 
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target: Option<Asset>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub assigner: Option<Party>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub assignee: Option<Party>,
+    #[serde(rename = "consequence", skip_serializing_if = "Vec::is_empty")]
     pub consequences: Vec<Duty>,
+    #[serde(skip_serializing)]
     pub pre_condition: Option<Vec<Duty>>,
 
 
@@ -137,11 +163,13 @@ impl Duty {
 #[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct Obligation {
 
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub uid: Option<IRI>,
     pub target: Asset,
     pub assigner: Party,
     pub assignee: Party,
     pub action: Action,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub consequence: Vec<Duty>,
 
 }

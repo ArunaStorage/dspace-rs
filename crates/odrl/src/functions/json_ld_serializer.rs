@@ -243,6 +243,12 @@ impl Serializable for Permission {
                             Operator::LessThan => IriRef::new(format!("{}lt", name_spaces::ODRL_NS))?,
                             Operator::GreaterThanOrEqual => IriRef::new(format!("{}gteq", name_spaces::ODRL_NS))?,
                             Operator::LessThanOrEqual => IriRef::new(format!("{}lteq", name_spaces::ODRL_NS))?,
+                            Operator::HasPart => IriRef::new(format!("{}hasPart", name_spaces::ODRL_NS))?,
+                            Operator::IsA => IriRef::new(format!("{}isA", name_spaces::ODRL_NS))?,
+                            Operator::IsAllOf => IriRef::new(format!("{}isAllOf", name_spaces::ODRL_NS))?,
+                            Operator::IsAnyOf => IriRef::new(format!("{}isAnyOf", name_spaces::ODRL_NS))?,
+                            Operator::IsNoneOf => IriRef::new(format!("{}isNoneOf", name_spaces::ODRL_NS))?,
+                            Operator::IsPartOf => IriRef::new(format!("{}isPartOf", name_spaces::ODRL_NS))?,
                         };
                         graph.insert(&refinement_term, &IriRef::new(format!("{}operator", name_spaces::LD_NS))?, &operator_term)?;
 
@@ -355,6 +361,12 @@ impl Serializable for Permission {
                     Operator::LessThan => IriRef::new(format!("{}lt", name_spaces::ODRL_NS))?,
                     Operator::GreaterThanOrEqual => IriRef::new(format!("{}gteq", name_spaces::ODRL_NS))?,
                     Operator::LessThanOrEqual => IriRef::new(format!("{}lteq", name_spaces::ODRL_NS))?,
+                    Operator::HasPart => IriRef::new(format!("{}hasPart", name_spaces::ODRL_NS))?,
+                    Operator::IsA => IriRef::new(format!("{}isA", name_spaces::ODRL_NS))?,
+                    Operator::IsAllOf => IriRef::new(format!("{}isAllOf", name_spaces::ODRL_NS))?,
+                    Operator::IsAnyOf => IriRef::new(format!("{}isAnyOf", name_spaces::ODRL_NS))?,
+                    Operator::IsNoneOf => IriRef::new(format!("{}isNoneOf", name_spaces::ODRL_NS))?,
+                    Operator::IsPartOf => IriRef::new(format!("{}isPartOf", name_spaces::ODRL_NS))?,
                 };
                 graph.insert(&constraint_term, &IriRef::new(format!("{}operator", name_spaces::LD_NS))?, &operator_term)?;
 
@@ -454,6 +466,12 @@ impl Serializable for Prohibition {
                             Operator::LessThan => IriRef::new(format!("{}lt", name_spaces::ODRL_NS))?,
                             Operator::GreaterThanOrEqual => IriRef::new(format!("{}gteq", name_spaces::ODRL_NS))?,
                             Operator::LessThanOrEqual => IriRef::new(format!("{}lteq", name_spaces::ODRL_NS))?,
+                            Operator::HasPart => IriRef::new(format!("{}hasPart", name_spaces::ODRL_NS))?,
+                            Operator::IsA => IriRef::new(format!("{}isA", name_spaces::ODRL_NS))?,
+                            Operator::IsAllOf => IriRef::new(format!("{}isAllOf", name_spaces::ODRL_NS))?,
+                            Operator::IsAnyOf => IriRef::new(format!("{}isAnyOf", name_spaces::ODRL_NS))?,
+                            Operator::IsNoneOf => IriRef::new(format!("{}isNoneOf", name_spaces::ODRL_NS))?,
+                            Operator::IsPartOf => IriRef::new(format!("{}isPartOf", name_spaces::ODRL_NS))?,
                         };
                         graph.insert(&refinement_term, &IriRef::new(format!("{}operator", name_spaces::LD_NS))?, &operator_term)?;
 
@@ -565,6 +583,12 @@ impl Serializable for Prohibition {
                     Operator::LessThan => IriRef::new(format!("{}lt", name_spaces::ODRL_NS))?,
                     Operator::GreaterThanOrEqual => IriRef::new(format!("{}gteq", name_spaces::ODRL_NS))?,
                     Operator::LessThanOrEqual => IriRef::new(format!("{}lteq", name_spaces::ODRL_NS))?,
+                    Operator::HasPart => IriRef::new(format!("{}hasPart", name_spaces::ODRL_NS))?,
+                    Operator::IsA => IriRef::new(format!("{}isA", name_spaces::ODRL_NS))?,
+                    Operator::IsAllOf => IriRef::new(format!("{}isAllOf", name_spaces::ODRL_NS))?,
+                    Operator::IsAnyOf => IriRef::new(format!("{}isAnyOf", name_spaces::ODRL_NS))?,
+                    Operator::IsNoneOf => IriRef::new(format!("{}isNoneOf", name_spaces::ODRL_NS))?,
+                    Operator::IsPartOf => IriRef::new(format!("{}isPartOf", name_spaces::ODRL_NS))?,
                 };
                 graph.insert(&constraint_term, &IriRef::new(format!("{}operator", name_spaces::LD_NS))?, &operator_term)?;
 
@@ -666,6 +690,12 @@ impl Serializable for Duty {
                             Operator::LessThan => IriRef::new(format!("{}lt", name_spaces::ODRL_NS))?,
                             Operator::GreaterThanOrEqual => IriRef::new(format!("{}gteq", name_spaces::ODRL_NS))?,
                             Operator::LessThanOrEqual => IriRef::new(format!("{}lteq", name_spaces::ODRL_NS))?,
+                            Operator::HasPart => IriRef::new(format!("{}hasPart", name_spaces::ODRL_NS))?,
+                            Operator::IsA => IriRef::new(format!("{}isA", name_spaces::ODRL_NS))?,
+                            Operator::IsAllOf => IriRef::new(format!("{}isAllOf", name_spaces::ODRL_NS))?,
+                            Operator::IsAnyOf => IriRef::new(format!("{}isAnyOf", name_spaces::ODRL_NS))?,
+                            Operator::IsNoneOf => IriRef::new(format!("{}isNoneOf", name_spaces::ODRL_NS))?,
+                            Operator::IsPartOf => IriRef::new(format!("{}isPartOf", name_spaces::ODRL_NS))?,
                         };
                         graph.insert(&refinement_term, &IriRef::new(format!("{}operator", name_spaces::LD_NS))?, &operator_term)?;
 
@@ -777,6 +807,12 @@ impl Serializable for Duty {
                     Operator::LessThan => IriRef::new(format!("{}lt", name_spaces::ODRL_NS))?,
                     Operator::GreaterThanOrEqual => IriRef::new(format!("{}gteq", name_spaces::ODRL_NS))?,
                     Operator::LessThanOrEqual => IriRef::new(format!("{}lteq", name_spaces::ODRL_NS))?,
+                    Operator::HasPart => IriRef::new(format!("{}hasPart", name_spaces::ODRL_NS))?,
+                    Operator::IsA => IriRef::new(format!("{}isA", name_spaces::ODRL_NS))?,
+                    Operator::IsAllOf => IriRef::new(format!("{}isAllOf", name_spaces::ODRL_NS))?,
+                    Operator::IsAnyOf => IriRef::new(format!("{}isAnyOf", name_spaces::ODRL_NS))?,
+                    Operator::IsNoneOf => IriRef::new(format!("{}isNoneOf", name_spaces::ODRL_NS))?,
+                    Operator::IsPartOf => IriRef::new(format!("{}isPartOf", name_spaces::ODRL_NS))?,
                 };
                 graph.insert(&constraint_term, &IriRef::new(format!("{}operator", name_spaces::LD_NS))?, &operator_term)?;
 

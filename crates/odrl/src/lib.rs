@@ -6,8 +6,9 @@ extern crate url;
 extern crate reqwest;
 
 pub mod functions {
+    pub mod json_ld_serializer;
     pub mod json_parser;
-    pub mod serializer;
+    pub mod json_serializer;
     pub mod state_machine;
     pub mod validator;
     pub mod vocabulary;

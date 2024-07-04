@@ -16,9 +16,13 @@ impl Default for Refinements {
 #[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct Action {
 
+    #[serde(rename = "action")]
     pub name: String,
+    #[serde(rename = "refinement", skip_serializing_if = "Option::is_none")]
     pub refinements: Option<Refinements>,
+    #[serde(rename = "includedIn", skip_serializing_if = "Option::is_none")]
     pub included_in: Option<Box<Action>>, // Use Box to allow recursive type definition
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub implies: Vec<Box<Action>>,
 
 }

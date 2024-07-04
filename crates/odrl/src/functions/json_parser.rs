@@ -1,7 +1,7 @@
 use serde_json::{Result, Value};
 use crate::model::action::Action;
 use crate::model::action::Refinements;
-use crate::model::asset::{Asset, Relation};
+use crate::model::asset::{Asset};
 use crate::model::conflict_term::ConflictTerm;
 use crate::model::constraint::{Constraint, LeftOperand, Operator, RightOperand, LogicalConstraint, LogicalOperator};
 use crate::model::party::{Function, Party};
@@ -268,7 +268,7 @@ fn parse_rule(rule_type: &str, rule: &Value) -> Result<Rule> {
     }
 
     let target = rule.get("target").ok_or("No target field").unwrap().to_string().replace("\"", "");
-    let asset = Asset::new(None, Some(target), None, vec![], Relation::new(None), None, None, None, None, None);
+    let asset = Asset::new(None, Some(target), None, vec![], None, None, None, None, None, None);
 
     let assigner: Option<Party>;
     let assignee: Option<Party>;

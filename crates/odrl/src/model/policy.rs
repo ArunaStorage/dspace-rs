@@ -12,10 +12,15 @@ use crate::model::type_alias::IRI;
 pub struct SetPolicy {
 
     pub uid: IRI,
-    pub rules: Vec<Rule>,
+    #[serde(skip_serializing)]
+    pub rules: Vec<Rule>,   // will be serialized manually since rules are serialized as arrays of permissions, prohibitions and obligations
+    #[serde(rename = "profile", skip_serializing_if = "Vec::is_empty")]
     pub profiles: Vec<IRI>,
+    #[serde(rename = "inheritFrom", skip_serializing_if = "Vec::is_empty")]
     pub inherit_from: Vec<IRI>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub conflict: Option<ConflictTerm>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub obligation: Vec<Rule>,
 
 }
@@ -39,11 +44,17 @@ impl SetPolicy {
 pub struct OfferPolicy {
 
     pub uid: IRI,
-    pub assigner: Party,
-    pub rules: Vec<Rule>,
+    #[serde(skip_serializing)]
+    pub assigner: Party,    // will be serialized as part of the rule
+    #[serde(skip_serializing)]
+    pub rules: Vec<Rule>,   // will be serialized manually since rules are serialized as arrays of permissions, prohibitions and obligations
+    #[serde(rename = "profile", skip_serializing_if = "Vec::is_empty")]
     pub profiles: Vec<IRI>,
+    #[serde(rename = "inheritFrom", skip_serializing_if = "Vec::is_empty")]
     pub inherit_from: Vec<IRI>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub conflict: Option<ConflictTerm>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub obligation: Vec<Rule>
 
 }
@@ -68,12 +79,19 @@ impl OfferPolicy {
 pub struct AgreementPolicy {
 
     pub uid: IRI,
-    pub assigner: Party,
-    pub assignee: Party,
-    pub rules: Vec<Rule>,
+    #[serde(skip_serializing)]
+    pub assigner: Party,    // will be serialized as part of the rule
+    #[serde(skip_serializing)]
+    pub assignee: Party,    // will be serialized as part of the rule
+    #[serde(skip_serializing)]
+    pub rules: Vec<Rule>,   // will be serialized manually since rules are serialized as arrays of permissions, prohibitions and obligations
+    #[serde(rename = "profile", skip_serializing_if = "Vec::is_empty")]
     pub profiles: Vec<IRI>,
+    #[serde(rename = "inheritFrom", skip_serializing_if = "Vec::is_empty")]
     pub inherit_from: Vec<IRI>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub conflict: Option<ConflictTerm>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub obligation: Vec<Rule>
 
 }
