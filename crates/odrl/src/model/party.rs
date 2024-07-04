@@ -22,15 +22,15 @@ impl Default for Function {
 pub enum PartyType {
 
     #[serde(rename = "Party")]
-    Party,
+    Party(Vec<String>),
     #[serde(rename = "PartyCollection")]
-    PartyCollection,
+    PartyCollection(Vec<String>),
 
 }
 
 impl Default for PartyType {
     fn default() -> PartyType {
-        PartyType::Party
+        PartyType::Party(vec!["Party".to_string(), "vcard:Individual".to_string()])
     }
 }
 
@@ -43,7 +43,7 @@ pub struct Party {
     pub part_of: Vec<PartyCollection>,
     #[serde(skip_serializing)]
     pub function: Function,
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "@type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<PartyType>,
 
 }
