@@ -267,7 +267,7 @@ impl Serialize for SetPolicy {
 
                 serde_json::Value::Object(obligation_map)
             }).collect();
-            state.serialize_field("prohibition", &serialized_obligations)?;
+            state.serialize_field("obligation", &serialized_obligations)?;
         }
 
         state.end()
