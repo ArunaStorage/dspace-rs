@@ -18,6 +18,22 @@ impl Default for Function {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum PartyType {
+
+    #[serde(rename = "Party")]
+    Party,
+    #[serde(rename = "PartyCollection")]
+    PartyCollection,
+
+}
+
+impl Default for PartyType {
+    fn default() -> PartyType {
+        PartyType::Party
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct Party {
 
@@ -27,16 +43,19 @@ pub struct Party {
     pub part_of: Vec<PartyCollection>,
     #[serde(skip_serializing)]
     pub function: Function,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub r#type: Option<PartyType>,
 
 }
 
 impl Party {
 
-    pub fn new(uid: Option<IRI>, part_of: Vec<PartyCollection>, function: Function) -> Party {
+    pub fn new(uid: Option<IRI>, part_of: Vec<PartyCollection>, function: Function, r#type: Option<PartyType>) -> Party {
         Party {
             uid,
             part_of,
-            function
+            function,
+            r#type
         }
     }
 
