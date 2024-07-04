@@ -219,52 +219,48 @@ impl Serialize for SetPolicy {
                     obligation_map.insert("target".to_string(), serde_json::json!(p.target.uid.as_ref().unwrap_or(&String::new())));
                 }
 
-                if let Some(assigner) = &p.assigner {
-                    let mut assigner_map = serde_json::Map::new();
-                    if let Some(assigner_type) = &assigner.r#type {
-                        assigner_map.insert("@type".to_string(), serde_json::json!(assigner_type));
-                    }
-                    if let Some(assigner_uid) = &assigner.uid {
-                        assigner_map.insert("uid".to_string(), serde_json::json!(assigner_uid));
-                    }
-                    if assigner.part_of.len() > 0 {
-                        if assigner.part_of.len() == 1 {
-                            assigner_map.insert("partOf".to_string(), serde_json::json!(assigner.part_of[0].source.as_ref().unwrap_or(&String::new())));
-                        } else {
-                            // Collect all PartyCollection.source into a vec
-                            let part_of: Vec<_> = assigner.part_of.iter().filter_map(|pc| pc.source.as_ref()).collect();
-                            assigner_map.insert("partOf".to_string(), serde_json::json!(part_of));
-                        }
-                    }
-                    if assigner_map.len() > 1 {
-                        obligation_map.insert("assigner".to_string(), serde_json::Value::Object(assigner_map));
+                let mut assigner_map = serde_json::Map::new();
+                if let Some(assigner_type) = &p.assigner.r#type {
+                    assigner_map.insert("@type".to_string(), serde_json::json!(assigner_type));
+                }
+                if let Some(assigner_uid) = &p.assigner.uid {
+                    assigner_map.insert("uid".to_string(), serde_json::json!(assigner_uid));
+                }
+                if p.assigner.part_of.len() > 0 {
+                    if p.assigner.part_of.len() == 1 {
+                        assigner_map.insert("partOf".to_string(), serde_json::json!(p.assigner.part_of[0].source.as_ref().unwrap_or(&String::new())));
                     } else {
-                        obligation_map.insert("assigner".to_string(), serde_json::json!(assigner.uid.as_ref().unwrap_or(&String::new())));
+                        // Collect all PartyCollection.source into a vec
+                        let part_of: Vec<_> = p.assigner.part_of.iter().filter_map(|pc| pc.source.as_ref()).collect();
+                        assigner_map.insert("partOf".to_string(), serde_json::json!(part_of));
                     }
                 }
+                if assigner_map.len() > 1 {
+                    obligation_map.insert("assigner".to_string(), serde_json::Value::Object(assigner_map));
+                } else {
+                    obligation_map.insert("assigner".to_string(), serde_json::json!(p.assigner.uid.as_ref().unwrap_or(&String::new())));
+                }
 
-                if let Some(assignee) = &p.assignee {
-                    let mut assignee_map = serde_json::Map::new();
-                    if let Some(assigner_type) = &assignee.r#type {
-                        assignee_map.insert("@type".to_string(), serde_json::json!(assigner_type));
-                    }
-                    if let Some(assigner_uid) = &assignee.uid {
-                        assignee_map.insert("uid".to_string(), serde_json::json!(assigner_uid));
-                    }
-                    if assignee.part_of.len() > 0 {
-                        if assignee.part_of.len() == 1 {
-                            assignee_map.insert("partOf".to_string(), serde_json::json!(assignee.part_of[0].source.as_ref().unwrap_or(&String::new())));
-                        } else {
-                            // Collect all PartyCollection.source into a vec
-                            let part_of: Vec<_> = assignee.part_of.iter().filter_map(|pc| pc.source.as_ref()).collect();
-                            assignee_map.insert("partOf".to_string(), serde_json::json!(part_of));
-                        }
-                    }
-                    if assignee_map.len() > 1 {
-                        obligation_map.insert("assigner".to_string(), serde_json::Value::Object(assignee_map));
+                let mut assignee_map = serde_json::Map::new();
+                if let Some(assigner_type) = &p.assignee.r#type {
+                    assignee_map.insert("@type".to_string(), serde_json::json!(assigner_type));
+                }
+                if let Some(assigner_uid) = &p.assignee.uid {
+                    assignee_map.insert("uid".to_string(), serde_json::json!(assigner_uid));
+                }
+                if p.assignee.part_of.len() > 0 {
+                    if p.assignee.part_of.len() == 1 {
+                        assignee_map.insert("partOf".to_string(), serde_json::json!(p.assignee.part_of[0].source.as_ref().unwrap_or(&String::new())));
                     } else {
-                        obligation_map.insert("assigner".to_string(), serde_json::json!(assignee.uid.as_ref().unwrap_or(&String::new())));
+                        // Collect all PartyCollection.source into a vec
+                        let part_of: Vec<_> = p.assignee.part_of.iter().filter_map(|pc| pc.source.as_ref()).collect();
+                        assignee_map.insert("partOf".to_string(), serde_json::json!(part_of));
                     }
+                }
+                if assignee_map.len() > 1 {
+                    obligation_map.insert("assigner".to_string(), serde_json::Value::Object(assignee_map));
+                } else {
+                    obligation_map.insert("assigner".to_string(), serde_json::json!(p.assignee.uid.as_ref().unwrap_or(&String::new())));
                 }
 
                 obligation_map.insert("action".to_string(), serde_json::json!(p.action.name.clone()));
