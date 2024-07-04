@@ -2,7 +2,7 @@
 
 use serde::{Serialize, Serializer, ser::SerializeStruct};
 use crate::model::policy::{AgreementPolicy, OfferPolicy, SetPolicy};
-use crate::model::rule::{Rule, Permission, Prohibition, Duty};
+use crate::model::rule::{Rule, Permission, Prohibition, Duty, Obligation};
 
 impl Serialize for SetPolicy {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -194,7 +194,85 @@ impl Serialize for SetPolicy {
             state.serialize_field("prohibition", &serialized_prohibitions)?;
         }
 
-        // TODO: Serialize prohibitions and obligations
+        let obligations: Vec<&Obligation> = self.rules.iter().filter_map(|rule| {
+            if let Rule::Obligation(obligation) = rule {
+                Some(obligation)
+            } else {
+                None
+            }
+        }).collect();
+
+        if !obligations.is_empty() {
+            let serialized_obligations: Vec<_> = obligations.iter().map(|p| {
+                let mut obligation_map = serde_json::Map::new();
+
+                let mut target_map = serde_json::Map::new();
+                if let Some(target_type) = &p.target.edc_type {
+                    target_map.insert("@type".to_string(), serde_json::json!(target_type));
+                }
+                if let Some(target_uid) = &p.target.uid {
+                    target_map.insert("uid".to_string(), serde_json::json!(target_uid));
+                }
+                if target_map.len() > 1 {
+                    obligation_map.insert("target".to_string(), serde_json::Value::Object(target_map));
+                } else {
+                    obligation_map.insert("target".to_string(), serde_json::json!(p.target.uid.as_ref().unwrap_or(&String::new())));
+                }
+
+                if let Some(assigner) = &p.assigner {
+                    let mut assigner_map = serde_json::Map::new();
+                    if let Some(assigner_type) = &assigner.r#type {
+                        assigner_map.insert("@type".to_string(), serde_json::json!(assigner_type));
+                    }
+                    if let Some(assigner_uid) = &assigner.uid {
+                        assigner_map.insert("uid".to_string(), serde_json::json!(assigner_uid));
+                    }
+                    if assigner.part_of.len() > 0 {
+                        if assigner.part_of.len() == 1 {
+                            assigner_map.insert("partOf".to_string(), serde_json::json!(assigner.part_of[0].source.as_ref().unwrap_or(&String::new())));
+                        } else {
+                            // Collect all PartyCollection.source into a vec
+                            let part_of: Vec<_> = assigner.part_of.iter().filter_map(|pc| pc.source.as_ref()).collect();
+                            assigner_map.insert("partOf".to_string(), serde_json::json!(part_of));
+                        }
+                    }
+                    if assigner_map.len() > 1 {
+                        obligation_map.insert("assigner".to_string(), serde_json::Value::Object(assigner_map));
+                    } else {
+                        obligation_map.insert("assigner".to_string(), serde_json::json!(assigner.uid.as_ref().unwrap_or(&String::new())));
+                    }
+                }
+
+                if let Some(assignee) = &p.assignee {
+                    let mut assignee_map = serde_json::Map::new();
+                    if let Some(assigner_type) = &assignee.r#type {
+                        assignee_map.insert("@type".to_string(), serde_json::json!(assigner_type));
+                    }
+                    if let Some(assigner_uid) = &assignee.uid {
+                        assignee_map.insert("uid".to_string(), serde_json::json!(assigner_uid));
+                    }
+                    if assignee.part_of.len() > 0 {
+                        if assignee.part_of.len() == 1 {
+                            assignee_map.insert("partOf".to_string(), serde_json::json!(assignee.part_of[0].source.as_ref().unwrap_or(&String::new())));
+                        } else {
+                            // Collect all PartyCollection.source into a vec
+                            let part_of: Vec<_> = assignee.part_of.iter().filter_map(|pc| pc.source.as_ref()).collect();
+                            assignee_map.insert("partOf".to_string(), serde_json::json!(part_of));
+                        }
+                    }
+                    if assignee_map.len() > 1 {
+                        obligation_map.insert("assigner".to_string(), serde_json::Value::Object(assignee_map));
+                    } else {
+                        obligation_map.insert("assigner".to_string(), serde_json::json!(assignee.uid.as_ref().unwrap_or(&String::new())));
+                    }
+                }
+
+                obligation_map.insert("action".to_string(), serde_json::json!(p.action.name.clone()));
+
+                serde_json::Value::Object(obligation_map)
+            }).collect();
+            state.serialize_field("prohibition", &serialized_obligations)?;
+        }
 
         state.end()
     }
