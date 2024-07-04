@@ -45,18 +45,34 @@ impl Serialize for SetPolicy {
         if !permissions.is_empty() {
             let serialized_permissions: Vec<_> = permissions.iter().map(|p| {
                 let mut permission_map = serde_json::Map::new();
-                permission_map.insert("target".to_string(), serde_json::json!(p.target.uid.as_ref().unwrap_or(&String::new())));
+
+                let mut target_map = serde_json::Map::new();
+                if let Some(target_type) = &p.target.edc_type {
+                    target_map.insert("@type".to_string(), serde_json::json!(target_type));
+                }
+                if let Some(target_uid) = &p.target.uid {
+                    target_map.insert("uid".to_string(), serde_json::json!(target_uid));
+                }
+                if target_map.len() > 1 {
+                    permission_map.insert("target".to_string(), serde_json::Value::Object(target_map));
+                } else {
+                    permission_map.insert("target".to_string(), serde_json::json!(p.target.uid.as_ref().unwrap_or(&String::new())));
+                }
+
                 if let Some(assigner) = &p.assigner {
                     if let Some(assigner_uid) = &assigner.uid {
                         permission_map.insert("assigner".to_string(), serde_json::json!(assigner_uid));
                     }
                 }
+
                 if let Some(assignee) = &p.assignee {
                     if let Some(assignee_uid) = &assignee.uid {
                         permission_map.insert("assignee".to_string(), serde_json::json!(assignee_uid));
                     }
                 }
+
                 permission_map.insert("action".to_string(), serde_json::json!(p.action.name.clone()));
+
                 serde_json::Value::Object(permission_map)
             }).collect();
             state.serialize_field("permission", &serialized_permissions)?;
