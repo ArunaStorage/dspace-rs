@@ -79,90 +79,7 @@ impl Serialize for SetPolicy {
 
         if !obligations.is_empty() {
             let serialized_obligations: Vec<_> = obligations.iter().map(|p| {
-                let mut obligation_map = serde_json::Map::new();
-
-                let mut target_map = serde_json::Map::new();
-                if let Some(target_type) = &p.target.edc_type {
-                    target_map.insert("@type".to_string(), serde_json::json!(target_type));
-                }
-                if let Some(target_uid) = &p.target.uid {
-                    target_map.insert("uid".to_string(), serde_json::json!(target_uid));
-                }
-                if target_map.len() > 1 {
-                    obligation_map.insert("target".to_string(), serde_json::Value::Object(target_map));
-                } else {
-                    obligation_map.insert("target".to_string(), serde_json::json!(p.target.uid.as_ref().unwrap_or(&String::new())));
-                }
-
-                let assigner_map = serialize_party(&p.assigner);
-                if assigner_map.len() > 1 {
-                    obligation_map.insert("assigner".to_string(), serde_json::Value::Object(assigner_map));
-                } else {
-                    obligation_map.insert("assigner".to_string(), serde_json::json!(p.assigner.uid.as_ref().unwrap_or(&String::new())));
-                }
-
-                let assignee_map = serialize_party(&p.assignee);
-                if assignee_map.len() > 1 {
-                    obligation_map.insert("assignee".to_string(), serde_json::Value::Object(assignee_map));
-                } else {
-                    obligation_map.insert("assignee".to_string(), serde_json::json!(p.assignee.uid.as_ref().unwrap_or(&String::new())));
-                }
-
-                if (p.action.refinements.is_none()) && (p.action.included_in.is_none()) && (p.action.implies.len() == 0) {
-                    obligation_map.insert("action".to_string(), serde_json::json!(p.action.name.clone()));
-                } else {
-                    let action_map = serialize_action(&p.action);
-                    obligation_map.insert("action".to_string(), serde_json::Value::Object(action_map));
-                }
-
-                // collect all consequences
-                let serialized_consequences: Vec<_> = p.consequence.iter().map(|d| {
-                    let mut consequence_map = serde_json::Map::new();
-                    if let Some(uid) = &d.uid {
-                        consequence_map.insert("uid".to_string(), serde_json::json!(uid));
-                    }
-                    if d.action.refinements.is_none() && d.action.included_in.is_none() && d.action.implies.len() == 0 {
-                        consequence_map.insert("action".to_string(), serde_json::json!(d.action.name.clone()));
-                    } else {
-                        let action_map = serialize_action(&d.action);
-                        consequence_map.insert("action".to_string(), serde_json::Value::Object(action_map));
-                    }
-                    if let Some(relation) = &d.relation {
-                        consequence_map.insert("relation".to_string(), serde_json::json!(relation.uid.as_ref().unwrap_or(&String::new())));
-                    }
-                    if !d.function.is_empty() {
-                        if d.function.len() > 1 {
-                            consequence_map.insert("compensatedParty".to_string(), serde_json::json!(d.function.iter().map(|f| f.clone().uid.expect("No UID").to_string()).collect::<Vec<_>>()));
-                        } else {
-                            consequence_map.insert("compensatedParty".to_string(), serde_json::json!(d.function[0].clone().uid.expect("No UID").to_string()));
-                        }
-                    }
-                    if !d.constraints.is_empty() {
-                        if d.constraints.len() > 1 {
-                            let mut serialized_constraints = Vec::new();
-                            for constraint in &d.constraints {
-                                let serialized = serde_json::to_string(constraint).expect("Failed to serialize constraint");
-                                serialized_constraints.push(serialized);
-                            }
-                            consequence_map.insert("constraint".to_string(), serde_json::json!(serialized_constraints));
-                        } else {
-                            consequence_map.insert("constraint".to_string(), serde_json::json!(serde_json::to_string(&d.constraints[0]).expect("Failed to serialize constraint")));
-                        }
-                    }
-                    if let Some(target) = &d.target {
-                        consequence_map.insert("target".to_string(), serde_json::json!(target.uid.as_ref().unwrap_or(&String::new())));
-                    }
-                    if let Some(assigner) = &d.assigner {
-                        consequence_map.insert("assigner".to_string(), serde_json::json!(assigner.uid.as_ref().unwrap_or(&String::new())));
-                    }
-                    if let Some(assignee) = &d.assignee {
-                        consequence_map.insert("assignee".to_string(), serde_json::json!(assignee.uid.as_ref().unwrap_or(&String::new())));
-                    }
-                    serde_json::Value::Object(consequence_map)
-                }).collect();
-
-                obligation_map.insert("consequence".to_string(), serde_json::json!(serialized_consequences));
-
+                let obligation_map = serialize_obligation(p);
                 serde_json::Value::Object(obligation_map)
             }).collect();
             state.serialize_field("obligation", &serialized_obligations)?;
@@ -393,4 +310,93 @@ fn serialize_prohibition(prohibition: &Prohibition) -> serde_json::Map<String, s
     }
 
     prohibition_map
+}
+
+
+fn serialize_obligation(obligation: &Obligation) -> serde_json::Map<String, serde_json::Value> {
+    let mut obligation_map = serde_json::Map::new();
+
+    let mut target_map = serde_json::Map::new();
+    if let Some(target_type) = &obligation.target.edc_type {
+        target_map.insert("@type".to_string(), serde_json::json!(target_type));
+    }
+    if let Some(target_uid) = &obligation.target.uid {
+        target_map.insert("uid".to_string(), serde_json::json!(target_uid));
+    }
+    if target_map.len() > 1 {
+        obligation_map.insert("target".to_string(), serde_json::Value::Object(target_map));
+    } else {
+        obligation_map.insert("target".to_string(), serde_json::json!(obligation.target.uid.as_ref().unwrap_or(&String::new())));
+    }
+
+    let assigner_map = serialize_party(&obligation.assigner);
+    if assigner_map.len() > 1 {
+        obligation_map.insert("assigner".to_string(), serde_json::Value::Object(assigner_map));
+    } else {
+        obligation_map.insert("assigner".to_string(), serde_json::json!(obligation.assigner.uid.as_ref().unwrap_or(&String::new())));
+    }
+
+    let assignee_map = serialize_party(&obligation.assignee);
+    if assignee_map.len() > 1 {
+        obligation_map.insert("assignee".to_string(), serde_json::Value::Object(assignee_map));
+    } else {
+        obligation_map.insert("assignee".to_string(), serde_json::json!(obligation.assignee.uid.as_ref().unwrap_or(&String::new())));
+    }
+
+    if (obligation.action.refinements.is_none()) && (obligation.action.included_in.is_none()) && (obligation.action.implies.len() == 0) {
+        obligation_map.insert("action".to_string(), serde_json::json!(obligation.action.name.clone()));
+    } else {
+        let action_map = serialize_action(&obligation.action);
+        obligation_map.insert("action".to_string(), serde_json::Value::Object(action_map));
+    }
+
+    // collect all consequences
+    let serialized_consequences: Vec<_> = obligation.consequence.iter().map(|d| {
+        let mut consequence_map = serde_json::Map::new();
+        if let Some(uid) = &d.uid {
+            consequence_map.insert("uid".to_string(), serde_json::json!(uid));
+        }
+        if d.action.refinements.is_none() && d.action.included_in.is_none() && d.action.implies.len() == 0 {
+            consequence_map.insert("action".to_string(), serde_json::json!(d.action.name.clone()));
+        } else {
+            let action_map = serialize_action(&d.action);
+            consequence_map.insert("action".to_string(), serde_json::Value::Object(action_map));
+        }
+        if let Some(relation) = &d.relation {
+            consequence_map.insert("relation".to_string(), serde_json::json!(relation.uid.as_ref().unwrap_or(&String::new())));
+        }
+        if !d.function.is_empty() {
+            if d.function.len() > 1 {
+                consequence_map.insert("compensatedParty".to_string(), serde_json::json!(d.function.iter().map(|f| f.clone().uid.expect("No UID").to_string()).collect::<Vec<_>>()));
+            } else {
+                consequence_map.insert("compensatedParty".to_string(), serde_json::json!(d.function[0].clone().uid.expect("No UID").to_string()));
+            }
+        }
+        if !d.constraints.is_empty() {
+            if d.constraints.len() > 1 {
+                let mut serialized_constraints = Vec::new();
+                for constraint in &d.constraints {
+                    let serialized = serde_json::to_string(constraint).expect("Failed to serialize constraint");
+                    serialized_constraints.push(serialized);
+                }
+                consequence_map.insert("constraint".to_string(), serde_json::json!(serialized_constraints));
+            } else {
+                consequence_map.insert("constraint".to_string(), serde_json::json!(serde_json::to_string(&d.constraints[0]).expect("Failed to serialize constraint")));
+            }
+        }
+        if let Some(target) = &d.target {
+            consequence_map.insert("target".to_string(), serde_json::json!(target.uid.as_ref().unwrap_or(&String::new())));
+        }
+        if let Some(assigner) = &d.assigner {
+            consequence_map.insert("assigner".to_string(), serde_json::json!(assigner.uid.as_ref().unwrap_or(&String::new())));
+        }
+        if let Some(assignee) = &d.assignee {
+            consequence_map.insert("assignee".to_string(), serde_json::json!(assignee.uid.as_ref().unwrap_or(&String::new())));
+        }
+        serde_json::Value::Object(consequence_map)
+    }).collect();
+
+    obligation_map.insert("consequence".to_string(), serde_json::json!(serialized_consequences));
+
+    obligation_map
 }
