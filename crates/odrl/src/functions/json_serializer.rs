@@ -108,7 +108,22 @@ impl Serialize for SetPolicy {
                     }
                 }
 
-                permission_map.insert("action".to_string(), serde_json::json!(p.action.name.clone()));
+                if (p.action.refinements.is_none()) && (p.action.included_in.is_none()) && (p.action.implies.len() == 0) {
+                    permission_map.insert("action".to_string(), serde_json::json!(p.action.name.clone()));
+                } else {
+                    let mut action_map = serde_json::Map::new();
+                    action_map.insert("name".to_string(), serde_json::json!(p.action.name.clone()));
+                    if let Some(refinements) = &p.action.refinements {
+                        action_map.insert("refinement".to_string(), serde_json::json!(refinements));
+                    }
+                    if let Some(included_in) = &p.action.included_in {
+                        action_map.insert("includedIn".to_string(), serde_json::json!(included_in));
+                    }
+                    if p.action.implies.len() > 0 {
+                        action_map.insert("implies".to_string(), serde_json::json!(p.action.implies.iter().map(|a| a.name.clone()).collect::<Vec<_>>()));
+                    }
+                    permission_map.insert("action".to_string(), serde_json::Value::Object(action_map));
+                }
 
                 serde_json::Value::Object(permission_map)
             }).collect();
@@ -188,7 +203,22 @@ impl Serialize for SetPolicy {
                     }
                 }
 
-                prohibition_map.insert("action".to_string(), serde_json::json!(p.action.name.clone()));
+                if (p.action.refinements.is_none()) && (p.action.included_in.is_none()) && (p.action.implies.len() == 0) {
+                    prohibition_map.insert("action".to_string(), serde_json::json!(p.action.name.clone()));
+                } else {
+                    let mut action_map = serde_json::Map::new();
+                    action_map.insert("name".to_string(), serde_json::json!(p.action.name.clone()));
+                    if let Some(refinements) = &p.action.refinements {
+                        action_map.insert("refinement".to_string(), serde_json::json!(refinements));
+                    }
+                    if let Some(included_in) = &p.action.included_in {
+                        action_map.insert("includedIn".to_string(), serde_json::json!(included_in));
+                    }
+                    if p.action.implies.len() > 0 {
+                        action_map.insert("implies".to_string(), serde_json::json!(p.action.implies.iter().map(|a| a.name.clone()).collect::<Vec<_>>()));
+                    }
+                    prohibition_map.insert("action".to_string(), serde_json::Value::Object(action_map));
+                }
 
                 serde_json::Value::Object(prohibition_map)
             }).collect();
@@ -262,7 +292,22 @@ impl Serialize for SetPolicy {
                     obligation_map.insert("assignee".to_string(), serde_json::json!(p.assignee.uid.as_ref().unwrap_or(&String::new())));
                 }
 
-                obligation_map.insert("action".to_string(), serde_json::json!(p.action.name.clone()));
+                if (p.action.refinements.is_none()) && (p.action.included_in.is_none()) && (p.action.implies.len() == 0) {
+                    obligation_map.insert("action".to_string(), serde_json::json!(p.action.name.clone()));
+                } else {
+                    let mut action_map = serde_json::Map::new();
+                    action_map.insert("name".to_string(), serde_json::json!(p.action.name.clone()));
+                    if let Some(refinements) = &p.action.refinements {
+                        action_map.insert("refinement".to_string(), serde_json::json!(refinements));
+                    }
+                    if let Some(included_in) = &p.action.included_in {
+                        action_map.insert("includedIn".to_string(), serde_json::json!(included_in));
+                    }
+                    if p.action.implies.len() > 0 {
+                        action_map.insert("implies".to_string(), serde_json::json!(p.action.implies.iter().map(|a| a.name.clone()).collect::<Vec<_>>()));
+                    }
+                    obligation_map.insert("action".to_string(), serde_json::Value::Object(action_map));
+                }
 
                 // collect all consequences
                 let serialized_consequences: Vec<_> = p.consequence.iter().map(|d| {
@@ -270,7 +315,23 @@ impl Serialize for SetPolicy {
                     if let Some(uid) = &d.uid {
                         consequence_map.insert("uid".to_string(), serde_json::json!(uid));
                     }
-                    consequence_map.insert("action".to_string(), serde_json::json!(d.action.name.clone()));;
+                    if d.action.refinements.is_none() && d.action.included_in.is_none() && d.action.implies.len() == 0 {
+                        consequence_map.insert("action".to_string(), serde_json::json!(d.action.name.clone()));
+                    } else {
+                        let mut action_map = serde_json::Map::new();
+                        action_map.insert("name".to_string(), serde_json::json!(d.action.name.clone()));
+                        if let Some(refinements) = &d.action.refinements {
+                            // TODO remove some of the field names
+                            action_map.insert("refinement".to_string(), serde_json::json!(refinements));
+                        }
+                        if let Some(included_in) = &d.action.included_in {
+                            action_map.insert("includedIn".to_string(), serde_json::json!(included_in));
+                        }
+                        if d.action.implies.len() > 0 {
+                            action_map.insert("implies".to_string(), serde_json::json!(d.action.implies.iter().map(|a| a.name.clone()).collect::<Vec<_>>()));
+                        }
+                        consequence_map.insert("action".to_string(), serde_json::Value::Object(action_map));
+                    }
                     if let Some(relation) = &d.relation {
                         consequence_map.insert("relation".to_string(), serde_json::json!(relation.uid.as_ref().unwrap_or(&String::new())));
                     }
