@@ -2,7 +2,7 @@
 
 use serde::{Serialize, Serializer, ser::SerializeStruct};
 use crate::model::policy::{AgreementPolicy, OfferPolicy, SetPolicy};
-use crate::model::rule::{Rule, Permission, Prohibition, Obligation};
+use crate::model::rule::{Rule, Permission, Prohibition, Obligation, Duty};
 use crate::model::action::{Action, Refinements};
 use crate::model::constraint::{Constraint, LeftOperand, RightOperand};
 use crate::model::party::Party;
@@ -191,6 +191,37 @@ fn serialize_constraint(constraints: &Vec<Constraint>) -> Vec<serde_json::Map<St
 }
 
 
+fn serialize_duty(duties: &Vec<Duty>) -> Vec<serde_json::Map<String, serde_json::Value>> {
+    let mut serialized_duties = Vec::new();
+    for duty in duties {
+        let mut duty_map = serde_json::Map::new();
+        if let Some(uid) = &duty.uid {
+            duty_map.insert("uid".to_string(), serde_json::json!(uid));
+        }
+        if duty.action.refinements.is_none() && duty.action.included_in.is_none() && duty.action.implies.len() == 0 {
+            duty_map.insert("action".to_string(), serde_json::json!(duty.action.name.clone()));
+        } else {
+            let action_map = serialize_action(&duty.action);
+            duty_map.insert("action".to_string(), serde_json::Value::Object(action_map));
+        }
+        if duty.failures.len() > 0 {
+            let mut serialized_failures = Vec::new();
+            for failure in &duty.failures {
+                let serialized = serde_json::to_string(failure).expect("Failed to serialize failure");
+                serialized_failures.push(serialized);
+            }
+            duty_map.insert("failure".to_string(), serde_json::json!(serialized_failures));
+        }
+        if !duty.constraints.is_empty() {
+            let serialized_constraints = serialize_constraint(&duty.constraints);
+            duty_map.insert("constraint".to_string(), serde_json::json!(serialized_constraints));
+        }
+        serialized_duties.push(duty_map);
+    }
+    serialized_duties
+}
+
+
 fn serialize_party(party: &Party) -> serde_json::Map<String, serde_json::Value> {
     let mut assigner_map = serde_json::Map::new();
     if let Some(assigner_type) = &party.r#type {
@@ -257,6 +288,11 @@ fn serialize_permission(permission: &Permission) -> serde_json::Map<String, serd
     if permission.constraints.len() != 0 {
         let serialized_constraints = serialize_constraint(&permission.constraints);
         permission_map.insert("constraint".to_string(), serde_json::json!(serialized_constraints));
+    }
+
+    if permission.duties.len() != 0 {
+        let serialized_duties = serialize_duty(&permission.duties);
+        permission_map.insert("duty".to_string(), serde_json::json!(serialized_duties));
     }
 
     permission_map
