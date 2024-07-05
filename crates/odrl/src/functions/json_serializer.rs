@@ -345,6 +345,11 @@ fn serialize_prohibition(prohibition: &Prohibition) -> serde_json::Map<String, s
         prohibition_map.insert("constraint".to_string(), serde_json::json!(serialized_constraints));
     }
 
+    if prohibition.remedies.len() != 0 {
+        let serialized_duties = serialize_duty(&prohibition.remedies);
+        prohibition.insert("remedy".to_string(), serde_json::json!(serialized_duties));
+    }
+
     prohibition_map
 }
 
