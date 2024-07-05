@@ -180,6 +180,49 @@ impl Serialize for SetPolicy {
                     permission_map.insert("action".to_string(), serde_json::Value::Object(action_map));
                 }
 
+                if p.constraints.len() != 0 {
+                    let mut serialized_constraints = Vec::new();
+                    for constraint in &p.constraints {
+                        let mut constraint_map = serde_json::Map::new();
+                        // differentiate between literal and iri operands
+                        match &constraint.left_operand {
+                            LeftOperand::Literal(literal) => {
+                                constraint_map.insert("leftOperand".to_string(), serde_json::json!(literal));
+                            },
+                            LeftOperand::IRI(iri) => {
+                                constraint_map.insert("leftOperand".to_string(), serde_json::json!(iri));
+                            }
+                            LeftOperand::Reference(reference) => {
+                                constraint_map.insert("leftOperand".to_string(), serde_json::json!(reference));
+                            }
+                        }
+                        constraint_map.insert("operator".to_string(), serde_json::json!(constraint.operator));
+                        // differentiate between literal and iri operands
+                        match &constraint.right_operand {
+                            RightOperand::Literal(literal) => {
+                                constraint_map.insert("rightOperand".to_string(), serde_json::json!(literal));
+                            },
+                            RightOperand::IRI(iri) => {
+                                constraint_map.insert("rightOperand".to_string(), serde_json::json!(iri));
+                            }
+                            RightOperand::Reference(reference) => {
+                                constraint_map.insert("rightOperand".to_string(), serde_json::json!(reference));
+                            }
+                        }
+                        if let Some(data_type) = &constraint.data_type {
+                            constraint_map.insert("dataType".to_string(), serde_json::json!(data_type));
+                        }
+                        if let Some(unit) = &constraint.unit {
+                            constraint_map.insert("unit".to_string(), serde_json::json!(unit));
+                        }
+                        if !constraint.status.is_empty() {
+                            constraint_map.insert("status".to_string(), serde_json::json!(constraint.status));
+                        }
+                        serialized_constraints.push(constraint_map);
+                    }
+                    permission_map.insert("constraint".to_string(), serde_json::json!(serialized_constraints));
+                }
+
                 serde_json::Value::Object(permission_map)
             }).collect();
             state.serialize_field("permission", &serialized_permissions)?;
@@ -327,6 +370,49 @@ impl Serialize for SetPolicy {
                         action_map.insert("implies".to_string(), serde_json::json!(p.action.implies.iter().map(|a| a.name.clone()).collect::<Vec<_>>()));
                     }
                     prohibition_map.insert("action".to_string(), serde_json::Value::Object(action_map));
+                }
+
+                if p.constraints.len() != 0 {
+                    let mut serialized_constraints = Vec::new();
+                    for constraint in &p.constraints {
+                        let mut constraint_map = serde_json::Map::new();
+                        // differentiate between literal and iri operands
+                        match &constraint.left_operand {
+                            LeftOperand::Literal(literal) => {
+                                constraint_map.insert("leftOperand".to_string(), serde_json::json!(literal));
+                            },
+                            LeftOperand::IRI(iri) => {
+                                constraint_map.insert("leftOperand".to_string(), serde_json::json!(iri));
+                            }
+                            LeftOperand::Reference(reference) => {
+                                constraint_map.insert("leftOperand".to_string(), serde_json::json!(reference));
+                            }
+                        }
+                        constraint_map.insert("operator".to_string(), serde_json::json!(constraint.operator));
+                        // differentiate between literal and iri operands
+                        match &constraint.right_operand {
+                            RightOperand::Literal(literal) => {
+                                constraint_map.insert("rightOperand".to_string(), serde_json::json!(literal));
+                            },
+                            RightOperand::IRI(iri) => {
+                                constraint_map.insert("rightOperand".to_string(), serde_json::json!(iri));
+                            }
+                            RightOperand::Reference(reference) => {
+                                constraint_map.insert("rightOperand".to_string(), serde_json::json!(reference));
+                            }
+                        }
+                        if let Some(data_type) = &constraint.data_type {
+                            constraint_map.insert("dataType".to_string(), serde_json::json!(data_type));
+                        }
+                        if let Some(unit) = &constraint.unit {
+                            constraint_map.insert("unit".to_string(), serde_json::json!(unit));
+                        }
+                        if !constraint.status.is_empty() {
+                            constraint_map.insert("status".to_string(), serde_json::json!(constraint.status));
+                        }
+                        serialized_constraints.push(constraint_map);
+                    }
+                    prohibition_map.insert("constraint".to_string(), serde_json::json!(serialized_constraints));
                 }
 
                 serde_json::Value::Object(prohibition_map)
