@@ -3,7 +3,7 @@
 use serde::{Serialize, Serializer, ser::SerializeStruct};
 use crate::model::policy::{AgreementPolicy, OfferPolicy, SetPolicy};
 use crate::model::rule::{Rule, Permission, Prohibition, Obligation};
-use crate::model::action::Refinements;
+use crate::model::action::{Action, Refinements};
 use crate::model::constraint::{LeftOperand, RightOperand};
 
 impl Serialize for SetPolicy {
@@ -112,71 +112,7 @@ impl Serialize for SetPolicy {
                 if (p.action.refinements.is_none()) && (p.action.included_in.is_none()) && (p.action.implies.len() == 0) {
                     permission_map.insert("action".to_string(), serde_json::json!(p.action.name.clone()));
                 } else {
-                    let mut action_map = serde_json::Map::new();
-                    action_map.insert("name".to_string(), serde_json::json!(p.action.name.clone()));
-                    if let Some(refinements) = &p.action.refinements {
-                        // differentiate between constraints and logical constraints
-                        match refinements {
-                            Refinements::Constraints(constraints) => {
-                                let mut serialized_constraints = Vec::new();
-                                for constraint in constraints {
-                                    let mut constraint_map = serde_json::Map::new();
-                                    // differentiate between literal and iri operands
-                                    match &constraint.left_operand {
-                                        LeftOperand::Literal(literal) => {
-                                            constraint_map.insert("leftOperand".to_string(), serde_json::json!(literal));
-                                        },
-                                        LeftOperand::IRI(iri) => {
-                                            constraint_map.insert("leftOperand".to_string(), serde_json::json!(iri));
-                                        }
-                                        LeftOperand::Reference(reference) => {
-                                            constraint_map.insert("leftOperand".to_string(), serde_json::json!(reference));
-                                        }
-                                    }
-                                    constraint_map.insert("operator".to_string(), serde_json::json!(constraint.operator));
-                                    // differentiate between literal and iri operands
-                                    match &constraint.right_operand {
-                                        RightOperand::Literal(literal) => {
-                                            constraint_map.insert("rightOperand".to_string(), serde_json::json!(literal));
-                                        },
-                                        RightOperand::IRI(iri) => {
-                                            constraint_map.insert("rightOperand".to_string(), serde_json::json!(iri));
-                                        }
-                                        RightOperand::Reference(reference) => {
-                                            constraint_map.insert("rightOperand".to_string(), serde_json::json!(reference));
-                                        }
-                                    }
-                                    if let Some(data_type) = &constraint.data_type {
-                                        constraint_map.insert("dataType".to_string(), serde_json::json!(data_type));
-                                    }
-                                    if let Some(unit) = &constraint.unit {
-                                        constraint_map.insert("unit".to_string(), serde_json::json!(unit));
-                                    }
-                                    if !constraint.status.is_empty() {
-                                        constraint_map.insert("status".to_string(), serde_json::json!(constraint.status));
-                                    }
-                                    serialized_constraints.push(constraint_map);
-                                }
-                                action_map.insert("refinement".to_string(), serde_json::json!(serialized_constraints));
-                            },
-                            Refinements::LogicalConstraints(logical_constraints) => {
-                                for logical_constraint in logical_constraints {
-                                    let mut logical_constraint_map = serde_json::Map::new();
-                                    if let Some(operand) = &logical_constraint.operand {
-                                        logical_constraint_map.insert(serde_json::json!(operand.0).to_string().replace("\"", ""), serde_json::json!(operand.1));
-                                    }
-                                    let serialized_logical_constraint = serde_json::json!(logical_constraint_map);
-                                    action_map.insert("refinement".to_string(), serialized_logical_constraint);
-                                }
-                            }
-                        }
-                    }
-                    if let Some(included_in) = &p.action.included_in {
-                        action_map.insert("includedIn".to_string(), serde_json::json!(included_in));
-                    }
-                    if p.action.implies.len() > 0 {
-                        action_map.insert("implies".to_string(), serde_json::json!(p.action.implies.iter().map(|a| a.name.clone()).collect::<Vec<_>>()));
-                    }
+                    let action_map = serialize_action(&p.action);
                     permission_map.insert("action".to_string(), serde_json::Value::Object(action_map));
                 }
 
@@ -304,71 +240,7 @@ impl Serialize for SetPolicy {
                 if (p.action.refinements.is_none()) && (p.action.included_in.is_none()) && (p.action.implies.len() == 0) {
                     prohibition_map.insert("action".to_string(), serde_json::json!(p.action.name.clone()));
                 } else {
-                    let mut action_map = serde_json::Map::new();
-                    action_map.insert("name".to_string(), serde_json::json!(p.action.name.clone()));
-                    if let Some(refinements) = &p.action.refinements {
-                        // differentiate between constraints and logical constraints
-                        match refinements {
-                            Refinements::Constraints(constraints) => {
-                                let mut serialized_constraints = Vec::new();
-                                for constraint in constraints {
-                                    let mut constraint_map = serde_json::Map::new();
-                                    // differentiate between literal and iri operands
-                                    match &constraint.left_operand {
-                                        LeftOperand::Literal(literal) => {
-                                            constraint_map.insert("leftOperand".to_string(), serde_json::json!(literal));
-                                        },
-                                        LeftOperand::IRI(iri) => {
-                                            constraint_map.insert("leftOperand".to_string(), serde_json::json!(iri));
-                                        }
-                                        LeftOperand::Reference(reference) => {
-                                            constraint_map.insert("leftOperand".to_string(), serde_json::json!(reference));
-                                        }
-                                    }
-                                    constraint_map.insert("operator".to_string(), serde_json::json!(constraint.operator));
-                                    // differentiate between literal and iri operands
-                                    match &constraint.right_operand {
-                                        RightOperand::Literal(literal) => {
-                                            constraint_map.insert("rightOperand".to_string(), serde_json::json!(literal));
-                                        },
-                                        RightOperand::IRI(iri) => {
-                                            constraint_map.insert("rightOperand".to_string(), serde_json::json!(iri));
-                                        }
-                                        RightOperand::Reference(reference) => {
-                                            constraint_map.insert("rightOperand".to_string(), serde_json::json!(reference));
-                                        }
-                                    }
-                                    if let Some(data_type) = &constraint.data_type {
-                                        constraint_map.insert("dataType".to_string(), serde_json::json!(data_type));
-                                    }
-                                    if let Some(unit) = &constraint.unit {
-                                        constraint_map.insert("unit".to_string(), serde_json::json!(unit));
-                                    }
-                                    if !constraint.status.is_empty() {
-                                        constraint_map.insert("status".to_string(), serde_json::json!(constraint.status));
-                                    }
-                                    serialized_constraints.push(constraint_map);
-                                }
-                                action_map.insert("refinement".to_string(), serde_json::json!(serialized_constraints));
-                            },
-                            Refinements::LogicalConstraints(logical_constraints) => {
-                                for logical_constraint in logical_constraints {
-                                    let mut logical_constraint_map = serde_json::Map::new();
-                                    if let Some(operand) = &logical_constraint.operand {
-                                        logical_constraint_map.insert(serde_json::json!(operand.0).to_string().replace("\"", ""), serde_json::json!(operand.1));
-                                    }
-                                    let serialized_logical_constraint = serde_json::json!(logical_constraint_map);
-                                    action_map.insert("refinement".to_string(), serialized_logical_constraint);
-                                }
-                            }
-                        }
-                    }
-                    if let Some(included_in) = &p.action.included_in {
-                        action_map.insert("includedIn".to_string(), serde_json::json!(included_in));
-                    }
-                    if p.action.implies.len() > 0 {
-                        action_map.insert("implies".to_string(), serde_json::json!(p.action.implies.iter().map(|a| a.name.clone()).collect::<Vec<_>>()));
-                    }
+                    let action_map = serialize_action(&p.action);
                     prohibition_map.insert("action".to_string(), serde_json::Value::Object(action_map));
                 }
 
@@ -490,71 +362,7 @@ impl Serialize for SetPolicy {
                 if (p.action.refinements.is_none()) && (p.action.included_in.is_none()) && (p.action.implies.len() == 0) {
                     obligation_map.insert("action".to_string(), serde_json::json!(p.action.name.clone()));
                 } else {
-                    let mut action_map = serde_json::Map::new();
-                    action_map.insert("name".to_string(), serde_json::json!(p.action.name.clone()));
-                    if let Some(refinements) = &p.action.refinements {
-                        // differentiate between constraints and logical constraints
-                        match refinements {
-                            Refinements::Constraints(constraints) => {
-                                let mut serialized_constraints = Vec::new();
-                                for constraint in constraints {
-                                    let mut constraint_map = serde_json::Map::new();
-                                    // differentiate between literal and iri operands
-                                    match &constraint.left_operand {
-                                        LeftOperand::Literal(literal) => {
-                                            constraint_map.insert("leftOperand".to_string(), serde_json::json!(literal));
-                                        },
-                                        LeftOperand::IRI(iri) => {
-                                            constraint_map.insert("leftOperand".to_string(), serde_json::json!(iri));
-                                        }
-                                        LeftOperand::Reference(reference) => {
-                                            constraint_map.insert("leftOperand".to_string(), serde_json::json!(reference));
-                                        }
-                                    }
-                                    constraint_map.insert("operator".to_string(), serde_json::json!(constraint.operator));
-                                    // differentiate between literal and iri operands
-                                    match &constraint.right_operand {
-                                        RightOperand::Literal(literal) => {
-                                            constraint_map.insert("rightOperand".to_string(), serde_json::json!(literal));
-                                        },
-                                        RightOperand::IRI(iri) => {
-                                            constraint_map.insert("rightOperand".to_string(), serde_json::json!(iri));
-                                        }
-                                        RightOperand::Reference(reference) => {
-                                            constraint_map.insert("rightOperand".to_string(), serde_json::json!(reference));
-                                        }
-                                    }
-                                    if let Some(data_type) = &constraint.data_type {
-                                        constraint_map.insert("dataType".to_string(), serde_json::json!(data_type));
-                                    }
-                                    if let Some(unit) = &constraint.unit {
-                                        constraint_map.insert("unit".to_string(), serde_json::json!(unit));
-                                    }
-                                    if !constraint.status.is_empty() {
-                                        constraint_map.insert("status".to_string(), serde_json::json!(constraint.status));
-                                    }
-                                    serialized_constraints.push(constraint_map);
-                                }
-                                action_map.insert("refinement".to_string(), serde_json::json!(serialized_constraints));
-                            },
-                            Refinements::LogicalConstraints(logical_constraints) => {
-                                for logical_constraint in logical_constraints {
-                                    let mut logical_constraint_map = serde_json::Map::new();
-                                    if let Some(operand) = &logical_constraint.operand {
-                                        logical_constraint_map.insert(serde_json::json!(operand.0).to_string().replace("\"", ""), serde_json::json!(operand.1));
-                                    }
-                                    let serialized_logical_constraint = serde_json::json!(logical_constraint_map);
-                                    action_map.insert("refinement".to_string(), serialized_logical_constraint);
-                                }
-                            }
-                        }
-                    }
-                    if let Some(included_in) = &p.action.included_in {
-                        action_map.insert("includedIn".to_string(), serde_json::json!(included_in));
-                    }
-                    if p.action.implies.len() > 0 {
-                        action_map.insert("implies".to_string(), serde_json::json!(p.action.implies.iter().map(|a| a.name.clone()).collect::<Vec<_>>()));
-                    }
+                    let action_map = serialize_action(&p.action);
                     obligation_map.insert("action".to_string(), serde_json::Value::Object(action_map));
                 }
 
@@ -567,71 +375,7 @@ impl Serialize for SetPolicy {
                     if d.action.refinements.is_none() && d.action.included_in.is_none() && d.action.implies.len() == 0 {
                         consequence_map.insert("action".to_string(), serde_json::json!(d.action.name.clone()));
                     } else {
-                        let mut action_map = serde_json::Map::new();
-                        action_map.insert("name".to_string(), serde_json::json!(d.action.name.clone()));
-                        if let Some(refinements) = &d.action.refinements {
-                            // differentiate between constraints and logical constraints
-                            match refinements {
-                                Refinements::Constraints(constraints) => {
-                                    let mut serialized_constraints = Vec::new();
-                                    for constraint in constraints {
-                                        let mut constraint_map = serde_json::Map::new();
-                                        // differentiate between literal and iri operands
-                                        match &constraint.left_operand {
-                                            LeftOperand::Literal(literal) => {
-                                                constraint_map.insert("leftOperand".to_string(), serde_json::json!(literal));
-                                            },
-                                            LeftOperand::IRI(iri) => {
-                                                constraint_map.insert("leftOperand".to_string(), serde_json::json!(iri));
-                                            }
-                                            LeftOperand::Reference(reference) => {
-                                                constraint_map.insert("leftOperand".to_string(), serde_json::json!(reference));
-                                            }
-                                        }
-                                        constraint_map.insert("operator".to_string(), serde_json::json!(constraint.operator));
-                                        // differentiate between literal and iri operands
-                                        match &constraint.right_operand {
-                                            RightOperand::Literal(literal) => {
-                                                constraint_map.insert("rightOperand".to_string(), serde_json::json!(literal));
-                                            },
-                                            RightOperand::IRI(iri) => {
-                                                constraint_map.insert("rightOperand".to_string(), serde_json::json!(iri));
-                                            }
-                                            RightOperand::Reference(reference) => {
-                                                constraint_map.insert("rightOperand".to_string(), serde_json::json!(reference));
-                                            }
-                                        }
-                                        if let Some(data_type) = &constraint.data_type {
-                                            constraint_map.insert("dataType".to_string(), serde_json::json!(data_type));
-                                        }
-                                        if let Some(unit) = &constraint.unit {
-                                            constraint_map.insert("unit".to_string(), serde_json::json!(unit));
-                                        }
-                                        if !constraint.status.is_empty() {
-                                            constraint_map.insert("status".to_string(), serde_json::json!(constraint.status));
-                                        }
-                                        serialized_constraints.push(constraint_map);
-                                    }
-                                    action_map.insert("refinement".to_string(), serde_json::json!(serialized_constraints));
-                                },
-                                Refinements::LogicalConstraints(logical_constraints) => {
-                                    for logical_constraint in logical_constraints {
-                                        let mut logical_constraint_map = serde_json::Map::new();
-                                        if let Some(operand) = &logical_constraint.operand {
-                                            logical_constraint_map.insert(serde_json::json!(operand.0).to_string().replace("\"", ""), serde_json::json!(operand.1));
-                                        }
-                                        let serialized_logical_constraint = serde_json::json!(logical_constraint_map);
-                                        action_map.insert("refinement".to_string(), serialized_logical_constraint);
-                                    }
-                                }
-                            }
-                        }
-                        if let Some(included_in) = &d.action.included_in {
-                            action_map.insert("includedIn".to_string(), serde_json::json!(included_in));
-                        }
-                        if d.action.implies.len() > 0 {
-                            action_map.insert("implies".to_string(), serde_json::json!(d.action.implies.iter().map(|a| a.name.clone()).collect::<Vec<_>>()));
-                        }
+                        let action_map = serialize_action(&d.action);
                         consequence_map.insert("action".to_string(), serde_json::Value::Object(action_map));
                     }
                     if let Some(relation) = &d.relation {
@@ -701,4 +445,74 @@ impl Serialize for AgreementPolicy {
         let mut state = serializer.serialize_struct("AgreementPolicy", 8)?;
         state.end()
     }
+}
+
+
+fn serialize_action(action: &Action) -> serde_json::Map<String, serde_json::Value> {
+    let mut action_map = serde_json::Map::new();
+    action_map.insert("name".to_string(), serde_json::json!(action.name.clone()));
+    if let Some(refinements) = &action.refinements {
+        // differentiate between constraints and logical constraints
+        match refinements {
+            Refinements::Constraints(constraints) => {
+                let mut serialized_constraints = Vec::new();
+                for constraint in constraints {
+                    let mut constraint_map = serde_json::Map::new();
+                    // differentiate between literal and iri operands
+                    match &constraint.left_operand {
+                        LeftOperand::Literal(literal) => {
+                            constraint_map.insert("leftOperand".to_string(), serde_json::json!(literal));
+                        },
+                        LeftOperand::IRI(iri) => {
+                            constraint_map.insert("leftOperand".to_string(), serde_json::json!(iri));
+                        }
+                        LeftOperand::Reference(reference) => {
+                            constraint_map.insert("leftOperand".to_string(), serde_json::json!(reference));
+                        }
+                    }
+                    constraint_map.insert("operator".to_string(), serde_json::json!(constraint.operator));
+                    // differentiate between literal and iri operands
+                    match &constraint.right_operand {
+                        RightOperand::Literal(literal) => {
+                            constraint_map.insert("rightOperand".to_string(), serde_json::json!(literal));
+                        },
+                        RightOperand::IRI(iri) => {
+                            constraint_map.insert("rightOperand".to_string(), serde_json::json!(iri));
+                        }
+                        RightOperand::Reference(reference) => {
+                            constraint_map.insert("rightOperand".to_string(), serde_json::json!(reference));
+                        }
+                    }
+                    if let Some(data_type) = &constraint.data_type {
+                        constraint_map.insert("dataType".to_string(), serde_json::json!(data_type));
+                    }
+                    if let Some(unit) = &constraint.unit {
+                        constraint_map.insert("unit".to_string(), serde_json::json!(unit));
+                    }
+                    if !constraint.status.is_empty() {
+                        constraint_map.insert("status".to_string(), serde_json::json!(constraint.status));
+                    }
+                    serialized_constraints.push(constraint_map);
+                }
+                action_map.insert("refinement".to_string(), serde_json::json!(serialized_constraints));
+            },
+            Refinements::LogicalConstraints(logical_constraints) => {
+                for logical_constraint in logical_constraints {
+                    let mut logical_constraint_map = serde_json::Map::new();
+                    if let Some(operand) = &logical_constraint.operand {
+                        logical_constraint_map.insert(serde_json::json!(operand.0).to_string().replace("\"", ""), serde_json::json!(operand.1));
+                    }
+                    let serialized_logical_constraint = serde_json::json!(logical_constraint_map);
+                    action_map.insert("refinement".to_string(), serialized_logical_constraint);
+                }
+            }
+        }
+    }
+    if let Some(included_in) = &action.included_in {
+        action_map.insert("includedIn".to_string(), serde_json::json!(included_in));
+    }
+    if action.implies.len() > 0 {
+        action_map.insert("implies".to_string(), serde_json::json!(action.implies.iter().map(|a| a.name.clone()).collect::<Vec<_>>()));
+    }
+    action_map
 }
