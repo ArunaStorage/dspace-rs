@@ -63,51 +63,7 @@ impl Serialize for SetPolicy {
 
         if !prohibitions.is_empty() {
             let serialized_prohibitions: Vec<_> = prohibitions.iter().map(|p| {
-                let mut prohibition_map = serde_json::Map::new();
-
-                let mut target_map = serde_json::Map::new();
-                if let Some(target_type) = &p.target.edc_type {
-                    target_map.insert("@type".to_string(), serde_json::json!(target_type));
-                }
-                if let Some(target_uid) = &p.target.uid {
-                    target_map.insert("uid".to_string(), serde_json::json!(target_uid));
-                }
-                if target_map.len() > 1 {
-                    prohibition_map.insert("target".to_string(), serde_json::Value::Object(target_map));
-                } else {
-                    prohibition_map.insert("target".to_string(), serde_json::json!(p.target.uid.as_ref().unwrap_or(&String::new())));
-                }
-
-                if let Some(assigner) = &p.assigner {
-                    let assigner_map = serialize_party(assigner);
-                    if assigner_map.len() > 1 {
-                        prohibition_map.insert("assigner".to_string(), serde_json::Value::Object(assigner_map));
-                    } else {
-                        prohibition_map.insert("assigner".to_string(), serde_json::json!(assigner.uid.as_ref().unwrap_or(&String::new())));
-                    }
-                }
-
-                if let Some(assignee) = &p.assignee {
-                    let assignee_map = serialize_party(assignee);
-                    if assignee_map.len() > 1 {
-                        prohibition_map.insert("assignee".to_string(), serde_json::Value::Object(assignee_map));
-                    } else {
-                        prohibition_map.insert("assignee".to_string(), serde_json::json!(assignee.uid.as_ref().unwrap_or(&String::new())));
-                    }
-                }
-
-                if (p.action.refinements.is_none()) && (p.action.included_in.is_none()) && (p.action.implies.len() == 0) {
-                    prohibition_map.insert("action".to_string(), serde_json::json!(p.action.name.clone()));
-                } else {
-                    let action_map = serialize_action(&p.action);
-                    prohibition_map.insert("action".to_string(), serde_json::Value::Object(action_map));
-                }
-
-                if p.constraints.len() != 0 {
-                    let serialized_constraints = serialize_constraint(&p.constraints);
-                    prohibition_map.insert("constraint".to_string(), serde_json::json!(serialized_constraints));
-                }
-
+                let prohibition_map = serialize_prohibition(p);
                 serde_json::Value::Object(prohibition_map)
             }).collect();
             state.serialize_field("prohibition", &serialized_prohibitions)?;
@@ -387,4 +343,54 @@ fn serialize_permission(permission: &Permission) -> serde_json::Map<String, serd
     }
 
     permission_map
+}
+
+
+fn serialize_prohibition(prohibition: &Prohibition) -> serde_json::Map<String, serde_json::Value> {
+    let mut prohibition_map = serde_json::Map::new();
+
+    let mut target_map = serde_json::Map::new();
+    if let Some(target_type) = &prohibition.target.edc_type {
+        target_map.insert("@type".to_string(), serde_json::json!(target_type));
+    }
+    if let Some(target_uid) = &prohibition.target.uid {
+        target_map.insert("uid".to_string(), serde_json::json!(target_uid));
+    }
+    if target_map.len() > 1 {
+        prohibition_map.insert("target".to_string(), serde_json::Value::Object(target_map));
+    } else {
+        prohibition_map.insert("target".to_string(), serde_json::json!(prohibition.target.uid.as_ref().unwrap_or(&String::new())));
+    }
+
+    if let Some(assigner) = &prohibition.assigner {
+        let assigner_map = serialize_party(assigner);
+        if assigner_map.len() > 1 {
+            prohibition_map.insert("assigner".to_string(), serde_json::Value::Object(assigner_map));
+        } else {
+            prohibition_map.insert("assigner".to_string(), serde_json::json!(assigner.uid.as_ref().unwrap_or(&String::new())));
+        }
+    }
+
+    if let Some(assignee) = &prohibition.assignee {
+        let assignee_map = serialize_party(assignee);
+        if assignee_map.len() > 1 {
+            prohibition_map.insert("assignee".to_string(), serde_json::Value::Object(assignee_map));
+        } else {
+            prohibition_map.insert("assignee".to_string(), serde_json::json!(assignee.uid.as_ref().unwrap_or(&String::new())));
+        }
+    }
+
+    if (prohibition.action.refinements.is_none()) && (prohibition.action.included_in.is_none()) && (prohibition.action.implies.len() == 0) {
+        prohibition_map.insert("action".to_string(), serde_json::json!(prohibition.action.name.clone()));
+    } else {
+        let action_map = serialize_action(&prohibition.action);
+        prohibition_map.insert("action".to_string(), serde_json::Value::Object(action_map));
+    }
+
+    if prohibition.constraints.len() != 0 {
+        let serialized_constraints = serialize_constraint(&prohibition.constraints);
+        prohibition_map.insert("constraint".to_string(), serde_json::json!(serialized_constraints));
+    }
+
+    prohibition_map
 }
