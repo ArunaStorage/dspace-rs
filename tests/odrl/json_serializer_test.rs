@@ -8,7 +8,7 @@ mod json_ld_serializer_test {
     use odrl::model::asset::Asset;
     use odrl::model::constraint::{Constraint, LeftOperand, Operator, RightOperand, LogicalConstraint, LogicalOperator};
     use odrl::model::party::Party;
-    use odrl::model::policy::{SetPolicy, OfferPolicy};
+    use odrl::model::policy::{SetPolicy, OfferPolicy, AgreementPolicy};
     use odrl::model::rule::{Rule, Permission, Prohibition, Obligation, Duty};
 
     #[test]
@@ -267,6 +267,47 @@ mod json_ld_serializer_test {
             "uid": "https://example.com/policy:1011",
             "profile": "https://example.com/odrl:profile:01",
             "assigner": "https://example.com/party:org:abc",
+            "permission": [{
+                "target": "https://example.com/asset:9898.movie",
+                "action": "play"
+            }]
+        }"#.to_string();
+
+        assert_eq!(
+            serialized_policy.parse::<serde_json::Value>().unwrap(),
+            expected_policy.parse::<serde_json::Value>().unwrap()
+        );
+    }
+
+    #[test]
+    fn test_agreement_policy_serialize() {
+        let action = Action::new("play", None, None, vec![]);
+        let mut asset = Asset::default();
+        asset.uid = Some("https://example.com/asset:9898.movie".to_string());
+        let mut permission = Permission::default();
+        permission.target = asset;
+        permission.action = action;
+
+        let mut assigner = Party::default();
+        assigner.uid = Some("https://example.com/party:org:abc".to_string());
+        let mut assignee = Party::default();
+        assignee.uid = Some("https://example.com/party:person:billie".to_string());
+
+        let mut policy = AgreementPolicy::default();
+        policy.uid = "https://example.com/policy:1012".to_string();
+        policy.rules = vec![Rule::Permission(permission)];
+        policy.assigner = assigner;
+        policy.assignee = assignee;
+        policy.profiles = vec!["https://example.com/odrl:profile:01".to_string()];
+
+        let serialized_policy = serde_json::to_string_pretty(&policy).unwrap();
+        let expected_policy = r#"
+        {
+            "@type": "Agreement",
+            "uid": "https://example.com/policy:1012",
+            "profile": "https://example.com/odrl:profile:01",
+            "assigner": "https://example.com/party:org:abc",
+            "assignee": "https://example.com/party:person:billie",
             "permission": [{
                 "target": "https://example.com/asset:9898.movie",
                 "action": "play"
