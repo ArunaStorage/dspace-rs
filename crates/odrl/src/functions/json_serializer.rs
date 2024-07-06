@@ -1,5 +1,3 @@
-// TODO: Serialize rules manually since they are represented as arrays of permissions, prohibitions and obligations
-
 use serde::{Serialize, Serializer, ser::SerializeStruct};
 use crate::model::policy::{AgreementPolicy, OfferPolicy, SetPolicy};
 use crate::model::rule::{Rule, Permission, Prohibition, Obligation, Duty};
@@ -95,8 +93,85 @@ impl Serialize for OfferPolicy {
     where
         S: Serializer
     {
-        // TODO
-        let mut state = serializer.serialize_struct("OfferPolicy", 7)?;
+        // docs.rs: len does not include fields which are skipped with SerializeStruct::skip_field.
+        let mut state = serializer.serialize_struct("OfferPolicy", 6)?;
+        state.serialize_field("@type", "Offer")?;
+        state.serialize_field("uid", &self.uid)?;
+        if !self.profiles.is_empty() {
+            if self.profiles.len() == 1 {
+                state.serialize_field("profile", &self.profiles[0])?;
+            } else {
+                state.serialize_field("profile", &self.profiles)?;
+            }
+        }
+        if !self.inherit_from.is_empty() {
+            if self.inherit_from.len() == 1 {
+                state.serialize_field("inheritFrom", &self.inherit_from[0])?;
+            } else {
+                state.serialize_field("inheritFrom", &self.inherit_from)?;
+            }
+        }
+        let assigner_map = serialize_party(&self.assigner);
+        if assigner_map.len() > 1 {
+            state.serialize_field("assigner", &serde_json::json!(assigner_map))?;
+        } else {
+            state.serialize_field("assigner", &serde_json::json!(self.assigner.uid.as_ref().unwrap_or(&String::new())))?;
+        }
+        if let Some(conflict) = &self.conflict {
+            state.serialize_field("conflict", conflict)?;
+        }
+        if !self.obligation.is_empty() {
+            state.serialize_field("obligation", &self.obligation)?;
+        }
+
+        let permissions: Vec<&Permission> = self.rules.iter().filter_map(|rule| {
+            if let Rule::Permission(permission) = rule {
+                Some(permission)
+            } else {
+                None
+            }
+        }).collect();
+
+        if !permissions.is_empty() {
+            let serialized_permissions: Vec<_> = permissions.iter().map(|p| {
+                let permission_map = serialize_permission(p);
+                serde_json::Value::Object(permission_map)
+            }).collect();
+            state.serialize_field("permission", &serialized_permissions)?;
+        }
+
+        let prohibitions: Vec<&Prohibition> = self.rules.iter().filter_map(|rule| {
+            if let Rule::Prohibition(prohibition) = rule {
+                Some(prohibition)
+            } else {
+                None
+            }
+        }).collect();
+
+        if !prohibitions.is_empty() {
+            let serialized_prohibitions: Vec<_> = prohibitions.iter().map(|p| {
+                let prohibition_map = serialize_prohibition(p);
+                serde_json::Value::Object(prohibition_map)
+            }).collect();
+            state.serialize_field("prohibition", &serialized_prohibitions)?;
+        }
+
+        let obligations: Vec<&Obligation> = self.rules.iter().filter_map(|rule| {
+            if let Rule::Obligation(obligation) = rule {
+                Some(obligation)
+            } else {
+                None
+            }
+        }).collect();
+
+        if !obligations.is_empty() {
+            let serialized_obligations: Vec<_> = obligations.iter().map(|p| {
+                let obligation_map = serialize_obligation(p);
+                serde_json::Value::Object(obligation_map)
+            }).collect();
+            state.serialize_field("obligation", &serialized_obligations)?;
+        }
+
         state.end()
     }
 }
@@ -107,8 +182,91 @@ impl Serialize for AgreementPolicy {
     where
         S: Serializer
     {
-        // TODO
-        let mut state = serializer.serialize_struct("AgreementPolicy", 8)?;
+        // docs.rs: len does not include fields which are skipped with SerializeStruct::skip_field.
+        let mut state = serializer.serialize_struct("AgreementPolicy", 7)?;
+        state.serialize_field("@type", "Agreement")?;
+        state.serialize_field("uid", &self.uid)?;
+        if !self.profiles.is_empty() {
+            if self.profiles.len() == 1 {
+                state.serialize_field("profile", &self.profiles[0])?;
+            } else {
+                state.serialize_field("profile", &self.profiles)?;
+            }
+        }
+        if !self.inherit_from.is_empty() {
+            if self.inherit_from.len() == 1 {
+                state.serialize_field("inheritFrom", &self.inherit_from[0])?;
+            } else {
+                state.serialize_field("inheritFrom", &self.inherit_from)?;
+            }
+        }
+        let assigner_map = serialize_party(&self.assigner);
+        if assigner_map.len() > 1 {
+            state.serialize_field("assigner", &serde_json::json!(assigner_map))?;
+        } else {
+            state.serialize_field("assigner", &serde_json::json!(self.assigner.uid.as_ref().unwrap_or(&String::new())))?;
+        }
+        let assignee_map = serialize_party(&self.assignee);
+        if assignee_map.len() > 1 {
+            state.serialize_field("assignee", &serde_json::json!(assignee_map))?;
+        } else {
+            state.serialize_field("assignee", &serde_json::json!(self.assignee.uid.as_ref().unwrap_or(&String::new())))?;
+        }
+        if let Some(conflict) = &self.conflict {
+            state.serialize_field("conflict", conflict)?;
+        }
+        if !self.obligation.is_empty() {
+            state.serialize_field("obligation", &self.obligation)?;
+        }
+
+        let permissions: Vec<&Permission> = self.rules.iter().filter_map(|rule| {
+            if let Rule::Permission(permission) = rule {
+                Some(permission)
+            } else {
+                None
+            }
+        }).collect();
+
+        if !permissions.is_empty() {
+            let serialized_permissions: Vec<_> = permissions.iter().map(|p| {
+                let permission_map = serialize_permission(p);
+                serde_json::Value::Object(permission_map)
+            }).collect();
+            state.serialize_field("permission", &serialized_permissions)?;
+        }
+
+        let prohibitions: Vec<&Prohibition> = self.rules.iter().filter_map(|rule| {
+            if let Rule::Prohibition(prohibition) = rule {
+                Some(prohibition)
+            } else {
+                None
+            }
+        }).collect();
+
+        if !prohibitions.is_empty() {
+            let serialized_prohibitions: Vec<_> = prohibitions.iter().map(|p| {
+                let prohibition_map = serialize_prohibition(p);
+                serde_json::Value::Object(prohibition_map)
+            }).collect();
+            state.serialize_field("prohibition", &serialized_prohibitions)?;
+        }
+
+        let obligations: Vec<&Obligation> = self.rules.iter().filter_map(|rule| {
+            if let Rule::Obligation(obligation) = rule {
+                Some(obligation)
+            } else {
+                None
+            }
+        }).collect();
+
+        if !obligations.is_empty() {
+            let serialized_obligations: Vec<_> = obligations.iter().map(|p| {
+                let obligation_map = serialize_obligation(p);
+                serde_json::Value::Object(obligation_map)
+            }).collect();
+            state.serialize_field("obligation", &serialized_obligations)?;
+        }
+
         state.end()
     }
 }
