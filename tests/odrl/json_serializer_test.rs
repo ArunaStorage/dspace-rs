@@ -1,7 +1,7 @@
 // Examples based on https://www.w3.org/TR/odrl-model
 
 #[cfg(test)]
-mod json_ld_serializer_test {
+mod json_serializer_test {
     extern crate odrl;
 
     use odrl::model::action::{Action, Refinements};
