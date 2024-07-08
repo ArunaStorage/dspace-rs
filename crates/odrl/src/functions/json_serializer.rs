@@ -382,7 +382,7 @@ fn serialize_duty(duties: &Vec<Duty>) -> Vec<serde_json::Map<String, serde_json:
 
 fn serialize_party(party: &Party) -> serde_json::Map<String, serde_json::Value> {
     let mut assigner_map = serde_json::Map::new();
-    if let Some(assigner_type) = &party.r#type {
+    if let Some(assigner_type) = &party.party_type {
         assigner_map.insert("@type".to_string(), serde_json::json!(assigner_type));
     }
     if let Some(assigner_uid) = &party.uid {

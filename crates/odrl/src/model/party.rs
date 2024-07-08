@@ -44,18 +44,18 @@ pub struct Party {
     #[serde(skip_serializing)]
     pub function: Function,
     #[serde(rename = "@type", skip_serializing_if = "Option::is_none")]
-    pub r#type: Option<PartyType>,
+    pub party_type: Option<PartyType>,
 
 }
 
 impl Party {
 
-    pub fn new(uid: Option<IRI>, part_of: Vec<PartyCollection>, function: Function, r#type: Option<PartyType>) -> Party {
+    pub fn new(uid: Option<IRI>, part_of: Vec<PartyCollection>, function: Function, party_type: Option<PartyType>) -> Party {
         Party {
             uid,
             part_of,
             function,
-            r#type
+            party_type
         }
     }
 
