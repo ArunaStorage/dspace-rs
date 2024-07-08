@@ -4,6 +4,7 @@ use crate::model::rule::{Rule, Permission, Prohibition, Obligation, Duty};
 use crate::model::action::{Action, Refinements};
 use crate::model::constraint::{Constraint, LeftOperand, RightOperand};
 use crate::model::party::Party;
+use crate::model::asset::Asset;
 
 impl Serialize for SetPolicy {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -402,16 +403,22 @@ fn serialize_party(party: &Party) -> serde_json::Map<String, serde_json::Value> 
 }
 
 
+fn serialize_target(target: &Asset) -> serde_json::Map<String, serde_json::Value> {
+    let mut target_map = serde_json::Map::new();
+    if let Some(target_type) = &target.edc_type {
+        target_map.insert("@type".to_string(), serde_json::json!(target_type));
+    }
+    if let Some(target_uid) = &target.uid {
+        target_map.insert("uid".to_string(), serde_json::json!(target_uid));
+    }
+    target_map
+}
+
+
 fn serialize_permission(permission: &Permission) -> serde_json::Map<String, serde_json::Value> {
     let mut permission_map = serde_json::Map::new();
 
-    let mut target_map = serde_json::Map::new();
-    if let Some(target_type) = &permission.target.edc_type {
-        target_map.insert("@type".to_string(), serde_json::json!(target_type));
-    }
-    if let Some(target_uid) = &permission.target.uid {
-        target_map.insert("uid".to_string(), serde_json::json!(target_uid));
-    }
+    let target_map = serialize_target(&permission.target);
     if target_map.len() > 1 {
         permission_map.insert("target".to_string(), serde_json::Value::Object(target_map));
     } else {
@@ -460,13 +467,7 @@ fn serialize_permission(permission: &Permission) -> serde_json::Map<String, serd
 fn serialize_prohibition(prohibition: &Prohibition) -> serde_json::Map<String, serde_json::Value> {
     let mut prohibition_map = serde_json::Map::new();
 
-    let mut target_map = serde_json::Map::new();
-    if let Some(target_type) = &prohibition.target.edc_type {
-        target_map.insert("@type".to_string(), serde_json::json!(target_type));
-    }
-    if let Some(target_uid) = &prohibition.target.uid {
-        target_map.insert("uid".to_string(), serde_json::json!(target_uid));
-    }
+    let target_map = serialize_target(&prohibition.target);
     if target_map.len() > 1 {
         prohibition_map.insert("target".to_string(), serde_json::Value::Object(target_map));
     } else {
@@ -515,13 +516,7 @@ fn serialize_prohibition(prohibition: &Prohibition) -> serde_json::Map<String, s
 fn serialize_obligation(obligation: &Obligation) -> serde_json::Map<String, serde_json::Value> {
     let mut obligation_map = serde_json::Map::new();
 
-    let mut target_map = serde_json::Map::new();
-    if let Some(target_type) = &obligation.target.edc_type {
-        target_map.insert("@type".to_string(), serde_json::json!(target_type));
-    }
-    if let Some(target_uid) = &obligation.target.uid {
-        target_map.insert("uid".to_string(), serde_json::json!(target_uid));
-    }
+    let target_map = serialize_target(&obligation.target);
     if target_map.len() > 1 {
         obligation_map.insert("target".to_string(), serde_json::Value::Object(target_map));
     } else {
