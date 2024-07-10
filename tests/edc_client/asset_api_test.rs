@@ -217,3 +217,75 @@ mod asset_api_delete_test {
              Assets that are part of a contract negotiation cannot be deleted */
 
 }
+
+#[cfg(test)]
+mod asset_api_request_test {
+
+    extern crate edc_api;
+    extern crate edc_client;
+    extern crate odrl;
+
+    use crate::common::setup_provider_configuration;
+    use edc_api::{AssetInput, Criterion, DataAddress, QuerySpec};
+    use edc_client::{asset_api, Error};
+    use odrl::name_spaces as NameSpaces;
+
+    use uuid::Uuid;
+
+    #[tokio::test]
+    async fn test_request_asset() {
+        let configuration = setup_provider_configuration();
+
+        let id_1 = Uuid::new_v4().to_string();
+        let mut properties_1 = std::collections::HashMap::new();
+        properties_1.insert("name".to_string(), serde_json::Value::String("test".to_string()));
+        properties_1.insert("foo".to_string(), serde_json::Value::String("bar".to_string()));
+        properties_1.insert(format!("{}{}", NameSpaces::EDC_NS, "id"), serde_json::Value::String(id_1.clone()));
+        let mut data_address = DataAddress::default();
+        data_address.r#type = Some("https://w3id.org/edc/v0.0.1/ns/DataAddress".to_string());
+
+        let mut asset_1 = AssetInput::default();
+        asset_1.at_id = Some(id_1.clone());
+        asset_1.data_address = Box::new(data_address.clone());
+        asset_1.properties = properties_1.clone();
+
+        let id_2 = Uuid::new_v4().to_string();
+        let mut properties_2 = std::collections::HashMap::new();
+        properties_2.insert("name".to_string(), serde_json::Value::String("test2".to_string()));
+        properties_2.insert("hello".to_string(), serde_json::Value::String("world".to_string()));
+
+        let mut asset_2 = AssetInput::default();
+        asset_2.at_id = Some(id_2.clone());
+        asset_2.data_address = Box::new(data_address.clone());
+        asset_2.properties = properties_2.clone();
+
+        let _ = asset_api::create_asset(&configuration, Some(asset_1)).await.unwrap();
+        let _ = asset_api::create_asset(&configuration, Some(asset_2)).await.unwrap();
+
+        let criterion = Criterion {
+            at_type: None,
+            operand_left: serde_json::Value::from(format!("{}{}", NameSpaces::EDC_NS, "id")),
+            operator: "=".to_string(),
+            operand_right: serde_json::Value::from(id_1.clone()),
+        };
+
+        // Should match only asset_1
+        let query = QuerySpec {
+            at_context: Some(std::collections::HashMap::from([("@vocab".to_string(), serde_json::Value::String(NameSpaces::EDC_NS.to_string()))])),
+            at_type: Some("QuerySpec".to_string()),
+            filter_expression: vec![criterion],
+            limit: None,
+            offset: None,
+            sort_field: None,
+            sort_order: None,
+        };
+
+        let response = asset_api::request_assets(&configuration, Some(query.clone())).await.unwrap();
+
+        assert_eq!(response.len(), 1);
+        assert_eq!(response[0].clone().at_id.clone().unwrap(), id_1.clone());
+        assert_eq!(response[0].clone().properties.unwrap().get("name").unwrap(), &serde_json::Value::String("test".to_string()));
+
+    }
+
+}
