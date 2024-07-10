@@ -289,3 +289,86 @@ mod asset_api_request_test {
     }
 
 }
+
+#[cfg(test)]
+mod asset_api_update_test {
+
+    extern crate edc_api;
+    extern crate edc_client;
+    extern crate odrl;
+
+    use crate::common::setup_provider_configuration;
+    use edc_api::{AssetInput, DataAddress};
+    use edc_client::{asset_api, Error};
+
+    use uuid::Uuid;
+
+    #[tokio::test]
+    async fn test_update_asset() {
+        let configuration = setup_provider_configuration();
+
+        let id = Uuid::new_v4().to_string();
+        let mut properties = std::collections::HashMap::new();
+        properties.insert("name".to_string(), serde_json::Value::String("test".to_string()));
+        properties.insert("foo".to_string(), serde_json::Value::String("bar".to_string()));
+        let mut data_address = DataAddress::default();
+        data_address.r#type = Some("https://w3id.org/edc/v0.0.1/ns/DataAddress".to_string());
+
+        let mut asset = AssetInput::default();
+        asset.at_id = Some(id.clone());
+        asset.data_address = Box::new(data_address.clone());
+        asset.properties = properties.clone();
+
+        let _ = asset_api::create_asset(&configuration, Some(asset.clone())).await.unwrap();
+
+        let mut new_properties = std::collections::HashMap::new();
+        new_properties.insert("name".to_string(), serde_json::Value::String("test2".to_string()));
+        new_properties.insert("foo".to_string(), serde_json::Value::String("bar2".to_string()));
+
+        let mut new_data_address = DataAddress::default();
+        new_data_address.r#type = Some("https://w3id.org/edc/v0.0.1/ns/DataAddress".to_string());
+
+        let mut new_asset = AssetInput::default();
+        new_asset.at_id = Some(id.clone());
+        new_asset.data_address = Box::new(new_data_address.clone());
+        new_asset.properties = new_properties.clone();
+
+        let response = asset_api::update_asset(&configuration, Some(new_asset.clone())).await;
+
+        assert!(response.is_ok());
+
+        let updated_asset = asset_api::get_asset(&configuration, &id.clone()).await.unwrap();
+
+        assert_eq!(updated_asset.clone().properties.unwrap().get("name").unwrap(), &serde_json::Value::String("test2".to_string()));
+        assert_eq!(updated_asset.clone().properties.unwrap().get("foo").unwrap(), &serde_json::Value::String("bar2".to_string()));
+    }
+
+    #[tokio::test]
+    async fn test_update_non_existent_asset() {
+        let configuration = setup_provider_configuration();
+
+        let id = Uuid::new_v4().to_string();
+        let mut new_properties = std::collections::HashMap::new();
+        new_properties.insert("name".to_string(), serde_json::Value::String("test2".to_string()));
+        new_properties.insert("foo".to_string(), serde_json::Value::String("bar2".to_string()));
+
+        let mut new_data_address = DataAddress::default();
+        new_data_address.r#type = Some("https://w3id.org/edc/v0.0.1/ns/DataAddress".to_string());
+
+        let mut new_asset = AssetInput::default();
+        new_asset.at_id = Some(id.clone());
+        new_asset.data_address = Box::new(new_data_address.clone());
+        new_asset.properties = new_properties.clone();
+
+        let response = asset_api::update_asset(&configuration, Some(new_asset.clone())).await;
+
+        assert!(response.is_err());
+        match response {
+            Err(Error::ResponseError(response)) => {
+                assert_eq!(response.status, reqwest::StatusCode::NOT_FOUND);
+            },
+            _ => panic!("Expected Status Code 404, because no asset with that ID exists"),
+        }
+    }
+
+}
