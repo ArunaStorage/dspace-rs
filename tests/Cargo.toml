@@ -41,3 +41,7 @@ path = "odrl/json_serializer_test.rs"
 [[test]]
 name = "asset_api_test"
 path = "edc_client/asset_api_test.rs"
+
+[[test]]
+name = "catalog_api_test"
+path = "edc_client/catalog_api_test.rs"
