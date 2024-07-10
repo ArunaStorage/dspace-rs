@@ -159,3 +159,61 @@ mod asset_api_get_test {
     }
 
 }
+
+#[cfg(test)]
+mod asset_api_delete_test {
+
+    extern crate edc_api;
+    extern crate edc_client;
+
+    use crate::common::setup_provider_configuration;
+    use edc_api::{AssetInput, DataAddress};
+    use edc_client::{asset_api, Error};
+
+    use uuid::Uuid;
+
+    #[tokio::test]
+    async fn test_delete_asset() {
+        let configuration = setup_provider_configuration();
+
+        let id = Uuid::new_v4().to_string();
+        let mut properties = std::collections::HashMap::new();
+        properties.insert("name".to_string(), serde_json::Value::String("test".to_string()));
+        properties.insert("foo".to_string(), serde_json::Value::String("bar".to_string()));
+        let mut data_address = DataAddress::default();
+        data_address.r#type = Some("https://w3id.org/edc/v0.0.1/ns/DataAddress".to_string());
+
+        let mut asset = AssetInput::default();
+        asset.at_id = Some(id.clone());
+        asset.data_address = Box::new(data_address.clone());
+        asset.properties = properties.clone();
+
+        let _ = asset_api::create_asset(&configuration, Some(asset)).await.unwrap();
+
+        let response = asset_api::remove_asset(&configuration, &id.clone()).await;
+
+        assert!(response.is_ok());
+
+    }
+
+    #[tokio::test]
+    async fn test_delete_asset_with_unknown_id() {
+        let configuration = setup_provider_configuration();
+
+        let id = Uuid::new_v4().to_string();
+
+        let response = asset_api::remove_asset(&configuration, &id.clone()).await;
+
+        assert!(response.is_err());
+        match response {
+            Err(Error::ResponseError(response)) => {
+                assert_eq!(response.status, reqwest::StatusCode::NOT_FOUND);
+            },
+            _ => panic!("Expected Status Code 404, because no asset with that ID exists"),
+        }
+    }
+
+    /* TODO: Check for Error 409, after contract negotiation api is tested
+             Assets that are part of a contract negotiation cannot be deleted */
+
+}
