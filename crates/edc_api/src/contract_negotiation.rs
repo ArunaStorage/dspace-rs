@@ -27,8 +27,8 @@ pub struct ContractNegotiation {
     pub error_detail: Option<String>,
     #[serde(rename = "protocol", skip_serializing_if = "Option::is_none")]
     pub protocol: Option<String>,
-    #[serde(rename = "state", skip_serializing_if = "Option::is_none")]
-    pub state: Option<String>,
+    #[serde(rename = "state")]
+    pub state: NegotiationState,
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<EnumType>,
 }
@@ -37,7 +37,7 @@ impl ContractNegotiation {
 
     pub fn new(context: std::collections::HashMap<String, serde_json::Value>, at_id: Option<String>, at_type: Option<String>, callback_addresses: Option<Vec<crate::CallbackAddress>>,
                contract_agreement_id: Option<String>, counter_party_address: Option<String>, counter_party_id: Option<String>, error_detail: Option<String>, protocol: Option<String>,
-               state: Option<String>, r#type: Option<EnumType>) -> ContractNegotiation {
+               state: NegotiationState, r#type: Option<EnumType>) -> ContractNegotiation {
         ContractNegotiation {
             context,
             at_id,
@@ -64,7 +64,7 @@ impl ContractNegotiation {
             counter_party_id: None,
             error_detail: None,
             protocol: None,
-            state: None,
+            state: NegotiationState::Initial,
             r#type: None,
         }
     }
@@ -82,5 +82,45 @@ pub enum EnumType {
 impl Default for EnumType {
     fn default() -> EnumType {
         Self::Consumer
+    }
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+pub enum NegotiationState {
+    #[serde(rename = "INITIAL")]
+    Initial,        // Consumer and Provider
+    #[serde(rename = "REQUESTING")]
+    Requesting,     // Consumer
+    #[serde(rename = "REQUESTED")]
+    Requested,      // Consumer and Provider
+    #[serde(rename = "OFFERING")]
+    Offering,       // Provider
+    #[serde(rename = "OFFERED")]
+    Offered,        // Consumer and Provider
+    #[serde(rename = "ACCEPTING")]
+    Accepting,      // Consumer
+    #[serde(rename = "ACCEPTED")]
+    Accepted,       // Consumer and Provider
+    #[serde(rename = "AGREEING")]
+    Agreeing,       // Provider
+    #[serde(rename = "AGREED")]
+    Agreed,         // Consumer and Provider
+    #[serde(rename = "VERIFYING")]
+    Verifying,      // Consumer
+    #[serde(rename = "VERIFIED")]
+    Verified,       // Consumer and Provider
+    #[serde(rename = "FINALIZING")]
+    Finalizing,     // Provider
+    #[serde(rename = "FINALIZED")]
+    Finalized,      // Consumer and Provider
+    #[serde(rename = "TERMINATING")]
+    Terminating,    // Consumer and Provider
+    #[serde(rename = "TERMINATED")]
+    Terminated,     // Consumer and Provider
+}
+
+impl Default for NegotiationState {
+    fn default() -> NegotiationState {
+        Self::Initial
     }
 }
