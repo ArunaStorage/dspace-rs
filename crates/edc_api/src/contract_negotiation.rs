@@ -28,7 +28,7 @@ pub struct ContractNegotiation {
     #[serde(rename = "protocol", skip_serializing_if = "Option::is_none")]
     pub protocol: Option<String>,
     #[serde(rename = "state")]
-    pub state: NegotiationState,
+    pub state: ContractNegotiationState,
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<EnumType>,
 }
@@ -37,7 +37,7 @@ impl ContractNegotiation {
 
     pub fn new(context: std::collections::HashMap<String, serde_json::Value>, at_id: Option<String>, at_type: Option<String>, callback_addresses: Option<Vec<crate::CallbackAddress>>,
                contract_agreement_id: Option<String>, counter_party_address: Option<String>, counter_party_id: Option<String>, error_detail: Option<String>, protocol: Option<String>,
-               state: NegotiationState, r#type: Option<EnumType>) -> ContractNegotiation {
+               state: ContractNegotiationState, r#type: Option<EnumType>) -> ContractNegotiation {
         ContractNegotiation {
             context,
             at_id,
@@ -64,7 +64,7 @@ impl ContractNegotiation {
             counter_party_id: None,
             error_detail: None,
             protocol: None,
-            state: NegotiationState::Initial,
+            state: ContractNegotiationState::Initial,
             r#type: None,
         }
     }
@@ -86,7 +86,12 @@ impl Default for EnumType {
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum NegotiationState {
+pub struct NegotiationState {
+    pub state: ContractNegotiationState,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+pub enum ContractNegotiationState {
     #[serde(rename = "INITIAL")]
     Initial,        // Consumer and Provider
     #[serde(rename = "REQUESTING")]
@@ -119,8 +124,8 @@ pub enum NegotiationState {
     Terminated,     // Consumer and Provider
 }
 
-impl Default for NegotiationState {
-    fn default() -> NegotiationState {
+impl Default for ContractNegotiationState {
+    fn default() -> ContractNegotiationState {
         Self::Initial
     }
 }

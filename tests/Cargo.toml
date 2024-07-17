@@ -45,3 +45,7 @@ path = "edc_client/asset_api_test.rs"
 [[test]]
 name = "catalog_api_test"
 path = "edc_client/catalog_api_test.rs"
+
+[[test]]
+name = "contract_agreement_api_test"
+path = "edc_client/contract_agreement_api_test.rs"
