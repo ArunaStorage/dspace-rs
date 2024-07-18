@@ -5,10 +5,10 @@ mod dataplane_selector_api_test {
     extern crate edc_api;
     extern crate edc_client;
 
-    use crate::common::{DATASPACE_PROTOCOL, PROVIDER_ID, PROVIDER_PROTOCOL, setup_consumer_configuration, setup_provider_configuration, setup_random_contract_definition};
-    use edc_api::{ContractOfferDescription, ContractRequest, DataAddress, DataPlaneInstanceSchema, DatasetRequest, Offer, SelectionRequestSchema};
-    use edc_client::{catalog_api, contract_negotiation_api, dataplane_selector_api, Error};
-    use odrl::name_spaces::{EDC_NS, ODRL_NS};
+    use crate::common::setup_provider_configuration;
+    use edc_api::{DataAddress, DataPlaneInstanceSchema, SelectionRequestSchema};
+    use edc_client::{dataplane_selector_api, Error};
+    use odrl::name_spaces::EDC_NS;
 
     use uuid::Uuid;
 
