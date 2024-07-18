@@ -61,3 +61,7 @@ path = "edc_client/contract_negotiation_api_test.rs"
 [[test]]
 name = "dataplane_selector_api_test"
 path = "edc_client/dataplane_selector_api_test.rs"
+
+[[test]]
+name = "policy_definition_api_test"
+path = "edc_client/policy_definition_api_test.rs"
