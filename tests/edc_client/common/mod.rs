@@ -158,6 +158,27 @@ pub async fn setup_random_contract_negotiation(consumer: &Configuration, provide
 
 }
 
+pub async fn setup_random_contract_agreement(consumer: &Configuration, provider: &Configuration) -> (String, String, String) {
+    let (contract_negotiation_id, asset_id) = setup_random_contract_negotiation(&consumer, &provider).await;
+
+    wait_for_negotiation_state(
+        &consumer,
+        &contract_negotiation_id,
+        NegotiationState { state: edc_api::ContractNegotiationState::Finalized },
+    ).await;
+
+    let agreement_id = contract_negotiation_api::get_negotiation(&consumer, &contract_negotiation_id).await.unwrap().contract_agreement_id.unwrap();
+
+    let agreement = contract_agreement_api::get_agreement_by_id(&consumer, &agreement_id).await.unwrap();
+
+    (
+        agreement.clone().at_id.unwrap(),
+        contract_negotiation_id,
+        asset_id,
+    )
+
+}
+
 pub async fn wait_for_negotiation_state(conf: &Configuration, id: &str, state: NegotiationState) {
     wait_for(|| {
         async {
