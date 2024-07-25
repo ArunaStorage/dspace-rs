@@ -28,6 +28,7 @@ mod dataplane_selector_api_test {
             last_active: None,
             turn_count: None,
             url: "https://somewhere.com:1234/api/v1".to_string(),
+            properties: None,
         };
 
         let response = dataplane_selector_api::add_entry(&provider_configuration, Some(dataplane_instance)).await;
@@ -52,6 +53,7 @@ mod dataplane_selector_api_test {
             last_active: None,
             turn_count: None,
             url: "https://somewhere.com:1234/api/v1".to_string(),
+            properties: None,
         };
 
         let second_dataplane_instance = DataPlaneInstanceSchema {
@@ -64,6 +66,7 @@ mod dataplane_selector_api_test {
             last_active: None,
             turn_count: None,
             url: "https://somewhere2.com:1234/api/v1".to_string(),
+            properties: None,
         };
 
         let first = dataplane_selector_api::add_entry(&provider_configuration, Some(first_dataplane_instance)).await;
@@ -107,6 +110,7 @@ mod dataplane_selector_api_test {
             last_active: None,
             turn_count: None,
             url: "https://somewhere.com:1234/api/v1".to_string(),
+            properties: None,
         };
 
         let response = dataplane_selector_api::add_entry(&provider_configuration, Some(dataplane)).await;
@@ -158,6 +162,7 @@ mod dataplane_selector_api_test {
             last_active: None,
             turn_count: None,
             url: "https://somewhere.com:1234/api/v1".to_string(),
+            properties: None,
         };
 
         let second_dataplane_instance = DataPlaneInstanceSchema {
@@ -170,6 +175,7 @@ mod dataplane_selector_api_test {
             last_active: None,
             turn_count: None,
             url: "https://somewhere2.com:1234/api/v1".to_string(),
+            properties: None,
         };
 
         let first = dataplane_selector_api::add_entry(&provider_configuration, Some(first_dataplane_instance)).await;
