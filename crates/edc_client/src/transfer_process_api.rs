@@ -145,7 +145,7 @@ pub async fn resume_transfer_process(configuration: &configuration::Configuratio
 }
 
 /// Requests the suspension of a transfer process. Due to the asynchronous nature of transfers, a successful response only indicates that the request was successfully received. This may take a long time, so clients must poll the /{id}/state endpoint to track the state.
-pub async fn suspend_transfer_process(configuration: &configuration::Configuration, id: &str) -> Result<(), Error<SuspendTransferProcessError>> {
+pub async fn suspend_transfer_process(configuration: &configuration::Configuration, id: &str, suspend_transfer: Option<edc_api::SuspendTransfer>) -> Result<(), Error<SuspendTransferProcessError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -156,6 +156,7 @@ pub async fn suspend_transfer_process(configuration: &configuration::Configurati
     if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
         local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
     }
+    local_var_req_builder = local_var_req_builder.json(&suspend_transfer);
 
     let local_var_req = local_var_req_builder.build()?;
     let local_var_resp = local_var_client.execute(local_var_req).await?;
