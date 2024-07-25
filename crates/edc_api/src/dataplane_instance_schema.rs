@@ -27,12 +27,15 @@ pub struct DataPlaneInstanceSchema {
     pub turn_count: Option<i32>,
     #[serde(rename = "url")]
     pub url: String,
+    #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
+    pub properties: Option<std::collections::HashMap<String, serde_json::Value>>,
 }
 
 impl DataPlaneInstanceSchema {
 
     pub fn new(context: std::collections::HashMap<String, serde_json::Value>, at_id: Option<String>, at_type: Option<String>, allowed_dest_types: Vec<String>,
-               allowed_source_types: Vec<String>, allowed_transfer_types: Option<Vec<String>>, last_active: Option<i64>, turn_count: Option<i32>, url: String) -> DataPlaneInstanceSchema {
+               allowed_source_types: Vec<String>, allowed_transfer_types: Option<Vec<String>>, last_active: Option<i64>, turn_count: Option<i32>, url: String,
+               properties: Option<std::collections::HashMap<String, serde_json::Value>>) -> DataPlaneInstanceSchema {
         DataPlaneInstanceSchema {
             context,
             at_id,
@@ -43,6 +46,7 @@ impl DataPlaneInstanceSchema {
             last_active,
             turn_count,
             url,
+            properties,
         }
     }
 
@@ -57,6 +61,7 @@ impl DataPlaneInstanceSchema {
             last_active: None,
             turn_count: None,
             url: String::new(),
+            properties: None,
         }
     }
 
