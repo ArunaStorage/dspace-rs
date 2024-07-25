@@ -13,7 +13,7 @@ pub struct DataAddress {
     pub at_type: Option<String>,
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
-    #[serde(rename = "baseURL", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "baseUrl", skip_serializing_if = "Option::is_none")]
     pub base_url: Option<String>,
 }
 
