@@ -7,32 +7,59 @@
  *
  */
 
-#[derive(Clone, Debug, PartialEq, Default, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub struct TransferState {
-    #[serde(rename = "@context")]
-    pub context: std::collections::HashMap<String, serde_json::Value>,
-    #[serde(rename = "@type", skip_serializing_if = "Option::is_none")]
-    pub at_type: Option<String>,
-    #[serde(rename = "state", skip_serializing_if = "Option::is_none")]
-    pub state: Option<String>,
+    #[serde(rename = "state")]
+    pub state: TransferProcessState,
 }
 
-impl TransferState {
+/// https://eclipse-edc.github.io/docs/#/submodule/Connector/docs/developer/transfer-process
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+pub enum TransferProcessState {
+    #[serde(rename = "INITIAL")]
+    Initial,
+    #[serde(rename = "PROVISIONING")]
+    Provisioning,
+    #[serde(rename = "PROVISIONING_REQUESTED")]
+    ProvisioningRequested,
+    #[serde(rename = "PROVISIONED")]
+    Provisioned,
+    #[serde(rename = "REQUESTING")]
+    Requesting,
+    #[serde(rename = "REQUESTED")]
+    Requested,
+    #[serde(rename = "STARTING")]
+    Starting,
+    #[serde(rename = "STARTED")]
+    Started,
+    #[serde(rename = "SUSPENDING")]
+    Suspending,
+    #[serde(rename = "SUSPENDED")]
+    Suspended,
+    #[serde(rename = "RESUMING")]
+    Resuming,
+    #[serde(rename = "RESUMED")]
+    Resumed,
+    #[serde(rename = "COMPLETING")]
+    Completing,
+    #[serde(rename = "COMPLETED")]
+    Completed,
+    #[serde(rename = "TERMINATING")]
+    Terminating,
+    #[serde(rename = "TERMINATED")]
+    Terminated,
+    #[serde(rename = "DEPROVISIONING")]
+    Deprovisioning,
+    #[serde(rename = "DEPROVISIONING_REQUESTED")]
+    DeprovisioningRequested,
+    #[serde(rename = "DEPROVISIONED")]
+    Deprovisioned,
+}
 
-    pub fn new(context: std::collections::HashMap<String, serde_json::Value>, at_type: Option<String>, state: Option<String>) -> TransferState {
-        TransferState {
-            context,
-            at_type,
-            state,
+impl Default for TransferState {
+    fn default() -> Self {
+        Self {
+            state: TransferProcessState::Initial,
         }
     }
-
-    pub fn default() -> TransferState {
-        TransferState {
-            context: std::collections::HashMap::from([("@vocab".to_string(), serde_json::Value::String("https://w3id.org/edc/v0.0.1/ns/".to_string()))]),
-            at_type: Some("TransferState".to_string()),
-            state: None,
-        }
-    }
-
 }
