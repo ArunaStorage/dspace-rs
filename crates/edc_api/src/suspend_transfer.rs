@@ -13,17 +13,17 @@ pub struct SuspendTransfer {
     pub context: std::collections::HashMap<String, serde_json::Value>,
     #[serde(rename = "@type", skip_serializing_if = "Option::is_none")]
     pub at_type: Option<String>,
-    #[serde(rename = "state", skip_serializing_if = "Option::is_none")] // TODO: Should this be "reason"?
-    pub state: Option<String>,
+    #[serde(rename = "reason", skip_serializing_if = "Option::is_none")]
+    pub reason: Option<String>,
 }
 
 impl SuspendTransfer {
 
-    pub fn new(context: std::collections::HashMap<String, serde_json::Value>, at_type: Option<String>, state: Option<String>) -> SuspendTransfer {
+    pub fn new(context: std::collections::HashMap<String, serde_json::Value>, at_type: Option<String>, reason: Option<String>) -> SuspendTransfer {
         SuspendTransfer {
             context,
             at_type,
-            state,
+            reason,
         }
     }
 
@@ -31,7 +31,7 @@ impl SuspendTransfer {
         SuspendTransfer {
             context: std::collections::HashMap::from([("@vocab".to_string(), serde_json::Value::String("https://w3id.org/edc/v0.0.1/ns/".to_string()))]),
             at_type: Some("SuspendTransfer".to_string()),
-            state: None,
+            reason: None,
         }
     }
 
