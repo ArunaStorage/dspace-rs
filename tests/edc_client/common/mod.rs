@@ -2,14 +2,17 @@ extern crate edc_client;
 extern crate odrl;
 
 use std::{future::Future, time::Duration};
+use std::collections::HashSet;
+use serde::__private::de::IdentifierDeserializer;
 use tokio::time::sleep;
-use edc_api::{AssetInput, ContractDefinitionInput, ContractNegotiation, ContractOfferDescription, ContractRequest, Criterion, DataAddress, DatasetRequest, NegotiationState, Offer, PolicyDefinitionInput};
+use edc_api::{AssetInput, CallbackAddress, ContractDefinitionInput, ContractNegotiation, ContractOfferDescription, ContractRequest, Criterion, DataAddress, DataPlaneInstanceSchema, DatasetRequest, NegotiationState, Offer, PolicyDefinitionInput, TransferRequest, TransferState};
 use edc_client::configuration::{ApiKey, Configuration};
-use edc_client::{asset_api, catalog_api, contract_agreement_api, contract_definition_api, contract_negotiation_api, policy_definition_api};
+use edc_client::{asset_api, catalog_api, contract_agreement_api, contract_definition_api, contract_negotiation_api, dataplane_selector_api, policy_definition_api, transfer_process_api};
 
 use uuid::Uuid;
 use edc_client::contract_negotiation_api::get_negotiation_state;
 use edc_client::policy_definition_api::get_policy_definition;
+use edc_client::transfer_process_api::get_transfer_process_state;
 use odrl::model::policy::OfferPolicy;
 use odrl::model::rule::Permission;
 use odrl::name_spaces::{EDC_NS, ODRL_NS};
@@ -46,8 +49,8 @@ pub async fn setup_random_contract_definition(configuration: &Configuration) -> 
         at_id: Some(Uuid::new_v4().to_string()),
         at_type: Some("Asset".to_string()),
         data_address: Box::new(DataAddress {
-            at_type: Some("HttpData".to_string()),
-            r#type: Some("https://w3id.org/edc/v0.0.1/ns/DataAddress".to_string()),
+            at_type: Some("DataAddress".to_string()),
+            r#type: Some("HttpData".to_string()),
             base_url: Some("https://jsonplaceholder.typicode.com/users".to_string()),
         }),
         private_properties: None,
@@ -108,7 +111,7 @@ pub async fn setup_random_contract_negotiation(consumer: &Configuration, provide
         at_type: Some("DatasetRequest".to_string()),
         at_id: Some(asset_id.clone()),
         counter_party_address: Some(PROVIDER_PROTOCOL.to_string()),
-        counter_party_id: None,
+        counter_party_id: Some(PROVIDER_ID.to_string()),
         protocol: Some(DATASPACE_PROTOCOL.to_string()),
         query_spec: None,
     };
@@ -144,12 +147,12 @@ pub async fn setup_random_contract_negotiation(consumer: &Configuration, provide
         context: std::collections::HashMap::from([("@vocab".to_string(), serde_json::Value::String("https://w3id.org/edc/v0.0.1/ns/".to_string()))]),
         at_type: Some("ContractRequest".to_string()),
         callback_addresses: None,
-        connector_address: None,
+        connector_address: Some(PROVIDER_PROTOCOL.to_string()),
         counter_party_address: PROVIDER_PROTOCOL.to_string(),
         offer: Some(offer_description),
-        policy: None,
+        policy: Some(offer),
         protocol: DATASPACE_PROTOCOL.to_string(),
-        provider_id: None,
+        provider_id: Some(PROVIDER_ID.to_string()),
     };
 
     let response = contract_negotiation_api::initiate_contract_negotiation(&consumer, Some(contract_request)).await.unwrap();
@@ -179,6 +182,71 @@ pub async fn setup_random_contract_agreement(consumer: &Configuration, provider:
 
 }
 
+pub async fn setup_random_transfer_process(consumer: &Configuration, provider: &Configuration) -> (String, String, String) {
+    let (agreement_id, _, asset_id) = setup_random_contract_agreement(&consumer, &provider).await;
+
+    let request = TransferRequest {
+        context: std::collections::HashMap::from([("@vocab".to_string(), serde_json::Value::String("https://w3id.org/edc/v0.0.1/ns/".to_string()))]),
+        at_type: None,
+        asset_id: asset_id.clone(),
+        callback_addresses: Some(vec![CallbackAddress {
+            at_type: None,
+            auth_code_id: None,
+            auth_key: None,
+            events: Some(vec!["contract.negotiation".to_string(), "transfer.process".to_string()]),
+            transactional: Some(false),
+            uri: Some("http://localhost:80".to_string()),
+        }]),
+        connector_address: Some(PROVIDER_PROTOCOL.to_string()),
+        connector_id: Some(PROVIDER_ID.to_string()),
+        contract_id: agreement_id.clone(),
+        counter_party_address: PROVIDER_PROTOCOL.to_string(),
+        data_destination: Box::new(DataAddress {
+            at_type: None,
+            r#type: Some("HttpProxy".to_string()),
+            base_url: Some(PROVIDER_PROTOCOL.to_string()),
+        }),
+        private_properties: None,
+        protocol: "dataspace-protocol-http".to_string(),
+        transfer_type: "HttpData-PULL".to_string(),
+    };
+
+    let transfer = transfer_process_api::initiate_transfer_process(&consumer, Some(request)).await.unwrap();
+
+    (
+        transfer.clone().at_id.unwrap(),
+        agreement_id,
+        asset_id,
+    )
+
+}
+
+pub async fn create_dataplane_for_transfer(conf: &Configuration, id: &str, url: &str) {
+
+    let mut properties: std::collections::HashMap<String, serde_json::Value> = Default::default();
+
+    if conf.base_path.contains("19193") { // consumer
+        properties.insert("publicApiUrl".to_string(), serde_json::Value::String("http://consumer-connector:9291/public".to_string()));
+    } else { // provider
+        properties.insert("publicApiUrl".to_string(), serde_json::Value::String("http://provider-connector:9291/public".to_string()));
+    }
+
+    let dataplane = DataPlaneInstanceSchema {
+        context: std::collections::HashMap::from([("@vocab".to_string(), serde_json::Value::String("https://w3id.org/edc/v0.0.1/ns/".to_string()))]),
+        at_id: Some(id.to_string()),
+        at_type: None,
+        allowed_dest_types: vec!["HttpProxy".to_string(), "DataAddress".to_string()],
+        allowed_source_types: vec!["HttpData".to_string(), "DataAddress".to_string()],
+        allowed_transfer_types: Some(vec!["HttpData-PULL".to_string(), "HttpData-PUSH".to_string()]),
+        last_active: None,
+        turn_count: None,
+        url: url.to_string(),
+        properties: Some(properties),
+    };
+
+    dataplane_selector_api::add_entry(conf, Some(dataplane.clone())).await.unwrap();
+}
+
 pub async fn wait_for_negotiation_state(conf: &Configuration, id: &str, state: NegotiationState) {
     wait_for(|| {
         async {
@@ -187,7 +255,22 @@ pub async fn wait_for_negotiation_state(conf: &Configuration, id: &str, state: N
                 if s == state {
                     Ok(i_state)
                 } else {
-                    Err(format!("State mismatch!\nExpected: {:?}\nGot: {:?}", state.clone().state, s.clone().state))
+                    Err(format!("State mismatch! Expected: {:?} Got: {:?}", state.clone().state, s.clone().state))
+                }
+            })
+        }
+    }).await.unwrap();
+}
+
+pub async fn wait_for_transfer_state(conf: &Configuration, id: &str, state: TransferState) {
+    let test = wait_for(|| {
+        async {
+            let i_state = state.clone();
+            get_transfer_process_state(conf, id).await.map_err(|err| err.to_string()).and_then(|s| {
+                if s == state {
+                    Ok(i_state)
+                } else {
+                    Err(format!("State mismatch! Expected: {:?} Got: {:?}", state.clone().state, s.clone().state))
                 }
             })
         }
@@ -200,7 +283,7 @@ where
     Fut: Future<Output = Result<R, E>>,
     E: std::fmt::Display,
 {
-    let timeout = tokio::time::timeout(Duration::from_secs(5), async move {
+    let timeout = tokio::time::timeout(Duration::from_secs(30), async move {
         loop {
             match f().await {
                 Ok(r) => break Ok(r),

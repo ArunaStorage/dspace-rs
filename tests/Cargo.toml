@@ -65,3 +65,7 @@ path = "edc_client/dataplane_selector_api_test.rs"
 [[test]]
 name = "policy_definition_api_test"
 path = "edc_client/policy_definition_api_test.rs"
+
+[[test]]
+name = "transfer_process_api_test"
+path = "edc_client/transfer_process_api_test.rs"
