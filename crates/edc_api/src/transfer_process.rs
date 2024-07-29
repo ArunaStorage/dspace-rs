@@ -8,6 +8,7 @@
  */
 
 use serde_with::{formats::PreferMany, serde_as, OneOrMany};
+use crate::transfer_state::TransferProcessState;
 
 #[serde_as]
 #[derive(Clone, Debug, PartialEq, Default, Serialize, Deserialize)]
@@ -35,12 +36,14 @@ pub struct TransferProcess {
     pub data_destination: Option<Box<crate::DataAddress>>,
     #[serde(rename = "errorDetail", skip_serializing_if = "Option::is_none")]
     pub error_detail: Option<String>,
-    #[serde(rename = "privateProperties", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "privateProperties", default)]
     pub private_properties: Option<::std::collections::HashMap<String, String>>,
     #[serde(rename = "protocol", skip_serializing_if = "Option::is_none")]
     pub protocol: Option<String>,
     #[serde(rename = "state", skip_serializing_if = "Option::is_none")]
-    pub state: Option<String>,
+    pub state: Option<TransferProcessState>,
+    #[serde(rename = "stateTimestamp", skip_serializing_if = "Option::is_none")]
+    pub state_timestamp: Option<i64>,
     #[serde(rename = "transferType", skip_serializing_if = "Option::is_none")]
     pub transfer_type: Option<String>,
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
@@ -51,8 +54,8 @@ impl TransferProcess {
 
     pub fn new(context: std::collections::HashMap<String, serde_json::Value>, at_type: Option<String>, at_id: Option<String>, correlation_id: Option<String>, callback_addresses: Vec<crate::CallbackAddress>,
                asset_id: Option<String>, contract_agreement_id: Option<String>, counter_party_address: Option<String>, counter_party_id: Option<String>, data_destination: Option<Box<crate::DataAddress>>,
-               error_detail: Option<String>, private_properties: Option<::std::collections::HashMap<String, String>>, protocol: Option<String>, state: Option<String>,
-               transfer_type: Option<String>, r#type: Option<RHashType>) -> TransferProcess {
+               error_detail: Option<String>, private_properties: Option<::std::collections::HashMap<String, String>>, protocol: Option<String>, state: Option<TransferProcessState>,
+               state_timestamp: Option<i64>, transfer_type: Option<String>, r#type: Option<RHashType>) -> TransferProcess {
         TransferProcess {
             context,
             at_type,
@@ -68,6 +71,7 @@ impl TransferProcess {
             private_properties,
             protocol,
             state,
+            state_timestamp,
             transfer_type,
             r#type,
         }
@@ -89,6 +93,7 @@ impl TransferProcess {
             private_properties: None,
             protocol: None,
             state: None,
+            state_timestamp: None,
             transfer_type: None,
             r#type: None,
         }
