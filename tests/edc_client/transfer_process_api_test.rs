@@ -288,7 +288,7 @@ mod transfer_process_api_resume_test {
             Err(Error::ResponseError(response)) => {
                 assert_eq!(response.status, reqwest::StatusCode::CONFLICT);
             },
-            _ => panic!("Expected Status Code 404´9, because a transfer process with the given id is already terminated"),
+            _ => panic!("Expected Status Code 409, because a transfer process with the given id is already terminated"),
         }
     }
 
