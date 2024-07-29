@@ -81,7 +81,7 @@ pub async fn update_secret(configuration: &configuration::Configuration, secret_
     }
 }
 
-/// Removes an EDR entry given the transfer process ID
+/// Creates a new secret.
 pub async fn create_secret(configuration: &configuration::Configuration, secret_input: Option<edc_api::SecretInput>) -> Result<edc_api::IdResponse, Error<CreateSecretError>> {
     let local_var_configuration = configuration;
 
@@ -112,7 +112,7 @@ pub async fn create_secret(configuration: &configuration::Configuration, secret_
     }
 }
 
-/// Gets the EDR data address with the given transfer process ID
+/// Gets a secret with the given ID
 pub async fn get_secret(configuration: &configuration::Configuration, secret_id: &str) -> Result<edc_api::SecretOutput, Error<GetSecretError>> {
     let local_var_configuration = configuration;
 
@@ -142,7 +142,7 @@ pub async fn get_secret(configuration: &configuration::Configuration, secret_id:
     }
 }
 
-/// Gets the EDR data address with the given transfer process ID
+/// Removes a secret with the given ID if possible.
 pub async fn delete_secret(configuration: &configuration::Configuration, secret_id: &str) -> Result<(), Error<DeleteSecretError>> {
     let local_var_configuration = configuration;
 

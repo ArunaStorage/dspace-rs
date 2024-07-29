@@ -7,12 +7,14 @@
  *
  */
 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Default, Serialize, Deserialize)]
 pub struct QuerySpec {
+    #[serde(rename = "@context", skip_serializing_if = "Option::is_none")]
+    pub at_context: Option<std::collections::HashMap<String, serde_json::Value>>,
     #[serde(rename = "@type", skip_serializing_if = "Option::is_none")]
     pub at_type: Option<String>,
-    #[serde(rename = "filterExpression", skip_serializing_if = "Option::is_none")]
-    pub filter_expression: Option<Vec<crate::Criterion>>,
+    #[serde(rename = "filterExpression", skip_serializing_if = "Vec::is_empty")]
+    pub filter_expression: Vec<crate::Criterion>,
     #[serde(rename = "limit", skip_serializing_if = "Option::is_none")]
     pub limit: Option<i32>,
     #[serde(rename = "offset", skip_serializing_if = "Option::is_none")]
@@ -25,8 +27,10 @@ pub struct QuerySpec {
 
 impl QuerySpec {
 
-    pub fn new(at_type: Option<String>, filter_expression: Option<Vec<crate::Criterion>>, limit: Option<i32>, offset: Option<i32>, sort_field: Option<String>, sort_order: Option<SortOrder>) -> QuerySpec {
+    pub fn new(at_context: Option<std::collections::HashMap<String, serde_json::Value>>, at_type: Option<String>, filter_expression: Vec<crate::Criterion>,
+               limit: Option<i32>, offset: Option<i32>, sort_field: Option<String>, sort_order: Option<SortOrder>) -> QuerySpec {
         QuerySpec {
+            at_context,
             at_type,
             filter_expression,
             limit,
@@ -38,8 +42,9 @@ impl QuerySpec {
 
     pub fn default() -> Self {
         QuerySpec {
+            at_context: Some(std::collections::HashMap::from([("@vocab".to_string(), serde_json::Value::String("https://w3id.org/edc/v0.0.1/ns/".to_string()))])),
             at_type: Some("QuerySpec".to_string()),
-            filter_expression: Some(vec![]),
+            filter_expression: vec![],
             limit: Some(10),
             offset: Some(5),
             sort_field: Some("fieldName".to_string()),

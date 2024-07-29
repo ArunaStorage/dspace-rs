@@ -21,6 +21,17 @@ The `docs/` directory contains the project documentation. Here you can find guid
 
 The `tests/` directory contains the test cases for the entire project. These tests are crucial for ensuring the functionality and integrity of the code.
 
+Some tests run against a running instance of EDC.
+
+You can use docker compose to start an instance for testing.
+
+```
+docker compose -f test_utils/docker-compose.yml up -d
+cargo test 
+```
+
+The tests setup was mostly derived by the Typescript client [edc-connector-client](https://github.com/Think-iT-Labs/edc-connector-client) by [Think-it](https://think-it.io/).
+
 ## Installation
 
 Instructions for installing and using the individual crates can be found in the respective README files within the `crates/` directory.

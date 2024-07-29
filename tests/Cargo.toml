@@ -37,3 +37,40 @@ path = "odrl/json_parser_test.rs"
 [[test]]
 name = "odrl_json_serializer_test"
 path = "odrl/json_serializer_test.rs"
+
+[[test]]
+name = "asset_api_test"
+path = "edc_client/asset_api_test.rs"
+
+[[test]]
+name = "catalog_api_test"
+path = "edc_client/catalog_api_test.rs"
+
+[[test]]
+name = "contract_agreement_api_test"
+path = "edc_client/contract_agreement_api_test.rs"
+
+[[test]]
+name = "contract_definition_api_test"
+path = "edc_client/contract_definition_api_test.rs"
+
+[[test]]
+name = "contract_negotiation_api_test"
+path = "edc_client/contract_negotiation_api_test.rs"
+
+[[test]]
+name = "dataplane_selector_api_test"
+path = "edc_client/dataplane_selector_api_test.rs"
+
+[[test]]
+
+name = "edr_cache_api_test"
+path = "edc_client/edr_cache_api_test.rs"
+
+[[test]]
+name = "policy_definition_api_test"
+path = "edc_client/policy_definition_api_test.rs"
+
+[[test]]
+name = "transfer_process_api_test"
+path = "edc_client/transfer_process_api_test.rs"

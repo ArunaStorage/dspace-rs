@@ -27,6 +27,7 @@ pub enum AddEntryError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FindError {
+    Status204(Vec<edc_api::ApiErrorDetail>),
     Status400(Vec<edc_api::ApiErrorDetail>),
     UnknownValue(serde_json::Value),
 }
@@ -91,7 +92,9 @@ pub async fn find(configuration: &configuration::Configuration, selection_reques
     let local_var_status = local_var_resp.status();
     let local_var_content = local_var_resp.text().await?;
 
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+    if local_var_status == reqwest::StatusCode::NO_CONTENT {
+        Err(Error::ResponseError(ResponseContent { status: local_var_status, content: "No suitable DataPlane instance was found".to_string(), entity: None }))
+    } else if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         let mut val = serde_json::from_str(&local_var_content).map_err(Error::from)?;
         val = remove_prefixes_from_value(val);
         serde_json::from_value(val).map_err(Error::from)
@@ -103,7 +106,7 @@ pub async fn find(configuration: &configuration::Configuration, selection_reques
 }
 
 /// Returns a list of all currently registered data plane instances
-pub async fn get_all(configuration: &configuration::Configuration) -> Result<(), Error<GetAllError>> {
+pub async fn get_all(configuration: &configuration::Configuration) -> Result<Vec<edc_api::DataPlaneInstanceSchema>, Error<GetAllError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -122,7 +125,9 @@ pub async fn get_all(configuration: &configuration::Configuration) -> Result<(),
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let mut val = serde_json::from_str(&local_var_content).map_err(Error::from)?;
+        val = remove_prefixes_from_value(val);
+        serde_json::from_value(val).map_err(Error::from)
     } else {
         let local_var_entity: Option<GetAllError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
