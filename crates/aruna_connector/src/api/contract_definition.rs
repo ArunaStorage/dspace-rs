@@ -304,7 +304,7 @@ pub(crate) async fn get_contract_definition(State(state): State<SharedState>, Pa
     }
 }
 
-pub(crate) async fn delete_contract_definition(State(state): State<SharedState>, Path(id): Path<String>,) -> StatusCode {
+pub(crate) async fn delete_contract_definition(State(state): State<SharedState>, Path(id): Path<String>,) -> impl IntoResponse {
 
     /// Gets a contract definition with the given ID
     ///
@@ -324,8 +324,8 @@ pub(crate) async fn delete_contract_definition(State(state): State<SharedState>,
 
     let mut state = state.lock().unwrap();
     if state.remove(&id).is_some() {
-        StatusCode::NO_CONTENT
+        StatusCode::NO_CONTENT.into_response()
     } else {
-        StatusCode::NOT_FOUND
+        StatusCode::NOT_FOUND.into_response()
     }
 }
