@@ -105,39 +105,12 @@ pub(crate) async fn create_contract_definition(State(state): State<SharedState>,
 
     let mut state = state.lock().unwrap();
 
-    if input.at_id.is_some() {
+    let id = input.at_id.clone().unwrap_or_else(|| Uuid::new_v4().to_string());
 
-        let id = input.at_id.clone().unwrap();
-
-        // Response with 409 Conflict
-        // Could not create contract definition, because a contract definition with that ID already exists
-        if state.contains_key(&id) {
-            return (StatusCode::CONFLICT, Json(error!("Could not create contract definition, because a contract definition with that ID already exists"))).into_response();
-        }
-
-        let created_at = Utc::now().timestamp();
-
-        let output = ContractDefinitionOutput {
-            context: input.context,
-            at_id: Some(id.clone()),
-            at_type: input.at_type.clone(),
-            access_policy_id: Some(input.access_policy_id.clone()),
-            assets_selector: Some(input.assets_selector.clone()),
-            contract_policy_id: Some(input.contract_policy_id.clone()),
-            created_at: Some(created_at),
-        };
-
-        state.insert(id.clone(), output.clone());
-
-        let id_response = IdResponse {
-            at_id: Some(id.clone()),
-            created_at: Some(created_at.clone()),
-        };
-
-        return (StatusCode::OK, Json(id_response)).into_response();
+    if state.contains_key(&id) {
+        return (StatusCode::CONFLICT, Json(error!("Could not create contract definition, because a contract definition with that ID already exists"))).into_response();
     }
 
-    let id = Uuid::new_v4().to_string();
     let created_at = Utc::now().timestamp();
 
     let output = ContractDefinitionOutput {
