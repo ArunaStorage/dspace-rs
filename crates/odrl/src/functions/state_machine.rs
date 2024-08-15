@@ -67,7 +67,7 @@ impl NegotiationState {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ConsumerStateMachine<CS> {
     pub state: CS,
     pub iri: String,
@@ -83,10 +83,10 @@ impl ConsumerStateMachine<ConsumerState> {
         }
     }
 
-    // Method to transition to a certain state if the provider receives messages
+    // Method to transition to a certain state if the consumer receives messages
     fn transition_to_state(&mut self, state: ConsumerState) {
         self.state = state.clone();
-        println!("Provider state transitioned to {:?}", self.state);
+        println!("Consumer state transitioned to {:?}", self.state);
     }
 
     pub fn transition_to_requesting(&mut self, msg: &str) {
@@ -160,12 +160,13 @@ impl ConsumerStateMachine<ConsumerState> {
 
     pub fn transition_to_terminating(&mut self, msg: &str) {
         // Check if the current state is Finalized
+        // TODO: Differentiate between termination since the negotiation is finalized and a termination because of an error or since it was requested by the consumer
         match &self.state {
             ConsumerState::Finalized(_) => {
                 // Update the state machine's state to Terminating
                 self.transition_to_state(ConsumerState::Terminating(Terminating::new(msg, self.iri.as_str(), self.negotiation_partner.as_str())));
             },
-            _ => println!("Cannot transition to Terminating from current state"),
+            _ => self.transition_to_state(ConsumerState::Terminating(Terminating::new(msg, self.iri.as_str(), self.negotiation_partner.as_str()))),
         }
     }
     pub fn transition_to_terminated(&mut self, msg: &str) {
@@ -258,7 +259,7 @@ impl ConsumerStateMachine<ConsumerState> {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ProviderStateMachine<PS> {
     pub state: PS,
     pub iri: String,
@@ -356,12 +357,13 @@ impl ProviderStateMachine<ProviderState> {
 
     pub fn transition_to_terminating(&mut self, msg: &str) {
         // Check if the current state is Finalized
+        // TODO: Differentiate between termination since the negotiation is finalized and a termination because of an error or since it was requested by the provider
         match &self.state {
             ProviderState::Finalized(_) => {
                 // Update the state machine's state to Terminating
                 self.transition_to_state(ProviderState::Terminating(Terminating::new(msg, self.negotiation_partner.as_str(), self.iri.as_str())));
             },
-            _ => println!("Cannot transition to Terminating from current state"),
+            _ => self.transition_to_state(ProviderState::Terminating(Terminating::new(msg, self.negotiation_partner.as_str(), self.iri.as_str()))),
         }
     }
 
