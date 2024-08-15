@@ -15,7 +15,7 @@ use edc_client::policy_definition_api::get_policy_definition;
 use edc_client::transfer_process_api::get_transfer_process_state;
 use odrl::model::policy::OfferPolicy;
 use odrl::model::rule::Permission;
-use odrl::name_spaces::{EDC_NS, ODRL_NS};
+use odrl::name_spaces::{EDC_NS, LD_NS, ODRL_NS};
 
 pub const PROVIDER_PROTOCOL: &str = "http://provider-connector:9194/protocol";
 pub const PROVIDER_ID: &str = "provider";
@@ -121,7 +121,7 @@ pub async fn setup_random_contract_negotiation(consumer: &Configuration, provide
     let offer_id = dataset.get("hasPolicy").unwrap().get("@id").unwrap().to_string().replace("\"", "");
 
     let offer = Offer {
-        context: std::collections::HashMap::from([("@vocab".to_string(), serde_json::Value::String(ODRL_NS.to_string()))]),
+        context:  Some(LD_NS.to_string()),
         at_type: Some("Offer".to_string()),
         at_id: offer_id.clone(),
         assigner: PROVIDER_ID.to_string(),

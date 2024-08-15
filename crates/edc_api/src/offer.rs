@@ -10,8 +10,8 @@
 /// ODRL offer
 #[derive(Clone, Debug, PartialEq, Default, Serialize, Deserialize)]
 pub struct Offer {
-    #[serde(rename = "@context")]
-    pub context: std::collections::HashMap<String, serde_json::Value>,
+    #[serde(rename = "@context", skip_serializing_if = "Option::is_none")]
+    pub context: Option<String>,
     #[serde(rename = "@type", skip_serializing_if = "Option::is_none")]
     pub at_type: Option<String>,
     #[serde(rename = "@id")]
@@ -24,7 +24,7 @@ pub struct Offer {
 
 impl Offer {
 
-    pub fn new(context: std::collections::HashMap<String, serde_json::Value>, at_type: Option<String>, at_id: String, assigner: String, target: String) -> Offer {
+    pub fn new(context: Option<String>, at_type: Option<String>, at_id: String, assigner: String, target: String) -> Offer {
         Offer {
             context,
             at_type,
@@ -36,7 +36,7 @@ impl Offer {
 
     pub fn default() -> Offer {
         Offer {
-            context: std::collections::HashMap::from([("@vocab".to_string(), serde_json::Value::String("https://w3id.org/edc/v0.0.1/ns/".to_string()))]),
+            context: Some("http://www.w3.org/ns/odrl.jsonld".to_string()),
             at_type: Some("Offer".to_string()),
             at_id: String::new(),
             assigner: String::new(),

@@ -8,7 +8,7 @@ mod contract_negotiation_api_initiate_test {
     use crate::common::{DATASPACE_PROTOCOL, PROVIDER_ID, PROVIDER_PROTOCOL, setup_consumer_configuration, setup_provider_configuration, setup_random_contract_definition};
     use edc_api::{ContractOfferDescription, ContractRequest, DatasetRequest, Offer};
     use edc_client::{catalog_api, contract_negotiation_api, Error};
-    use odrl::name_spaces::{EDC_NS, ODRL_NS};
+    use odrl::name_spaces::{EDC_NS, LD_NS, ODRL_NS};
 
     use uuid::Uuid;
 
@@ -34,7 +34,7 @@ mod contract_negotiation_api_initiate_test {
         let offer_id = dataset.get("hasPolicy").unwrap().get("@id").unwrap().to_string().replace("\"", "");
 
         let offer = Offer {
-            context: std::collections::HashMap::from([("@vocab".to_string(), serde_json::Value::String(ODRL_NS.to_string()))]),
+            context: Some(LD_NS.to_string()),
             at_type: Some("Offer".to_string()),
             at_id: offer_id.clone(),
             assigner: PROVIDER_ID.to_string(),
