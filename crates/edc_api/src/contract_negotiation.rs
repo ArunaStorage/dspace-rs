@@ -31,13 +31,15 @@ pub struct ContractNegotiation {
     pub state: ContractNegotiationState,
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<EnumType>,
+    #[serde(rename = "createdAt", skip_serializing_if = "Option::is_none")]
+    pub created_at: Option<i64>,
 }
 
 impl ContractNegotiation {
 
     pub fn new(context: std::collections::HashMap<String, serde_json::Value>, at_id: Option<String>, at_type: Option<String>, callback_addresses: Option<Vec<crate::CallbackAddress>>,
                contract_agreement_id: Option<String>, counter_party_address: Option<String>, counter_party_id: Option<String>, error_detail: Option<String>, protocol: Option<String>,
-               state: ContractNegotiationState, r#type: Option<EnumType>) -> ContractNegotiation {
+               state: ContractNegotiationState, r#type: Option<EnumType>, created_at: Option<i64>) -> ContractNegotiation {
         ContractNegotiation {
             context,
             at_id,
@@ -50,6 +52,7 @@ impl ContractNegotiation {
             protocol,
             state,
             r#type,
+            created_at,
         }
     }
 
@@ -66,6 +69,7 @@ impl ContractNegotiation {
             protocol: None,
             state: ContractNegotiationState::Initial,
             r#type: None,
+            created_at: None,
         }
     }
 
