@@ -8,6 +8,6 @@ pub const VCARD_NS: &'static str = "http://www.w3.org/2006/vcard/ns#";
 pub const FOAF_NS: &'static str = "http://xmlns.com/foaf/0.1/";
 pub const SCHEMA_NS: &'static str = "http://schema.org/";
 pub const CC_NS: &'static str = "https://creativecommons.org/ns#";
-pub const LD_NS: &'static str = "http://www.w3.org/ns/odrl.jsonld#";
+pub const LD_NS: &'static str = "http://www.w3.org/ns/odrl.jsonld";
 pub const ODRL_NS: &'static str = "http://www.w3.org/ns/odrl/2/";
 pub const EDC_NS: &'static str = "https://w3id.org/edc/v0.0.1/ns/";
