@@ -33,18 +33,18 @@ pub struct ContractRequestMessage {
     pub dsp_type: String,
     #[serde(rename = "dspace:providerPid", skip_serializing_if = "Option::is_none")]
     pub provider_pid: Option<String>,
-    #[serde(rename = "dspace:consumerPid", skip_serializing_if = "Option::is_none")]
-    pub consumer_pid: Option<String>,
+    #[serde(rename = "dspace:consumerPid")]
+    pub consumer_pid: String,
     #[serde(rename = "dspace:offer")]
     pub offer: serde_json::Value,   //TODO: Maybe better to use a struct here
-    #[serde(rename = "dspace:callbackAddress", skip_serializing_if = "Option::is_none")]
-    pub callback_address: Option<String>,
+    #[serde(rename = "dspace:callbackAddress")]
+    pub callback_address: String,
 }
 
 impl ContractRequestMessage {
 
-    pub fn new(context: std::collections::HashMap<String, serde_json::Value>, dsp_type: String, provider_pid: Option<String>, consumer_pid: Option<String>,
-               offer: serde_json::Value, callback_address: Option<String>) -> ContractRequestMessage {
+    pub fn new(context: std::collections::HashMap<String, serde_json::Value>, dsp_type: String, provider_pid: Option<String>, consumer_pid: String,
+               offer: serde_json::Value, callback_address: String) -> ContractRequestMessage {
         ContractRequestMessage {
             context,
             dsp_type,
@@ -60,9 +60,9 @@ impl ContractRequestMessage {
             context: std::collections::HashMap::from([("@vocab".to_string(), serde_json::Value::String("https://w3id.org/dspace/2024/1/context.json".to_string()))]),
             dsp_type: "dspace:ContractRequestMessage".to_string(),
             provider_pid: None,
-            consumer_pid: None,
+            consumer_pid: String::new(),
             offer: serde_json::Value::Null,
-            callback_address: None,
+            callback_address: String::new(),
         }
     }
 
