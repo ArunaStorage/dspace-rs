@@ -10,4 +10,6 @@ pub mod contract_negotiation {
     pub use self::contract_agreement_message::ContractAgreementMessage;
     pub mod contract_agreement_verification_message;
     pub use self::contract_agreement_verification_message::ContractAgreementVerificationMessage;
+    pub mod contract_negotiation_event_message;
+    pub use self::contract_negotiation_event_message::ContractNegotiationEventMessage;
 }
