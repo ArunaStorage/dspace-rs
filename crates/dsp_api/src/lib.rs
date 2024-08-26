@@ -6,4 +6,6 @@ pub mod contract_negotiation {
     pub use self::contract_request_message::ContractRequestMessage;
     pub mod contract_offer_message;
     pub use self::contract_offer_message::ContractOfferMessage;
+    pub mod contract_agreement_message;
+    pub use self::contract_agreement_message::ContractAgreementMessage;
 }
