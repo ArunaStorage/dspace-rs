@@ -14,4 +14,6 @@ pub mod contract_negotiation {
     pub use self::contract_negotiation_event_message::ContractNegotiationEventMessage;
     pub mod contract_negotiation_termination_message;
     pub use self::contract_negotiation_termination_message::ContractNegotiationTerminationMessage;
+    pub mod contract_negotiation;
+    pub use self::contract_negotiation::ContractNegotiation;
 }
