@@ -68,4 +68,6 @@ pub mod transfer_process {
     pub use self::transfer_request_message::EndpointProperty;
     pub mod transfer_start_message;
     pub use self::transfer_start_message::TransferStartMessage;
+    pub mod transfer_suspension_message;
+    pub use self::transfer_suspension_message::TransferSuspendMessage;
 }
