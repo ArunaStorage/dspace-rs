@@ -30,6 +30,13 @@ If the Connector can't identify a matching Dataspace Protocol Version, it must t
 
 See [Common Functionalities Definition](https://docs.internationaldataspaces.org/ids-knowledgebase/v/dataspace-protocol/common-functionalities) for more information.
 
+## Documentation for Catalog
+
+The Catalog Protocol defines how a Catalog is requested from a Catalog Service by a Consumer using an abstract message exchange format. 
+The concrete message exchange wire format is defined in the binding specifications.
+
+See [Catalog Definition](../dsp_api/src/catalog/README.md) for more information.
+
 ## Documentation for Contract Negotiations
 
 A Contract Negotiation (CN) involves two parties, a Provider that offers one or more Datasets under a usage contract and Consumer that requests Datasets.
