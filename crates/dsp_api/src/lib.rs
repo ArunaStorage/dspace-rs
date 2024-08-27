@@ -10,6 +10,8 @@ pub mod common {
 pub mod catalog {
     pub mod catalog_request_message;
     pub use self::catalog_request_message::CatalogRequestMessage;
+    pub mod dataset_request_message;
+    pub use self::dataset_request_message::DatasetRequestMessage;
 }
 
 pub mod contract_negotiation {
