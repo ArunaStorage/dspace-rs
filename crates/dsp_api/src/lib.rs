@@ -1,6 +1,12 @@
 #[macro_use]
 extern crate serde_derive;
 
+pub mod common {
+    pub mod dsp_version;
+    pub use self::dsp_version::DspVersion;
+    pub use self::dsp_version::ProtocolVersion;
+}
+
 pub mod contract_negotiation {
     pub mod contract_request_message;
     pub use self::contract_request_message::ContractRequestMessage;
