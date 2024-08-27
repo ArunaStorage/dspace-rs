@@ -5,6 +5,7 @@
  *
  * The Catalog contains all Datasets which the requester shall see.
  */
+use crate::catalog::{DataService, Dataset};
 
 #[derive(Clone, Debug, PartialEq, Default, Serialize, Deserialize)]
 pub struct Catalog {
@@ -13,9 +14,9 @@ pub struct Catalog {
     #[serde(rename = "@type")]
     pub dsp_type: String,
     #[serde(rename = "dspace:dataset")]
-    pub datasets: Vec<String>,  // TODO: Maybe better to use a struct here (Dataset)
+    pub datasets: Vec<Dataset>,
     #[serde(rename = "dcat:service")]
-    pub service: Vec<String>,   // TODO: Maybe better to use a struct here (DataService)
+    pub service: Vec<DataService>,
     #[serde(rename = "dspace:participantId", skip_serializing_if = "Option::is_none")]
     pub participant_id: Option<String>,
     #[serde(rename = "foaf:homepage", skip_serializing_if = "Option::is_none")]
@@ -24,7 +25,7 @@ pub struct Catalog {
 
 impl Catalog {
 
-    pub fn new(context: std::collections::HashMap<String, serde_json::Value>, dsp_type: String, datasets: Vec<String>, service: Vec<String>,
+    pub fn new(context: std::collections::HashMap<String, serde_json::Value>, dsp_type: String, datasets: Vec<Dataset>, service: Vec<DataService>,
                participant_id: Option<String>, homepage: Option<String>) -> Catalog {
         Catalog {
             context,

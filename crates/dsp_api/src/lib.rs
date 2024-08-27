@@ -14,6 +14,14 @@ pub mod catalog {
     pub use self::dataset_request_message::DatasetRequestMessage;
     pub mod catalog;
     pub use self::catalog::Catalog;
+    pub mod dataset;
+    pub use self::dataset::Dataset;
+    pub use self::dataset::AbstractDataset;
+    pub use self::dataset::Resource;
+    pub use self::dataset::Distribution;
+    pub use self::dataset::DataService;
+    pub use self::dataset::Reference;
+    pub use self::dataset::MultiLanguage;
 }
 
 pub mod contract_negotiation {
