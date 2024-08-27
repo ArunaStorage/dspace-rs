@@ -77,4 +77,6 @@ pub mod transfer_process {
     pub mod transfer_process;
     pub use self::transfer_process::TransferProcess;
     pub use self::transfer_process::TransferState;
+    pub mod transfer_error;
+    pub use self::transfer_error::TransferError;
 }
