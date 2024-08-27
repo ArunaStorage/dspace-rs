@@ -22,6 +22,8 @@ pub mod catalog {
     pub use self::dataset::DataService;
     pub use self::dataset::Reference;
     pub use self::dataset::MultiLanguage;
+    pub mod catalog_error;
+    pub use self::catalog_error::CatalogError;
 }
 
 pub mod contract_negotiation {
