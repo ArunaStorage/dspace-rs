@@ -46,3 +46,11 @@ A CN transitions to a state in response to an acknowledged message from the coun
 Both parties have the same state of the CN. In case the states differ, the CN is terminated and a new CN has to be initiated.
 
 See [Contract Negotiation Definition](../dsp_api/src/contract_negotiation/README.md) for more information.
+
+## Documentation for Transfer Process
+
+A Transfer Process (TP) involves two parties, a Provider that offers one or more Datasets under a Usage Policy and a Consumer that requests Datasets. 
+A TP progresses through a series of states, which are controlled by the Provider and Consumer using messages. 
+A TP transitions to another state as a result of an exchanged message.
+
+See [Transfer Process Definition](../dsp_api/src/transfer_process/README.md) for more information.
