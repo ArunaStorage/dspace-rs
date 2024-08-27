@@ -43,4 +43,20 @@ pub mod contract_negotiation {
     pub use self::contract_negotiation::ContractNegotiation;
     pub mod contract_negotiation_error;
     pub use self::contract_negotiation_error::ContractNegotiationError;
+    pub mod contract;
+    pub use self::contract::Policy;
+    pub use self::contract::PolicyClass;
+    pub use self::contract::AbstractPolicyRule;
+    pub use self::contract::MessageOffer;
+    pub use self::contract::Offer;
+    pub use self::contract::Agreement;
+    pub use self::contract::RuleClass;
+    pub use self::contract::Permission;
+    pub use self::contract::Duty;
+    pub use self::contract::Action;
+    pub use self::contract::Constraint;
+    pub use self::contract::Operator;
+    pub use self::contract::RightOperand;
+    pub use self::contract::LeftOperand;
+    pub use self::contract::Reference;
 }

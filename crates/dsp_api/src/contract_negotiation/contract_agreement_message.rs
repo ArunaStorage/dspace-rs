@@ -19,7 +19,9 @@
  * An Agreement must contain a odrl:target property. None of its Rules, however, must have any odrl:target attributes to prevent inconsistencies with the ODRL inferencing rules for compact policies.
  */
 
-#[derive(Clone, Debug, PartialEq, Default, Serialize, Deserialize)]
+use crate::contract_negotiation::Agreement;
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ContractAgreementMessage {
     #[serde(rename = "@context")]
     pub context: std::collections::HashMap<String, serde_json::Value>,
@@ -30,15 +32,14 @@ pub struct ContractAgreementMessage {
     #[serde(rename = "dspace:consumerPid")]
     pub consumer_pid: String,
     #[serde(rename = "dspace:agreement")]
-    pub agreement: serde_json::Value,   //TODO: Maybe better to use a struct here
+    pub agreement: Agreement,
     #[serde(rename = "dspace:callbackAddress")]
     pub callback_address: String,
 }
 
 impl ContractAgreementMessage {
-
     pub fn new(context: std::collections::HashMap<String, serde_json::Value>, dsp_type: String, provider_pid: String, consumer_pid: String,
-               agreement: serde_json::Value, callback_address: String) -> ContractAgreementMessage {
+               agreement: Agreement, callback_address: String) -> ContractAgreementMessage {
         ContractAgreementMessage {
             context,
             dsp_type,
@@ -46,17 +47,6 @@ impl ContractAgreementMessage {
             consumer_pid,
             agreement,
             callback_address,
-        }
-    }
-
-    pub fn default() -> ContractAgreementMessage {
-        ContractAgreementMessage {
-            context: std::collections::HashMap::from([("@vocab".to_string(), serde_json::Value::String("https://w3id.org/dspace/2024/1/context.json".to_string()))]),
-            dsp_type: "dspace:ContractAgreementMessage".to_string(),
-            provider_pid: String::new(),
-            consumer_pid: String::new(),
-            agreement: serde_json::Value::Null,
-            callback_address: String::new(),
         }
     }
 }

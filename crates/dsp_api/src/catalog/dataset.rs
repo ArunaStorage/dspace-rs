@@ -6,6 +6,8 @@
  * The Catalog contains all Datasets which the requester shall see.
  */
 
+use crate::contract_negotiation::Offer;
+
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Dataset {
     #[serde(flatten)]
@@ -17,7 +19,7 @@ pub struct AbstractDataset {
     #[serde(flatten)]
     pub resource: Resource,
     #[serde(rename = "odrl:hasPolicy")]
-    pub policies: Vec<String>,  // TODO: Maybe better to use a struct here (Offer)
+    pub policies: Vec<Offer>,
     #[serde(rename = "dcat:distribution")]
     pub distributions: Vec<Distribution>,
 }
@@ -95,7 +97,7 @@ impl Dataset {
 }
 
 impl AbstractDataset {
-    pub fn new(resource: Resource, policies: Vec<String>, distributions: Vec<Distribution>) -> AbstractDataset {
+    pub fn new(resource: Resource, policies: Vec<Offer>, distributions: Vec<Distribution>) -> AbstractDataset {
         AbstractDataset {
             resource,
             policies,

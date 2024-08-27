@@ -25,7 +25,9 @@
  * However, it's contained Rules must not have any odrl:target attributes to prevent inconsistencies with the ODRL inferencing rules for compact policies.
  */
 
-#[derive(Clone, Debug, PartialEq, Default, Serialize, Deserialize)]
+use crate::contract_negotiation::MessageOffer;
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ContractRequestMessage {
     #[serde(rename = "@context")]
     pub context: std::collections::HashMap<String, serde_json::Value>,
@@ -36,15 +38,14 @@ pub struct ContractRequestMessage {
     #[serde(rename = "dspace:consumerPid")]
     pub consumer_pid: String,
     #[serde(rename = "dspace:offer")]
-    pub offer: serde_json::Value,   //TODO: Maybe better to use a struct here
+    pub offer: MessageOffer,
     #[serde(rename = "dspace:callbackAddress")]
     pub callback_address: String,
 }
 
 impl ContractRequestMessage {
-
     pub fn new(context: std::collections::HashMap<String, serde_json::Value>, dsp_type: String, provider_pid: Option<String>, consumer_pid: String,
-               offer: serde_json::Value, callback_address: String) -> ContractRequestMessage {
+               offer: MessageOffer, callback_address: String) -> ContractRequestMessage {
         ContractRequestMessage {
             context,
             dsp_type,
@@ -54,16 +55,4 @@ impl ContractRequestMessage {
             callback_address,
         }
     }
-
-    pub fn default() -> ContractRequestMessage {
-        ContractRequestMessage {
-            context: std::collections::HashMap::from([("@vocab".to_string(), serde_json::Value::String("https://w3id.org/dspace/2024/1/context.json".to_string()))]),
-            dsp_type: "dspace:ContractRequestMessage".to_string(),
-            provider_pid: None,
-            consumer_pid: String::new(),
-            offer: serde_json::Value::Null,
-            callback_address: String::new(),
-        }
-    }
-
 }
