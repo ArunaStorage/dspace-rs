@@ -66,4 +66,6 @@ pub mod transfer_process {
     pub use self::transfer_request_message::TransferRequestMessage;
     pub use self::transfer_request_message::DataAddress;
     pub use self::transfer_request_message::EndpointProperty;
+    pub mod transfer_start_message;
+    pub use self::transfer_start_message::TransferStartMessage;
 }
