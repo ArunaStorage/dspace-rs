@@ -60,3 +60,10 @@ pub mod contract_negotiation {
     pub use self::contract::LeftOperand;
     pub use self::contract::Reference;
 }
+
+pub mod transfer_process {
+    pub mod transfer_request_message;
+    pub use self::transfer_request_message::TransferRequestMessage;
+    pub use self::transfer_request_message::DataAddress;
+    pub use self::transfer_request_message::EndpointProperty;
+}
