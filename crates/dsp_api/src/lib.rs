@@ -74,4 +74,7 @@ pub mod transfer_process {
     pub use self::transfer_completion_message::TransferCompletionMessage;
     pub mod transfer_termination_message;
     pub use self::transfer_termination_message::TransferTerminationMessage;
+    pub mod transfer_process;
+    pub use self::transfer_process::TransferProcess;
+    pub use self::transfer_process::TransferState;
 }
