@@ -12,6 +12,8 @@ pub mod catalog {
     pub use self::catalog_request_message::CatalogRequestMessage;
     pub mod dataset_request_message;
     pub use self::dataset_request_message::DatasetRequestMessage;
+    pub mod catalog;
+    pub use self::catalog::Catalog;
 }
 
 pub mod contract_negotiation {
