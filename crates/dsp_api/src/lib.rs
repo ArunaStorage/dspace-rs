@@ -7,6 +7,11 @@ pub mod common {
     pub use self::dsp_version::ProtocolVersion;
 }
 
+pub mod catalog {
+    pub mod catalog_request_message;
+    pub use self::catalog_request_message::CatalogRequestMessage;
+}
+
 pub mod contract_negotiation {
     pub mod contract_request_message;
     pub use self::contract_request_message::ContractRequestMessage;
