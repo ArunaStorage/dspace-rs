@@ -458,11 +458,14 @@ mod timestamp_format {
     use super::*;
     use serde::{self, Deserialize, Deserializer, Serializer};
 
-    pub fn serialize<S>(timestamp: &str, serializer: S) -> Result<S::Ok, S::Error>
+    pub fn serialize<S>(timestamp: &Option<String>, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
-        serializer.serialize_str(timestamp)
+        match timestamp {
+            Some(ref ts) => serializer.serialize_str(ts),
+            None => serializer.serialize_none(),
+        }
     }
 
     pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
