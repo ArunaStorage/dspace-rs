@@ -13,7 +13,7 @@
  */
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-pub struct DspVersion {
+pub struct DspaceVersion {
     #[serde(rename = "@context")]
     pub context: std::collections::HashMap<String, serde_json::Value>,
     #[serde(rename = "protocolVersion")]
@@ -28,9 +28,9 @@ pub struct ProtocolVersion {
     pub path: String,
 }
 
-impl DspVersion {
-    pub fn new(context: std::collections::HashMap<String, serde_json::Value>, protocol_version: Vec<ProtocolVersion>) -> DspVersion {
-        DspVersion {
+impl DspaceVersion {
+    pub fn new(context: std::collections::HashMap<String, serde_json::Value>, protocol_version: Vec<ProtocolVersion>) -> DspaceVersion {
+        DspaceVersion {
             context,
             protocol_version,
         }

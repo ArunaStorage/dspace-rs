@@ -2,9 +2,9 @@
 extern crate serde_derive;
 
 pub mod common {
-    pub mod dsp_version;
-    pub use self::dsp_version::DspVersion;
-    pub use self::dsp_version::ProtocolVersion;
+    pub mod dspace_version;
+    pub use self::dspace_version::DspaceVersion;
+    pub use self::dspace_version::ProtocolVersion;
 }
 
 pub mod catalog {
