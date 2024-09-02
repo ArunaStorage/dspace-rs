@@ -16,7 +16,7 @@
 pub struct DspaceVersion {
     #[serde(rename = "@context")]
     pub context: std::collections::HashMap<String, serde_json::Value>,
-    #[serde(rename = "protocolVersion")]
+    #[serde(rename = "protocolVersions")]
     pub protocol_version: Vec<ProtocolVersion>,
 }
 
