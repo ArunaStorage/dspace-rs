@@ -12,11 +12,15 @@
  * If the Connector can't identify a matching Dataspace Protocol Version, it must terminate the communication.
  */
 
+use serde_with::{formats::PreferMany, serde_as, OneOrMany};
+
+#[serde_as]
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DspaceVersion {
     #[serde(rename = "@context")]
     pub context: std::collections::HashMap<String, serde_json::Value>,
     #[serde(rename = "protocolVersions")]
+    #[serde_as(deserialize_as = "OneOrMany<_, PreferMany>")]
     pub protocol_version: Vec<ProtocolVersion>,
 }
 
