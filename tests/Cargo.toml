@@ -80,3 +80,7 @@ path = "edc_client/transfer_process_api_test.rs"
 [[test]]
 name = "dspace_version_api_test"
 path = "dsp_client/common_dspace_version_api_test.rs"
+
+[[test]]
+name = "dsp_catalog_api_test"
+path = "dsp_client/catalog_api_test.rs"

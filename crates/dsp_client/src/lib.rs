@@ -4,6 +4,12 @@ extern crate dsp_api as dsp_models;
 
 pub use dsp_models::common::DspaceVersion;
 
+pub use dsp_models::catalog::Catalog;
+pub use dsp_models::catalog::CatalogError;
+pub use dsp_models::catalog::CatalogRequestMessage;
+pub use dsp_models::catalog::Dataset;
+pub use dsp_models::catalog::DatasetRequestMessage;
+
 use std::error;
 use std::fmt;
 
@@ -12,6 +18,10 @@ pub mod utils;
 
 pub mod common {
     pub mod dspace_version;
+}
+
+pub mod catalog {
+    pub mod catalog_api;
 }
 
 #[derive(Debug, Clone)]
