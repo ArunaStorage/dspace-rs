@@ -1,5 +1,6 @@
 use regex::Regex;
 use thiserror::Error;
+use serde_with::{formats::PreferMany, serde_as, OneOrMany};
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Policy {
@@ -23,6 +24,7 @@ pub enum PolicyType {
     Agreement(Agreement),
 }
 
+#[serde_as]
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct PolicyClass {
     #[serde(flatten)]
@@ -30,10 +32,13 @@ pub struct PolicyClass {
     #[serde(rename = "@id")]
     pub id: String,
     #[serde(rename = "odrl:profile", skip_serializing_if = "Vec::is_empty")]
+    #[serde_as(deserialize_as = "OneOrMany<_, PreferMany>")]
     pub profile: Vec<Reference>,
     #[serde(rename = "odrl:permission")]
+    #[serde_as(deserialize_as = "OneOrMany<_, PreferMany>")]
     pub permission: Vec<Permission>,
     #[serde(rename = "odrl:obligation")]
+    #[serde_as(deserialize_as = "OneOrMany<_, PreferMany>")]
     pub obligation: Vec<Duty>,
 }
 
@@ -134,6 +139,7 @@ impl Agreement {
     }
 }
 
+#[serde_as]
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct RuleClass {
     #[serde(flatten)]
@@ -141,6 +147,7 @@ pub struct RuleClass {
     #[serde(rename = "odrl:action")]
     pub action: Action,
     #[serde(rename = "odrl:constraint")]
+    #[serde_as(deserialize_as = "OneOrMany<_, PreferMany>")]
     pub constraint: Vec<Constraint>,
 }
 
@@ -154,6 +161,7 @@ impl RuleClass {
     }
 }
 
+#[serde_as]
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Permission {
     #[serde(flatten)]
@@ -161,6 +169,7 @@ pub struct Permission {
     #[serde(rename = "odrl:action")]
     pub action: Action,
     #[serde(rename = "odrl:constraint")]
+    #[serde_as(deserialize_as = "OneOrMany<_, PreferMany>")]
     pub constraint: Vec<Constraint>,
     #[serde(rename = "odrl:duty", skip_serializing_if = "Option::is_none")]
     pub duty: Option<Duty>,
@@ -177,6 +186,7 @@ impl Permission {
     }
 }
 
+#[serde_as]
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Duty {
     #[serde(flatten)]
@@ -186,6 +196,7 @@ pub struct Duty {
     #[serde(rename = "odrl:action")]
     pub action: Action,
     #[serde(rename = "odrl:constraint", skip_serializing_if = "Vec::is_empty")]
+    #[serde_as(deserialize_as = "OneOrMany<_, PreferMany>")]
     pub constraint: Vec<Constraint>,
 }
 

@@ -5,17 +5,23 @@
  *
  * The Catalog contains all Datasets which the requester shall see.
  */
-use crate::catalog::{DataService, Dataset};
 
-#[derive(Clone, Debug, PartialEq, Default, Serialize, Deserialize)]
+use crate::catalog::{AbstractDataset, DataService, Dataset};
+use serde_with::{formats::PreferMany, serde_as, OneOrMany};
+
+#[serde_as]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Catalog {
+    #[serde(flatten)]
+    pub abstract_dataset: AbstractDataset,
     #[serde(rename = "@context")]
     pub context: std::collections::HashMap<String, serde_json::Value>,
     #[serde(rename = "@type")]
     pub dsp_type: String,
-    #[serde(rename = "dspace:dataset")]
-    pub datasets: Vec<Dataset>,
+    #[serde(rename = "dcat:dataset", skip_serializing_if = "Option::is_none")]
+    pub datasets: Option<Vec<Dataset>>,
     #[serde(rename = "dcat:service")]
+    #[serde_as(deserialize_as = "OneOrMany<_, PreferMany>")]
     pub service: Vec<DataService>,
     #[serde(rename = "dspace:participantId", skip_serializing_if = "Option::is_none")]
     pub participant_id: Option<String>,
@@ -25,26 +31,16 @@ pub struct Catalog {
 
 impl Catalog {
 
-    pub fn new(context: std::collections::HashMap<String, serde_json::Value>, dsp_type: String, datasets: Vec<Dataset>, service: Vec<DataService>,
+    pub fn new(abstract_dataset: AbstractDataset, context: std::collections::HashMap<String, serde_json::Value>, dsp_type: String, datasets: Option<Vec<Dataset>>, service: Vec<DataService>,
                participant_id: Option<String>, homepage: Option<String>) -> Catalog {
         Catalog {
+            abstract_dataset,
             context,
             dsp_type,
             datasets,
             service,
             participant_id,
             homepage,
-        }
-    }
-
-    pub fn default() -> Catalog {
-        Catalog {
-            context: std::collections::HashMap::from([("@vocab".to_string(), serde_json::Value::String("https://w3id.org/dspace/2024/1/context.json".to_string()))]),
-            dsp_type: "dspace:Catalog".to_string(),
-            datasets: Vec::new(),
-            service: Vec::new(),
-            participant_id: None,
-            homepage: None,
         }
     }
 
