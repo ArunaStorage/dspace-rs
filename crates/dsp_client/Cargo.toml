@@ -18,7 +18,8 @@ serde = { version = "1.0.195", features = ["derive"] }
 serde_derive = "^1.0"
 url = "2.5.0"
 tokio = { version = "1.38.0", features = ["rt", "rt-multi-thread", "macros"] }
-edc_api = { path = "../edc_api" }
+odrl = { path = "../odrl" }
+dsp_api = { path = "../dsp_api" }
 [dependencies.reqwest]
 version = "^0.12.5"
 features = ["json", "multipart"]

@@ -22,6 +22,8 @@ edc_api = { path = "../crates/edc_api" }
 edc_client = { path = "../crates/edc_client" }
 edc_server = { path = "../crates/edc_server" }
 odrl = { path = "../crates/odrl" }
+dsp_api = { path = "../crates/dsp_api" }
+dsp_client = { path = "../crates/dsp_client" }
 [dependencies.reqwest]
 version = "^0.12.5"
 features = ["json", "multipart"]
@@ -74,3 +76,7 @@ path = "edc_client/policy_definition_api_test.rs"
 [[test]]
 name = "transfer_process_api_test"
 path = "edc_client/transfer_process_api_test.rs"
+
+[[test]]
+name = "dspace_version_api_test"
+path = "dsp_client/common_dspace_version_api_test.rs"
