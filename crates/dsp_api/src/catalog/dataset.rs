@@ -57,7 +57,7 @@ pub struct Distribution {
     #[serde(rename = "dct:modified", skip_serializing_if = "Option::is_none")]
     pub modified: Option<String>,
     #[serde(rename = "odrl:hasPolicy")]
-    pub policy: Vec<String>,  // TODO: Maybe better to use a struct here (Offer)
+    pub policy: Vec<Offer>,
     #[serde(rename = "dcat:accessService")]
     pub access_services: Vec<DataService>,
 }
@@ -126,7 +126,7 @@ impl Resource {
 
 impl Distribution {
     pub fn new(title: Option<String>, descriptions: Vec<MultiLanguage>, issued: Option<String>, modified: Option<String>,
-               policy: Vec<String>, access_services: Vec<DataService>) -> Distribution {
+               policy: Vec<Offer>, access_services: Vec<DataService>) -> Distribution {
         Distribution {
             title,
             descriptions,
