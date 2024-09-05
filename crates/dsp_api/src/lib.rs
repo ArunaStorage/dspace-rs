@@ -59,6 +59,7 @@ pub mod contract_negotiation {
     pub use self::contract::RightOperand;
     pub use self::contract::LeftOperand;
     pub use self::contract::Reference;
+    pub use self::contract::Target;
 }
 
 pub mod transfer_process {
