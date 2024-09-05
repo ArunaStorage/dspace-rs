@@ -20,6 +20,10 @@ pub mod common {
     pub mod dspace_version;
 }
 
+pub mod contract_negotiation {
+    pub mod negotiation_provider_api;
+}
+
 pub mod catalog {
     pub mod catalog_api;
 }

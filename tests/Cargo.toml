@@ -84,3 +84,7 @@ path = "dsp_client/common_dspace_version_api_test.rs"
 [[test]]
 name = "dsp_catalog_api_test"
 path = "dsp_client/catalog_api_test.rs"
+
+[[test]]
+name = "dsp_contract_negotiation_provider_api_test"
+path = "dsp_client/contract_negotiation_provider_api_test.rs"
