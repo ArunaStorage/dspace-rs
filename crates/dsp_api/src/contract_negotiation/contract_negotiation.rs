@@ -35,7 +35,7 @@ impl ContractNegotiation {
 
     pub fn default() -> ContractNegotiation {
         ContractNegotiation {
-            context: std::collections::HashMap::from([("@vocab".to_string(), serde_json::Value::String("https://w3id.org/dspace/2024/1/context.json".to_string()))]),
+            context: std::collections::HashMap::from([("dspace".to_string(), serde_json::Value::String("https://w3id.org/dspace/v0.8/".to_string()))]),
             dsp_type: "dspace:ContractNegotiation".to_string(),
             provider_pid: String::new(),
             consumer_pid: String::new(),
@@ -47,18 +47,18 @@ impl ContractNegotiation {
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum NegotiationState {
-    #[serde(rename = "dspace:REQUESTED")]
+    #[serde(rename = "dspace:REQUESTED", alias = "https://w3id.org/dspace/v0.8/REQUESTED")]
     REQUESTED,
-    #[serde(rename = "dspace:OFFERED")]
+    #[serde(rename = "dspace:OFFERED", alias = "https://w3id.org/dspace/v0.8/OFFERED")]
     OFFERED,
-    #[serde(rename = "dspace:ACCEPTED")]
+    #[serde(rename = "dspace:ACCEPTED", alias = "https://w3id.org/dspace/v0.8/ACCEPTED")]
     ACCEPTED,
-    #[serde(rename = "dspace:AGREED")]
+    #[serde(rename = "dspace:AGREED", alias = "https://w3id.org/dspace/v0.8/AGREED")]
     AGREED,
-    #[serde(rename = "dspace:VERIFIED")]
+    #[serde(rename = "dspace:VERIFIED", alias = "https://w3id.org/dspace/v0.8/VERIFIED")]
     VERIFIED,
-    #[serde(rename = "dspace:FINALIZED")]
+    #[serde(rename = "dspace:FINALIZED", alias = "https://w3id.org/dspace/v0.8/FINALIZED")]
     FINALIZED,
-    #[serde(rename = "dspace:TERMINATED")]
+    #[serde(rename = "dspace:TERMINATED", alias = "https://w3id.org/dspace/v0.8/TERMINATED")]
     TERMINATED,
 }

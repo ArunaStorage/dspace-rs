@@ -24,6 +24,20 @@ pub enum PolicyType {
     Agreement(Agreement),
 }
 
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct Target {
+    #[serde(rename = "@id")]
+    pub id: String,
+}
+
+impl Target {
+    pub fn new(id: String) -> Target {
+        Target {
+            id,
+        }
+    }
+}
+
 #[serde_as]
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct PolicyClass {
@@ -34,22 +48,25 @@ pub struct PolicyClass {
     #[serde(rename = "odrl:profile", skip_serializing_if = "Vec::is_empty")]
     #[serde_as(deserialize_as = "OneOrMany<_, PreferMany>")]
     pub profile: Vec<Reference>,
-    #[serde(rename = "odrl:permission")]
+    #[serde(rename = "odrl:permission", skip_serializing_if = "Vec::is_empty")]
     #[serde_as(deserialize_as = "OneOrMany<_, PreferMany>")]
     pub permission: Vec<Permission>,
-    #[serde(rename = "odrl:obligation")]
+    #[serde(rename = "odrl:obligation", skip_serializing_if = "Vec::is_empty")]
     #[serde_as(deserialize_as = "OneOrMany<_, PreferMany>")]
     pub obligation: Vec<Duty>,
+    #[serde(rename = "odrl:target")]
+    pub target: Target,
 }
 
 impl PolicyClass {
-    pub fn new(abstract_policy_rule: AbstractPolicyRule, id: String, profile: Vec<Reference>, permission: Vec<Permission>, obligation: Vec<Duty>) -> PolicyClass {
+    pub fn new(abstract_policy_rule: AbstractPolicyRule, id: String, profile: Vec<Reference>, permission: Vec<Permission>, obligation: Vec<Duty>, target: Target) -> PolicyClass {
         PolicyClass {
             abstract_policy_rule,
             id,
             profile,
             permission,
             obligation,
+            target,
         }
     }
 }
@@ -146,7 +163,7 @@ pub struct RuleClass {
     pub abstract_policy_rule: AbstractPolicyRule,
     #[serde(rename = "odrl:action")]
     pub action: Action,
-    #[serde(rename = "odrl:constraint")]
+    #[serde(rename = "odrl:constraint", skip_serializing_if = "Vec::is_empty")]
     #[serde_as(deserialize_as = "OneOrMany<_, PreferMany>")]
     pub constraint: Vec<Constraint>,
 }
@@ -168,7 +185,7 @@ pub struct Permission {
     pub abstract_policy_rule: AbstractPolicyRule,
     #[serde(rename = "odrl:action")]
     pub action: Action,
-    #[serde(rename = "odrl:constraint")]
+    #[serde(rename = "odrl:constraint", skip_serializing_if = "Vec::is_empty")]
     #[serde_as(deserialize_as = "OneOrMany<_, PreferMany>")]
     pub constraint: Vec<Constraint>,
     #[serde(rename = "odrl:duty", skip_serializing_if = "Option::is_none")]
@@ -492,6 +509,7 @@ mod timestamp_format {
                     profile: vec![],
                     permission: vec![],
                     obligation: vec![],
+                    target: Target::new(String::new()),
                 },
                 String::new(),
                 String::new(),
