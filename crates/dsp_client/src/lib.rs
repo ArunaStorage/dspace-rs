@@ -22,6 +22,7 @@ pub mod common {
 
 pub mod contract_negotiation {
     pub mod negotiation_provider_api;
+    pub mod negotiation_consumer_api;
 }
 
 pub mod catalog {
