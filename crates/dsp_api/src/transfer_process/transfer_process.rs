@@ -17,25 +17,73 @@ pub struct TransferProcess {
     #[serde(rename = "dspace:consumerPid")]
     pub consumer_pid: String,
     #[serde(rename = "dspace:state")]
-    pub state: TransferState,
+    pub state: TransferStateType,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub enum TransferStateType {
+    TransferState(TransferState),
+    EDCTransferState(EDCTransferState),
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub enum TransferState {
-    #[serde(rename = "dspace:REQUESTED")]
+    #[serde(rename = "dspace:REQUESTED", alias = "https://w3id.org/dspace/v0.8/REQUESTED")]
     REQUESTED,
-    #[serde(rename = "STARTED")]
+    #[serde(rename = "dspace:STARTED", alias = "https://w3id.org/dspace/v0.8/STARTED")]
     STARTED,
-    #[serde(rename = "TERMINATED")]
+    #[serde(rename = "dspace:TERMINATED", alias = "https://w3id.org/dspace/v0.8/TERMINATED")]
     TERMINATED,
-    #[serde(rename = "COMPLETED")]
+    #[serde(rename = "dspace:COMPLETED", alias = "https://w3id.org/dspace/v0.8/COMPLETED")]
     COMPLETED,
-    #[serde(rename = "SUSPENDED")]
+    #[serde(rename = "dspace:SUSPENDED", alias = "https://w3id.org/dspace/v0.8/SUSPENDED")]
     SUSPENDED,
 }
 
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub enum EDCTransferState {
+    #[serde(rename = "INITIAL")]
+    Initial,
+    #[serde(rename = "PROVISIONING")]
+    Provisioning,
+    #[serde(rename = "PROVISIONING_REQUESTED")]
+    ProvisioningRequested,
+    #[serde(rename = "PROVISIONED")]
+    Provisioned,
+    #[serde(rename = "REQUESTING")]
+    Requesting,
+    #[serde(rename = "REQUESTED")]
+    Requested,
+    #[serde(rename = "STARTING")]
+    Starting,
+    #[serde(rename = "STARTED")]
+    Started,
+    #[serde(rename = "SUSPENDING")]
+    Suspending,
+    #[serde(rename = "SUSPENDED")]
+    Suspended,
+    #[serde(rename = "RESUMING")]
+    Resuming,
+    #[serde(rename = "RESUMED")]
+    Resumed,
+    #[serde(rename = "COMPLETING")]
+    Completing,
+    #[serde(rename = "COMPLETED")]
+    Completed,
+    #[serde(rename = "TERMINATING")]
+    Terminating,
+    #[serde(rename = "TERMINATED")]
+    Terminated,
+    #[serde(rename = "DEPROVISIONING")]
+    Deprovisioning,
+    #[serde(rename = "DEPROVISIONING_REQUESTED")]
+    DeprovisioningRequested,
+    #[serde(rename = "DEPROVISIONED")]
+    Deprovisioned,
+}
+
 impl TransferProcess {
-    pub fn new(context: std::collections::HashMap<String, serde_json::Value>, dsp_type: String, provider_pid: String, consumer_pid: String, state: TransferState) -> TransferProcess {
+    pub fn new(context: std::collections::HashMap<String, serde_json::Value>, dsp_type: String, provider_pid: String, consumer_pid: String, state: TransferStateType) -> TransferProcess {
         TransferProcess {
             context,
             dsp_type,
