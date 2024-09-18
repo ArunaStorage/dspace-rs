@@ -29,6 +29,10 @@ pub mod catalog {
     pub mod catalog_api;
 }
 
+pub mod transfer_process {
+    pub mod transfer_provider_api;
+}
+
 #[derive(Debug, Clone)]
 pub struct ResponseContent<T> {
     pub status: reqwest::StatusCode,
