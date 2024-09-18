@@ -31,6 +31,7 @@ pub mod catalog {
 
 pub mod transfer_process {
     pub mod transfer_provider_api;
+    pub mod transfer_consumer_api;
 }
 
 #[derive(Debug, Clone)]
