@@ -122,7 +122,7 @@ pub async fn request_negotiation(configuration: &configuration::Configuration, r
 /// A Consumer may make an Offer by POSTing a Contract Request Message to negotiations/:providerPid/request
 /// If the message is successfully processed, the Provider must return an HTTP 200 (OK) response.
 /// The response body is not specified and clients are not required to process it.
-pub async fn make_offer(configuration: &configuration::Configuration, request_message: ContractRequestMessage, provider_pid: &str) -> Result<String, Error<MakeOfferError>> {
+pub async fn make_offer(configuration: &configuration::Configuration, request_message: ContractRequestMessage, provider_pid: &str) -> Result<(), Error<MakeOfferError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -144,7 +144,7 @@ pub async fn make_offer(configuration: &configuration::Configuration, request_me
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(local_var_content)
+        Ok(())
     } else {
         let local_var_entity: Option<MakeOfferError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -156,7 +156,7 @@ pub async fn make_offer(configuration: &configuration::Configuration, request_me
 /// If the CN's state is successfully transitioned, the Provider must return an HTTP code 200 (OK).
 /// The response body is not specified and clients are not required to process it.
 /// If the current Offer was created by the Consumer, the Provider must return an HTTP code 400 (Bad Request) with a Contract Negotiation Error in the response body.
-pub async fn accept_offer(configuration: &configuration::Configuration, event_message: ContractNegotiationEventMessage, provider_pid: &str) -> Result<String, Error<AcceptOfferError>> {
+pub async fn accept_offer(configuration: &configuration::Configuration, event_message: ContractNegotiationEventMessage, provider_pid: &str) -> Result<(), Error<AcceptOfferError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -178,7 +178,7 @@ pub async fn accept_offer(configuration: &configuration::Configuration, event_me
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(local_var_content)
+        Ok(())
     } else {
         let local_var_entity: Option<AcceptOfferError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -188,7 +188,7 @@ pub async fn accept_offer(configuration: &configuration::Configuration, event_me
 
 /// The Consumer can POST a Contract Agreement Verification Message to verify an Agreement.
 /// If the CN's state is successfully transitioned, the Provider must return an HTTP code 200 (OK). The response body is not specified and clients are not required to process it.
-pub async fn verify_agreement(configuration: &configuration::Configuration, verification_message: ContractAgreementVerificationMessage, provider_pid: &str) -> Result<String, Error<VerifyAgreementError>> {
+pub async fn verify_agreement(configuration: &configuration::Configuration, verification_message: ContractAgreementVerificationMessage, provider_pid: &str) -> Result<(), Error<VerifyAgreementError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -210,7 +210,7 @@ pub async fn verify_agreement(configuration: &configuration::Configuration, veri
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(local_var_content)
+        Ok(())
     } else {
         let local_var_entity: Option<VerifyAgreementError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -220,7 +220,7 @@ pub async fn verify_agreement(configuration: &configuration::Configuration, veri
 
 /// The Consumer can POST a Contract Negotiation Termination Message to terminate a CN.
 /// If the CN's state is successfully transitioned, the Provider must return HTTP code 200 (OK). The response body is not specified and clients are not required to process it.
-pub async fn terminate_negotiation(configuration: &configuration::Configuration, termination_message: ContractNegotiationTerminationMessage, provider_pid: &str) -> Result<String, Error<TerminateNegotiationError>> {
+pub async fn terminate_negotiation(configuration: &configuration::Configuration, termination_message: ContractNegotiationTerminationMessage, provider_pid: &str) -> Result<(), Error<TerminateNegotiationError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -242,7 +242,7 @@ pub async fn terminate_negotiation(configuration: &configuration::Configuration,
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(local_var_content)
+        Ok(())
     } else {
         let local_var_entity: Option<TerminateNegotiationError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
