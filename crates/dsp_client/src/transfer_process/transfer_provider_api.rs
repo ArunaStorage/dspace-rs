@@ -36,7 +36,7 @@ pub enum RestartTransferError {
 /// struct for typed errors of method [`complete_transfer`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum CompleteTransferError {
+pub enum ProviderSideCompleteTransferError {
     Status400(dsp_api::transfer_process::TransferError),
     Status404(dsp_api::transfer_process::TransferError),
     Status409(dsp_api::transfer_process::TransferError),
@@ -46,7 +46,7 @@ pub enum CompleteTransferError {
 /// struct for typed errors of method [`terminate_transfer`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum TerminateTransferError {
+pub enum ProviderSideTerminateTransferError {
     Status400(dsp_api::transfer_process::TransferError),
     Status404(dsp_api::transfer_process::TransferError),
     Status409(dsp_api::transfer_process::TransferError),
@@ -56,7 +56,7 @@ pub enum TerminateTransferError {
 /// struct for typed errors of method [`suspend_transfer`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum SuspendTransferError {
+pub enum ProviderSideSuspendTransferError {
     Status400(dsp_api::transfer_process::TransferError),
     Status404(dsp_api::transfer_process::TransferError),
     Status409(dsp_api::transfer_process::TransferError),
@@ -166,7 +166,7 @@ pub async fn restart_transfer(configuration: &configuration::Configuration, tran
 
 /// The Consumer can POST a Transfer Completion Message to complete a TP
 /// If the TPs state is successfully transitioned, the Provider must return HTTP code 200 (OK). The response body is not specified and clients are not required to process it.
-pub async fn complete_transfer(configuration: &configuration::Configuration, completion_message: TransferCompletionMessage, provider_pid: &str) -> Result<(), Error<CompleteTransferError>> {
+pub async fn complete_transfer(configuration: &configuration::Configuration, completion_message: TransferCompletionMessage, provider_pid: &str) -> Result<(), Error<ProviderSideCompleteTransferError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -191,7 +191,7 @@ pub async fn complete_transfer(configuration: &configuration::Configuration, com
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         Ok(())
     } else {
-        let local_var_entity: Option<CompleteTransferError> = serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<ProviderSideCompleteTransferError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
     }
@@ -199,7 +199,7 @@ pub async fn complete_transfer(configuration: &configuration::Configuration, com
 
 /// The Consumer can POST a Transfer Termination Message to terminate a TP
 /// If the TPs state is successfully transitioned, the Provider must return HTTP code 200 (OK). The response body is not specified and clients are not required to process it.
-pub async fn terminate_transfer(configuration: &configuration::Configuration, termination_message: TransferTerminationMessage, provider_pid: &str) -> Result<(), Error<TerminateTransferError>> {
+pub async fn terminate_transfer(configuration: &configuration::Configuration, termination_message: TransferTerminationMessage, provider_pid: &str) -> Result<(), Error<ProviderSideTerminateTransferError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -224,7 +224,7 @@ pub async fn terminate_transfer(configuration: &configuration::Configuration, te
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         Ok(())
     } else {
-        let local_var_entity: Option<TerminateTransferError> = serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<ProviderSideTerminateTransferError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
     }
@@ -232,7 +232,7 @@ pub async fn terminate_transfer(configuration: &configuration::Configuration, te
 
 /// The Consumer can POST a Transfer Suspension Message to suspend a TP
 /// If the TPs state is successfully transitioned, the Provider must return HTTP code 200 (OK). The response body is not specified and clients are not required to process it.
-pub async fn suspend_transfer(configuration: &configuration::Configuration, suspension_message: TransferSuspendMessage, provider_pid: &str) -> Result<(), Error<SuspendTransferError>> {
+pub async fn suspend_transfer(configuration: &configuration::Configuration, suspension_message: TransferSuspendMessage, provider_pid: &str) -> Result<(), Error<ProviderSideSuspendTransferError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -257,7 +257,7 @@ pub async fn suspend_transfer(configuration: &configuration::Configuration, susp
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         Ok(())
     } else {
-        let local_var_entity: Option<SuspendTransferError> = serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<ProviderSideSuspendTransferError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
     }
