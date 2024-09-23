@@ -19,5 +19,6 @@ EXPOSE 9192
 EXPOSE 9193
 EXPOSE 9194
 EXPOSE 9291
+EXPOSE 9393
 
 ENTRYPOINT java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:1044 -jar connector.jar
