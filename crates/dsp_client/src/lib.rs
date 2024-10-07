@@ -34,6 +34,13 @@ pub mod transfer_process {
     pub mod transfer_consumer_api;
 }
 
+pub const PROVIDER_PROTOCOL: &str = "http://provider-connector:9194/protocol";
+pub const PROVIDER_ID: &str = "provider";
+pub const PROVIDER_DSP_HOST: &str = "provider-connector:9194";
+pub const CONSUMER_PROTOCOL: &str = "http://consumer-connector:9194/protocol";
+pub const CONSUMER_ID: &str = "consumer";
+pub const CONSUMER_DSP_HOST: &str = "consumer-connector:9194";
+
 #[derive(Debug, Clone)]
 pub struct ResponseContent<T> {
     pub status: reqwest::StatusCode,
