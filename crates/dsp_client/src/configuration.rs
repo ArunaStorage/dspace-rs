@@ -57,7 +57,7 @@ impl Default for Configuration {
 
         Configuration {
             base_path,
-            user_agent: Some("APITest/rust".to_owned()),
+            user_agent: Some("okhttp/4.12.0".to_owned()),
             client: reqwest::Client::new(),
             basic_auth: Some(BasicAuth::default()),
             oauth_access_token: None,
