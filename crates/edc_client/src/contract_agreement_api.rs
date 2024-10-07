@@ -62,9 +62,8 @@ pub async fn get_agreement_by_id(configuration: &configuration::Configuration, i
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        let mut val = serde_json::from_str(&local_var_content).map_err(Error::from)?;
-        val = remove_prefixes_from_value(val);
-        serde_json::from_value(val).map_err(Error::from)
+        let val = serde_json::from_str(&local_var_content).map_err(Error::from)?;
+        Ok(val)
     } else {
         let local_var_entity: Option<GetAgreementByIdError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -92,9 +91,8 @@ pub async fn get_negotiation_by_agreement_id(configuration: &configuration::Conf
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        let mut val = serde_json::from_str(&local_var_content).map_err(Error::from)?;
-        val = remove_prefixes_from_value(val);
-        serde_json::from_value(val).map_err(Error::from)
+        let val = serde_json::from_str(&local_var_content).map_err(Error::from)?;
+        Ok(val)
     } else {
         let local_var_entity: Option<GetNegotiationByAgreementIdError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
