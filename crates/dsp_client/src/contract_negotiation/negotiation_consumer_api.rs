@@ -1,7 +1,7 @@
 use reqwest;
-use reqwest::header::AUTHORIZATION;
+use reqwest::header::{AUTHORIZATION, HOST};
 use dsp_models::contract_negotiation::{ContractAgreementMessage, ContractNegotiation, ContractNegotiationEventMessage, ContractNegotiationTerminationMessage, ContractOfferMessage};
-use crate::ResponseContent;
+use crate::{ResponseContent, CONSUMER_DSP_HOST, CONSUMER_PROTOCOL, PROVIDER_ID};
 use crate::{Error, configuration};
 
 /// All callback paths are relative to the callbackAddress base URL specified in the Contract Request Message that initiated a CN.
@@ -70,7 +70,9 @@ pub async fn offer_negotiation(configuration: &configuration::Configuration, cb_
     }
     local_var_req_builder = local_var_req_builder.json(&offer_message);
 
-    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, "{\"region\": \"any\", \"audience\": \"any\", \"clientId\": \"any\"}");
+    let auth_header = format!("{{\"region\": \"eu\", \"audience\": \"{}\", \"clientId\": \"{}\"}}", CONSUMER_PROTOCOL, PROVIDER_ID);
+    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, auth_header);
+    local_var_req_builder = local_var_req_builder.header(HOST, CONSUMER_DSP_HOST);
 
     let local_var_req = local_var_req_builder.build()?;
     let local_var_resp = local_var_client.execute(local_var_req).await?;
@@ -104,7 +106,9 @@ pub async fn counter_offer_negotiation(configuration: &configuration::Configurat
     }
     local_var_req_builder = local_var_req_builder.json(&offer_message);
 
-    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, "{\"region\": \"any\", \"audience\": \"any\", \"clientId\": \"any\"}");
+    let auth_header = format!("{{\"region\": \"eu\", \"audience\": \"{}\", \"clientId\": \"{}\"}}", CONSUMER_PROTOCOL, PROVIDER_ID);
+    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, auth_header);
+    local_var_req_builder = local_var_req_builder.header(HOST, CONSUMER_DSP_HOST);
 
     let local_var_req = local_var_req_builder.build()?;
     let local_var_resp = local_var_client.execute(local_var_req).await?;
@@ -137,7 +141,9 @@ pub async fn agree_negotiation(configuration: &configuration::Configuration, cb_
     }
     local_var_req_builder = local_var_req_builder.json(&agreement_message);
 
-    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, "{\"region\": \"any\", \"audience\": \"any\", \"clientId\": \"any\"}");
+    let auth_header = format!("{{\"region\": \"eu\", \"audience\": \"{}\", \"clientId\": \"{}\"}}", CONSUMER_PROTOCOL, PROVIDER_ID);
+    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, auth_header);
+    local_var_req_builder = local_var_req_builder.header(HOST, CONSUMER_DSP_HOST);
 
     let local_var_req = local_var_req_builder.build()?;
     let local_var_resp = local_var_client.execute(local_var_req).await?;
@@ -170,7 +176,9 @@ pub async fn finalize_negotiation(configuration: &configuration::Configuration, 
     }
     local_var_req_builder = local_var_req_builder.json(&negotiation_event_message);
 
-    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, "{\"region\": \"any\", \"audience\": \"any\", \"clientId\": \"any\"}");
+    let auth_header = format!("{{\"region\": \"eu\", \"audience\": \"{}\", \"clientId\": \"{}\"}}", CONSUMER_PROTOCOL, PROVIDER_ID);
+    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, auth_header);
+    local_var_req_builder = local_var_req_builder.header(HOST, CONSUMER_DSP_HOST);
 
     let local_var_req = local_var_req_builder.build()?;
     let local_var_resp = local_var_client.execute(local_var_req).await?;
@@ -203,7 +211,9 @@ pub async fn terminate_negotiation(configuration: &configuration::Configuration,
     }
     local_var_req_builder = local_var_req_builder.json(&terminate_message);
 
-    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, "{\"region\": \"any\", \"audience\": \"any\", \"clientId\": \"any\"}");
+    let auth_header = format!("{{\"region\": \"eu\", \"audience\": \"{}\", \"clientId\": \"{}\"}}", CONSUMER_PROTOCOL, PROVIDER_ID);
+    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, auth_header);
+    local_var_req_builder = local_var_req_builder.header(HOST, CONSUMER_DSP_HOST);
 
     let local_var_req = local_var_req_builder.build()?;
     let local_var_resp = local_var_client.execute(local_var_req).await?;
