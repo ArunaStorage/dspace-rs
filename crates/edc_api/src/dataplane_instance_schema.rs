@@ -7,6 +7,9 @@
  *
  */
 
+
+use serde::{Deserialize, Deserializer};
+
 #[derive(Clone, Debug, PartialEq, Default, Serialize, Deserialize)]
 pub struct DataPlaneInstanceSchema {
     #[serde(rename = "@context")]
@@ -15,9 +18,9 @@ pub struct DataPlaneInstanceSchema {
     pub at_id: Option<String>,
     #[serde(rename = "@type", skip_serializing_if = "Option::is_none")]
     pub at_type: Option<String>,
-    #[serde(rename = "allowedDestTypes")]
+    #[serde(rename = "allowedDestTypes", deserialize_with = "string_or_vec")]
     pub allowed_dest_types: Vec<String>,
-    #[serde(rename = "allowedSourceTypes")]
+    #[serde(rename = "allowedSourceTypes", deserialize_with = "string_or_vec")]
     pub allowed_source_types: Vec<String>,
     #[serde(rename = "allowedTransferTypes", skip_serializing_if = "Option::is_none")]
     pub allowed_transfer_types: Option<Vec<String>>,
@@ -29,6 +32,28 @@ pub struct DataPlaneInstanceSchema {
     pub url: String,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<std::collections::HashMap<String, serde_json::Value>>,
+}
+
+fn string_or_vec<'de, D>(deserializer: D) -> Result<Vec<String>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let v = serde_json::Value::deserialize(deserializer)?;
+    if let Some(s) = v.as_str() {
+        Ok(vec![s.to_string()])
+    } else if let Some(arr) = v.as_array() {
+        let strings: Result<Vec<String>, _> = arr
+            .iter()
+            .map(|val| {
+                val.as_str()
+                    .map(|s| s.to_string())
+                    .ok_or_else(|| serde::de::Error::custom("Expected a string in the array"))
+            })
+            .collect();
+        strings
+    } else {
+        Err(serde::de::Error::custom("Expected either a string or an array of strings"))
+    }
 }
 
 impl DataPlaneInstanceSchema {
