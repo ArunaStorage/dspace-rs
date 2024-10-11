@@ -5,9 +5,8 @@ mod transfer_process_api_initiate_test {
     extern crate edc_api;
     extern crate edc_client;
 
-    use crate::common::{PROVIDER_PROTOCOL, setup_consumer_configuration, setup_provider_configuration, setup_random_contract_agreement, wait_for_transfer_state};
-    use edc_api::{DataAddress, TransferRequest, TransferState};
-    use edc_api::transfer_state::TransferProcessState;
+    use crate::common::{PROVIDER_PROTOCOL, setup_consumer_configuration, setup_provider_configuration, setup_random_contract_agreement};
+    use edc_api::{DataAddress, TransferRequest};
     use edc_client::transfer_process_api;
     
     #[tokio::test]
@@ -64,9 +63,14 @@ mod transfer_process_api_initiate_test {
             transfer_type: "HttpData-PULL".to_string(),
         };
 
-        let response = transfer_process_api::initiate_transfer_process(&consumer_configuration, Some(request)).await.unwrap();
+        let response = transfer_process_api::initiate_transfer_process(&consumer_configuration, Some(request)).await;
 
-        wait_for_transfer_state(&consumer_configuration, &response.at_id.unwrap().clone(), TransferState { state: TransferProcessState::Terminated }).await;
+        match response {
+            Err(edc_client::Error::ResponseError(response)) => {
+                assert_eq!(response.status, reqwest::StatusCode::BAD_REQUEST);
+            },
+            _ => panic!("Expected Status Code 400, because the contract does not exist and therefore the request is invalid"),
+        }
     }
 }
 
