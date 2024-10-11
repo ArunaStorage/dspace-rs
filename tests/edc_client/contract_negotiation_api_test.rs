@@ -7,10 +7,8 @@ mod contract_negotiation_api_initiate_test {
 
     use crate::common::{DATASPACE_PROTOCOL, PROVIDER_ID, PROVIDER_PROTOCOL, setup_consumer_configuration, setup_provider_configuration, setup_random_contract_definition};
     use edc_api::{ContractOfferDescription, ContractRequest, DatasetRequest, Offer};
-    use edc_client::{catalog_api, contract_negotiation_api, Error};
-    use odrl::name_spaces::{EDC_NS, LD_NS, ODRL_NS};
-
-    use uuid::Uuid;
+    use edc_client::{catalog_api, contract_negotiation_api};
+    use odrl::name_spaces::LD_NS;
 
     #[tokio::test]
     async fn test_initiate_contract_definition() {
@@ -63,7 +61,7 @@ mod contract_negotiation_api_initiate_test {
             connector_address: None,
             counter_party_address: PROVIDER_PROTOCOL.to_string(),
             offer: Some(offer_description),
-            policy: None,
+            policy: Some(offer.clone()),
             protocol: DATASPACE_PROTOCOL.to_string(),
             provider_id: None,
         };
