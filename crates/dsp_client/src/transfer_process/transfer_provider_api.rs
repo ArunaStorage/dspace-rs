@@ -1,7 +1,7 @@
 use reqwest;
-use reqwest::header::AUTHORIZATION;
+use reqwest::header::{AUTHORIZATION, HOST};
 use dsp_models::transfer_process::{TransferCompletionMessage, TransferProcess, TransferRequestMessage, TransferStartMessage, TransferSuspendMessage, TransferTerminationMessage};
-use crate::ResponseContent;
+use crate::{ResponseContent, CONSUMER_ID, PROVIDER_DSP_HOST, PROVIDER_PROTOCOL};
 use crate::{Error, configuration};
 
 /// struct for typed errors of method [`get_negotiation`]
@@ -78,7 +78,9 @@ pub async fn get_negotiation(configuration: &configuration::Configuration, provi
         local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
     }
 
-    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, "{\"region\": \"any\", \"audience\": \"any\", \"clientId\": \"any\"}");
+    let auth_header = format!("{{\"region\": \"eu\", \"audience\": \"{}\", \"clientId\": \"{}\"}}", PROVIDER_PROTOCOL, CONSUMER_ID);
+    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, auth_header);
+    local_var_req_builder = local_var_req_builder.header(HOST, PROVIDER_DSP_HOST);
 
     let local_var_req = local_var_req_builder.build()?;
     let local_var_resp = local_var_client.execute(local_var_req).await?;
@@ -110,7 +112,9 @@ pub async fn request_transfer(configuration: &configuration::Configuration, tran
         local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
     }
 
-    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, "{\"region\": \"any\", \"audience\": \"any\", \"clientId\": \"any\"}");
+    let auth_header = format!("{{\"region\": \"eu\", \"audience\": \"{}\", \"clientId\": \"{}\"}}", PROVIDER_PROTOCOL, CONSUMER_ID);
+    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, auth_header);
+    local_var_req_builder = local_var_req_builder.header(HOST, PROVIDER_DSP_HOST);
 
     local_var_req_builder = local_var_req_builder.json(&transfer_request_message);
 
@@ -145,7 +149,9 @@ pub async fn restart_transfer(configuration: &configuration::Configuration, tran
         local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
     }
 
-    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, "{\"region\": \"any\", \"audience\": \"any\", \"clientId\": \"any\"}");
+    let auth_header = format!("{{\"region\": \"eu\", \"audience\": \"{}\", \"clientId\": \"{}\"}}", PROVIDER_PROTOCOL, CONSUMER_ID);
+    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, auth_header);
+    local_var_req_builder = local_var_req_builder.header(HOST, PROVIDER_DSP_HOST);
 
     local_var_req_builder = local_var_req_builder.json(&transfer_start_message);
 
@@ -178,7 +184,9 @@ pub async fn complete_transfer(configuration: &configuration::Configuration, com
         local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
     }
 
-    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, "{\"region\": \"any\", \"audience\": \"any\", \"clientId\": \"any\"}");
+    let auth_header = format!("{{\"region\": \"eu\", \"audience\": \"{}\", \"clientId\": \"{}\"}}", PROVIDER_PROTOCOL, CONSUMER_ID);
+    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, auth_header);
+    local_var_req_builder = local_var_req_builder.header(HOST, PROVIDER_DSP_HOST);
 
     local_var_req_builder = local_var_req_builder.json(&completion_message);
 
@@ -211,7 +219,9 @@ pub async fn terminate_transfer(configuration: &configuration::Configuration, te
         local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
     }
 
-    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, "{\"region\": \"any\", \"audience\": \"any\", \"clientId\": \"any\"}");
+    let auth_header = format!("{{\"region\": \"eu\", \"audience\": \"{}\", \"clientId\": \"{}\"}}", PROVIDER_PROTOCOL, CONSUMER_ID);
+    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, auth_header);
+    local_var_req_builder = local_var_req_builder.header(HOST, PROVIDER_DSP_HOST);
 
     local_var_req_builder = local_var_req_builder.json(&termination_message);
 
@@ -244,7 +254,9 @@ pub async fn suspend_transfer(configuration: &configuration::Configuration, susp
         local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
     }
 
-    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, "{\"region\": \"any\", \"audience\": \"any\", \"clientId\": \"any\"}");
+    let auth_header = format!("{{\"region\": \"eu\", \"audience\": \"{}\", \"clientId\": \"{}\"}}", PROVIDER_PROTOCOL, CONSUMER_ID);
+    local_var_req_builder = local_var_req_builder.header(AUTHORIZATION, auth_header);
+    local_var_req_builder = local_var_req_builder.header(HOST, PROVIDER_DSP_HOST);
 
     local_var_req_builder = local_var_req_builder.json(&suspension_message);
 
