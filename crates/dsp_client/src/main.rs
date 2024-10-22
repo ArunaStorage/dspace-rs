@@ -68,9 +68,6 @@ pub async fn setup_random_contract_definition(configuration: &edc_client::config
         "@type": "Set",
         "uid": "api_test_policy",
         "permission": [
-            {
-            "action": "use"
-            }
         ]
     }
     "#;
@@ -169,7 +166,7 @@ pub async fn setup_random_contract_negotiation(consumer: &edc_client::configurat
         connector_address: Some(PROVIDER_PROTOCOL.to_string()),
         counter_party_address: PROVIDER_PROTOCOL.to_string(),
         offer: Some(offer_description),
-        policy: None, //Some(offer),
+        policy: Some(offer),
         protocol: DATASPACE_PROTOCOL.to_string(),
         provider_id: Some(PROVIDER_ID.to_string()),
     };
