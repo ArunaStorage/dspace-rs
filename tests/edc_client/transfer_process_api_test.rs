@@ -10,7 +10,7 @@ mod transfer_process_api_initiate_test {
     use edc_client::transfer_process_api;
     
     #[tokio::test]
-    async fn test_transfer_process_initate() {
+    async fn test_transfer_process_initiate() {
         let provider_configuration = setup_provider_configuration();
         let consumer_configuration = setup_consumer_configuration();
 
