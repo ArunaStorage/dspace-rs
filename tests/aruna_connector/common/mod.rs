@@ -35,7 +35,7 @@ pub fn setup_consumer_configuration() -> Configuration {
 
 pub async fn setup_management_consumer() -> edc_client::configuration::Configuration {
     let mut management_consumer = edc_client::configuration::Configuration::default();
-    management_consumer.base_path = "http://localhost:19193/management".to_owned();
+    management_consumer.base_path = "http://localhost:9193/management".to_owned();
     management_consumer.api_key = Some(ApiKey {
         prefix: Some("x-api-key".to_string()),
         key: "123456".to_owned(),

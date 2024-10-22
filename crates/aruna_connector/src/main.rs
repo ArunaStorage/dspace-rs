@@ -75,7 +75,7 @@ async fn main() {
 
     // create our app by nesting the routes
     let api_routes = Router::new()
-        .nest("/v2/catalog", catalog_route)
+        .nest("/catalog", catalog_route)
         .route("/*path", get(debug_route).post(debug_route).put(debug_route).delete(debug_route));
         /*.nest("/v2/contractagreements", contract_agreement_routes)
         .nest("/v2/contractdefinitions", contract_definitions_routes)

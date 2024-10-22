@@ -52,6 +52,8 @@ pub async fn get_dataset(configuration: &configuration::Configuration, dataset_r
     let local_var_status = local_var_resp.status();
     let local_var_content = local_var_resp.text().await?;
 
+    println!("Status: {:#?}, body: {:?}", local_var_status, local_var_content);
+
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         let mut val = serde_json::from_str(&local_var_content).map_err(Error::from)?;
         val = remove_prefixes_from_value(val);
