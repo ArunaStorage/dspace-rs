@@ -1,24 +1,21 @@
 extern crate dsp_api;
 
 use std::collections::HashMap;
-use std::fmt::format;
 use std::future::Future;
 use std::time::Duration;
 use tokio::time::sleep;
-use dsp_api::contract_negotiation::{AbstractPolicyRule, Agreement, ContractOfferMessage, MessageOffer, PolicyClass, Target};
-use dsp_client::common::dspace_version::get_dspace_version;
+use dsp_api::contract_negotiation::{AbstractPolicyRule,MessageOffer, PolicyClass, Target};
 use dsp_client::configuration::Configuration;
-use dsp_client::{common, Error};
+use dsp_client::Error;
 use uuid::Uuid;
-use dsp_api::contract_negotiation::contract_negotiation_event_message::EventType;
-use dsp_api::transfer_process::{EndpointProperty, TransferProcess, TransferRequestMessage};
+use dsp_api::transfer_process::TransferRequestMessage;
 use dsp_client::contract_negotiation::negotiation_provider_api::GetNegotiationError;
 
 extern crate edc_api;
-use edc_api::{AssetInput, CallbackAddress, ContractDefinitionInput, ContractOfferDescription, ContractRequest, Criterion, DataAddress, DataPlaneInstanceSchema, DatasetRequest, NegotiationState, Offer, PolicyDefinitionInput};
+use edc_api::{AssetInput, ContractDefinitionInput, ContractOfferDescription, ContractRequest, Criterion, DataAddress, DatasetRequest, NegotiationState, Offer, PolicyDefinitionInput};
 
 extern crate edc_client;
-use edc_client::{asset_api, catalog_api, contract_agreement_api, contract_definition_api, contract_negotiation_api, dataplane_selector_api, policy_definition_api};
+use edc_client::{asset_api, catalog_api, contract_agreement_api, contract_definition_api, contract_negotiation_api, policy_definition_api};
 use edc_client::configuration::ApiKey;
 use odrl::name_spaces::{EDC_NS, LD_NS};
 
@@ -282,7 +279,6 @@ pub async fn setup_management_consumer() -> edc_client::configuration::Configura
 #[tokio::main]
 pub async fn main() {
 
-    let consumer = setup_consumer_conf();
     let provider = setup_provider_conf();
 
 
