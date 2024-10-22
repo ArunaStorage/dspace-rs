@@ -18,6 +18,7 @@ services:
       - ./conf/consumer-connector.config:/config
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    network_mode: "host"
 
   provider-connector:
     build: connector

@@ -1,18 +1,22 @@
-use axum::{routing::{get, post, put, delete}, Router, ServiceExt};
+use axum::{routing::{get, post}, Json, Router, ServiceExt};
 use serde::{Deserialize, Serialize};
 use tracing::{Level};
 use tracing_subscriber;
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
-
+use axum::extract::Path;
+use axum::http::HeaderMap;
+use tracing::{error, info};
 
 pub mod api {
-    pub mod contract_agreement;
-    pub mod contract_definition;
-    pub mod contract_negotiation;
+    pub mod catalog;
 }
 
-use api::{contract_agreement, contract_definition, contract_negotiation};
+use crate::api::catalog;
+
+async fn debug_route(headers: HeaderMap, Path(path): Path<String>, value: Option<Json<serde_json::Value>>) {
+    info!("Debug route called path {:#?} with value: {:#?}\nHeader: {:#?}", path, value, headers);
+}
 
 #[tokio::main]
 async fn main() {
@@ -24,22 +28,13 @@ async fn main() {
 
 
     // Shared states to store
-    let shared_contract_definitions_state = Arc::new(Mutex::new(HashMap::new())); // Contract Definitions
-    let shared_contract_negotiations_state = Arc::new(Mutex::new(HashMap::new())); // Contract Negotiations
-    //let shared_contract_agreement_states = Arc::new(Mutex::new(HashMap::new())); // Contract Agreements
+    //let shared_catalog_state = Arc::new(Mutex::new(HashMap::new())); // Catalog
 
-
-    // routes for contract agreements
-    let contract_agreement_routes = Router::new()
-        // Contract Agreements
-        // `POST /v2/contractagreements/request` goes to `query_all_agreements`
-        .route("/request", post(contract_agreement::query_all_agreements))
-        // `GET /v2/contractagreements/{id}` goes to `get_agreement_by_id`
-        .route("/:id", get(contract_agreement::get_agreement_by_id))
-        // `GET /v2/contractagreements/{id}/negotiation` goes to `get_negotiation_by_agreement_id`
-        .route("/:id/negotiation", get(contract_agreement::get_negotiation_by_agreement_id));
-        // add shared state to the app
-        //.with_state(shared_contract_agreement_states);
+    let catalog_route = Router::new()
+        .route("/request", post(catalog::get_catalog))
+        .route("/datasets/:id", get(catalog::get_dataset));
+        //.with_state(shared_catalog_state);
+/*
 
     // routes for contract definitions
     let contract_definitions_routes = Router::new()
@@ -74,13 +69,17 @@ async fn main() {
         .route("/:id/terminate", post(contract_negotiation::terminate_contract_negotiation))
         // add shared state to the app
         .with_state(shared_contract_negotiations_state);
+*/
 
+    // Path(path): Path<String>
 
     // create our app by nesting the routes
     let api_routes = Router::new()
-        .nest("/v2/contractagreements", contract_agreement_routes)
+        .nest("/v2/catalog", catalog_route)
+        .route("/*path", get(debug_route).post(debug_route).put(debug_route).delete(debug_route));
+        /*.nest("/v2/contractagreements", contract_agreement_routes)
         .nest("/v2/contractdefinitions", contract_definitions_routes)
-        .nest("/v2/contractnegotiations", contract_negotiations_routes);
+        .nest("/v2/contractnegotiations", contract_negotiations_routes);*/
 
 
     // run our app with hyper, listening globally on port 3000
