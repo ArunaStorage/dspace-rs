@@ -385,7 +385,7 @@ pub enum Operator {
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub enum RightOperand {
-    //
+    String(String),
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]

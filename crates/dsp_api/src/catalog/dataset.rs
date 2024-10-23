@@ -28,6 +28,8 @@ pub struct AbstractDataset {
 #[serde_as]
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Resource {
+    #[serde(rename = "@id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
     #[serde(rename = "dcat:keyword", skip_serializing_if = "Option::is_none")]
     pub keywords: Option<Vec<String>>,
     #[serde(rename = "dcat:theme", skip_serializing_if = "Option::is_none")]
@@ -113,10 +115,11 @@ impl AbstractDataset {
 }
 
 impl Resource {
-    pub fn new(keywords: Option<Vec<String>>, themes: Option<Vec<Reference>>, conforms_to: Option<String>, creator: Option<String>,
+    pub fn new(id: Option<String>, keywords: Option<Vec<String>>, themes: Option<Vec<Reference>>, conforms_to: Option<String>, creator: Option<String>,
                descriptions: Option<Vec<MultiLanguage>>, identifier: Option<String>, issued: Option<String>, modified: Option<String>,
                title: Option<String>) -> Resource {
         Resource {
+            id,
             keywords,
             themes,
             conforms_to,
