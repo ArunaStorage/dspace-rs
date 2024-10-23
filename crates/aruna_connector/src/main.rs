@@ -7,6 +7,8 @@ use std::sync::{Arc, Mutex};
 use axum::extract::Path;
 use axum::http::HeaderMap;
 use tracing::{error, info};
+use dsp_api::catalog::{AbstractDataset, Catalog, DataService, Dataset, Distribution, MultiLanguage, Resource};
+use dsp_api::contract_negotiation::{AbstractPolicyRule, Action, Constraint, Duty, LeftOperand, MessageOffer, Offer, Operator, Permission, PolicyClass, RightOperand, Target};
 
 pub mod api {
     pub mod catalog;
@@ -18,22 +20,160 @@ async fn debug_route(headers: HeaderMap, Path(path): Path<String>, value: Option
     info!("Debug route called path {:#?} with value: {:#?}\nHeader: {:#?}", path, value, headers);
 }
 
+async fn initiate_catalog() -> Catalog {
+    
+    let context: HashMap<String, serde_json::Value> = HashMap::from([("dspace".to_string(), serde_json::Value::String("https://w3id.org/dspace/2024/1/context.json".to_string()))]);
+
+    let first_dataset = Dataset::new(AbstractDataset {
+        resource: Resource {
+            id: Some("Test".to_string()),
+            keywords: None,
+            themes: None,
+            conforms_to: None,
+            creator: None,
+            descriptions: None,
+            identifier: None,
+            issued: None,
+            modified: None,
+            title: None,
+        },
+        policies: Some(vec![Offer { message_offer: MessageOffer { policy_class: PolicyClass {
+            abstract_policy_rule: AbstractPolicyRule { assigner: Some("aruna-connector".to_string()), assignee: None },
+            id: "test-policy".to_string(),
+            profile: vec![],
+            permission: vec![Permission {
+                abstract_policy_rule: AbstractPolicyRule { assigner: Some("aruna-connector".to_string()), assignee: None },
+                action: Action::Use,
+                constraint: vec![],
+                duty: None,
+            }],
+            obligation: vec![],
+            target: Target { id: "Test".to_string() },
+        }, odrl_type: "odrl:Offer".to_string() } }]),
+        distributions: None,
+    });
+    let second_dataset = Dataset::new(AbstractDataset {
+        resource: Resource {
+            id: Some("3dd1add8-4d2d-569e-d634-8394a8836a88".to_string()),
+            keywords: Some(vec!["traffic".to_string()]),
+            themes: None,
+            conforms_to: None,
+            creator: None,
+            descriptions: Some(vec![MultiLanguage { value: "Traffic data sample extract".to_string(), language: "en".to_string() }]),
+            identifier: Some("3dd1add8-4d2d-569e-d634-8394a8836a88".to_string()),
+            issued: None,
+            modified: None,
+            title: Some("Traffic Data".to_string()),
+        },
+        policies: Some(vec![Offer { message_offer: MessageOffer { policy_class: PolicyClass {
+            abstract_policy_rule: AbstractPolicyRule { assigner: Some("http://example.com/Provider".to_string()), assignee: None },
+            id: "3dd1add8-4d2d-569e-d634-8394a8836a88".to_string(),
+            profile: vec![],
+            permission: vec![Permission {
+                abstract_policy_rule: AbstractPolicyRule { assigner: Some("http://example.com/Provider".to_string()), assignee: None },
+                action: Action::Use,
+                constraint: vec![Constraint {
+                    right_operand: Some(RightOperand::String("http://example.org/EU".to_string())),
+                    right_operand_reference: None,
+                    left_operand: LeftOperand::AbsolutePosition,
+                    operator: Operator::Eq,
+                }],
+                duty: Some(Duty {
+                    abstract_policy_rule: AbstractPolicyRule { assigner: None, assignee: None },
+                    id: None,
+                    action: Action::Attribution,
+                    constraint: vec![],
+                }),
+            }],
+            obligation: vec![],
+            target: Target { id: "3dd1add8-4d2d-569e-d634-8394a8836a88".to_string() },
+        }, odrl_type: "odrl:Offer".to_string() } }]),
+        distributions: Some(vec![Distribution {
+            title: None,
+            descriptions: vec![],
+            issued: None,
+            modified: None,
+            policy: vec![],
+            access_services: vec![DataService {
+                resource: Resource {
+                    id: None,
+                    keywords: None,
+                    themes: None,
+                    conforms_to: None,
+                    creator: None,
+                    descriptions: None,
+                    identifier: None,
+                    issued: None,
+                    modified: None,
+                    title: None,
+                },
+                endpoint_description: None,
+                endpoint_url: Some("https://provider-a.com/connector".to_string()),
+                serves_datasets: None,
+            }],
+        }]),
+    });
+    let datasets = Vec::from([first_dataset, second_dataset]);
+
+    let data_service = vec![DataService {
+        resource: Resource {
+            id: None,
+            keywords: None,
+            themes: None,
+            conforms_to: None,
+            creator: None,
+            descriptions: None,
+            identifier: None,
+            issued: None,
+            modified: None,
+            title: None,
+        },
+        endpoint_description: None,
+        endpoint_url: Some("https://aruna-connector/public".to_string()),
+        serves_datasets: None,
+    }];
+
+    let catalog = Catalog::new(AbstractDataset {
+        resource: Resource {
+            id: None,
+            keywords: None,
+            themes: None,
+            conforms_to: None,
+            creator: None,
+            descriptions: None,
+            identifier: None,
+            issued: None,
+            modified: None,
+            title: None,
+        },
+        policies: None,
+        distributions: None,
+    }, context, "dcat:Catalog".to_string(), Some(datasets), data_service, None, None);
+
+    catalog
+}
+
+async fn initialize_shared_catalog() -> Arc<Mutex<Catalog>> {
+    let catalog = initiate_catalog().await;
+    Arc::new(Mutex::new(catalog))
+}
+
 #[tokio::main]
 async fn main() {
 
     // initialize tracing
     tracing_subscriber::fmt()
-        .with_max_level(Level::INFO)
+        .with_max_level(Level::DEBUG)
         .init();
 
 
     // Shared states to store
-    //let shared_catalog_state = Arc::new(Mutex::new(HashMap::new())); // Catalog
+    let shared_catalog_state = initialize_shared_catalog().await; // Catalog
 
     let catalog_route = Router::new()
         .route("/request", post(catalog::get_catalog))
-        .route("/datasets/:id", get(catalog::get_dataset));
-        //.with_state(shared_catalog_state);
+        .route("/datasets/:id", get(catalog::get_dataset))
+        .with_state(shared_catalog_state);
 /*
 
     // routes for contract definitions
