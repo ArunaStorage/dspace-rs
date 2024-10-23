@@ -8,6 +8,9 @@ dspace-rs is a Rust-based framework for managing and utilizing dataspaces. It co
 
 The `crates/` directory contains the individual Rust crates of the project:
 
+- **aruna_connector**: Prototype of a Connector of Aruna realms that can interoperate with EDC-Connectors. Note, this is under constant development.
+- **dsp_api**: Provides the API for the Dataspace Protocol (DSP).
+- **dsp_client**: Implements the client for communicating with the DSP API.
 - **edc_api**: Provides the API for the Eclipse Dataspace Components (EDC).
 - **edc_client**: Implements the client for communicating with the EDC API.
 - **edc_server**: Implements the server that provides the EDC API. (**Coming**)
@@ -31,6 +34,19 @@ cargo test
 ```
 
 The tests setup was mostly derived by the Typescript client [edc-connector-client](https://github.com/Think-iT-Labs/edc-connector-client) by [Think-it](https://think-it.io/).
+
+**! Note MacOS**: If you are using a system with MacOS, host networking must be activated in the Docker settings.
+
+Host networking is supported on Docker Desktop version 4.34 and later. To enable this feature:
+
+- Sign in to your Docker account in Docker Desktop.
+- Navigate to Settings.
+- Under the Resources tab, select Network.
+- Check the Enable host networking option.
+- Select Apply and restart.
+
+This feature works in both directions. This means you can access a server that is running in a container from your host and you can access servers running on your host from any container that is started with host networking enabled. TCP as well as UDP are supported as communication protocols.
+See [DockerDocs](https://docs.docker.com/engine/network/drivers/host/#docker-desktop) for more information.
 
 ## Installation
 
