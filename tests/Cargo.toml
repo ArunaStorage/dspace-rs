@@ -86,5 +86,9 @@ name = "dsp_contract_negotiation_provider_api_test"
 path = "dsp_client/contract_negotiation_provider_api_test.rs"
 
 [[test]]
-name = "aruna_connector"
+name = "aruna_connector_catalog"
 path = "aruna_connector/catalog_api_test.rs"
+
+[[test]]
+name = "aruna_connector_negotiation_provider"
+path = "aruna_connector/negotiation_provider_api_test.rs"

@@ -171,6 +171,7 @@ async fn main() {
 
     // Shared states to store
     let shared_catalog_state = initialize_shared_catalog().await; // Catalog
+    let shared_negotiation_state = Arc::new(Mutex::new(HashMap::new())); // Contract Negotiation
 
     let catalog_route = Router::new()
         .route("/request", post(catalog::get_catalog))
@@ -183,7 +184,8 @@ async fn main() {
         .route("/:pid/request", post(negotiation_provider::make_offer))
         .route("/:pid/events", post(negotiation_provider::accept_offer))
         .route("/:pid/agreement/verification", post(negotiation_provider::verify_agreement))
-        .route("/:pid/termination", post(negotiation_provider::terminate_negotiation));
+        .route("/:pid/termination", post(negotiation_provider::terminate_negotiation))
+        .with_state(shared_negotiation_state);
 /*
 
     // routes for contract definitions
