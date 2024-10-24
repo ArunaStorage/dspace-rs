@@ -12,9 +12,11 @@ use dsp_api::contract_negotiation::{AbstractPolicyRule, Action, Constraint, Duty
 
 pub mod api {
     pub mod catalog;
+    pub mod contract_negotiation_provider;
 }
 
 use crate::api::catalog;
+use crate::api::contract_negotiation_provider as negotiation_provider;
 
 async fn debug_route(headers: HeaderMap, Path(path): Path<String>, value: Option<Json<serde_json::Value>>) {
     info!("Debug route called path {:#?} with value: {:#?}\nHeader: {:#?}", path, value, headers);
@@ -174,6 +176,14 @@ async fn main() {
         .route("/request", post(catalog::get_catalog))
         .route("/datasets/:id", get(catalog::get_dataset))
         .with_state(shared_catalog_state);
+
+    let negotiation_route = Router::new()
+        .route("/:pid", get(negotiation_provider::get_negotiation))
+        .route("/request", post(negotiation_provider::request_negotiation))
+        .route("/:pid/request", post(negotiation_provider::make_offer))
+        .route("/:pid/events", post(negotiation_provider::accept_offer))
+        .route("/:pid/agreement/verification", post(negotiation_provider::verify_agreement))
+        .route("/:pid/termination", post(negotiation_provider::terminate_negotiation));
 /*
 
     // routes for contract definitions
@@ -216,6 +226,7 @@ async fn main() {
     // create our app by nesting the routes
     let api_routes = Router::new()
         .nest("/catalog", catalog_route)
+        .nest("/negotiations", negotiation_route)
         .route("/*path", get(debug_route).post(debug_route).put(debug_route).delete(debug_route));
         /*.nest("/v2/contractagreements", contract_agreement_routes)
         .nest("/v2/contractdefinitions", contract_definitions_routes)
