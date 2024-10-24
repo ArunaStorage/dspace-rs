@@ -1,4 +1,5 @@
 use chrono::{Local, DateTime};
+use std::fmt;
 
 #[derive(Debug, Clone)]
 pub enum ConsumerState {
@@ -22,6 +23,44 @@ pub enum ConsumerState {
     // Termination
     Terminating(Terminating),   // if the consumer terminates the transfer he will send a TransferTerminationMessage
     Terminated(Terminated),     // final state
+}
+
+impl fmt::Display for ConsumerState {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            ConsumerState::Initial(_) => write!(f, "Initial"),
+            ConsumerState::Requesting(_) => write!(f, "Requesting"),
+            ConsumerState::Requested(_) => write!(f, "Requested"),
+            ConsumerState::Offered(_) => write!(f, "Offered"),
+            ConsumerState::Accepting(_) => write!(f, "Accepting"),
+            ConsumerState::Accepted(_) => write!(f, "Accepted"),
+            ConsumerState::Agreed(_) => write!(f, "Agreed"),
+            ConsumerState::Verifying(_) => write!(f, "Verifying"),
+            ConsumerState::Verified(_) => write!(f, "Verified"),
+            ConsumerState::Finalized(_) => write!(f, "Finalized"),
+            ConsumerState::Terminating(_) => write!(f, "Terminating"),
+            ConsumerState::Terminated(_) => write!(f, "Terminated"),
+        }
+    }
+}
+
+impl fmt::Display for ProviderState {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            ProviderState::Initial(_) => write!(f, "Initial"),
+            ProviderState::Offering(_) => write!(f, "Offering"),
+            ProviderState::Offered(_) => write!(f, "Offered"),
+            ProviderState::Requested(_) => write!(f, "Requested"),
+            ProviderState::Accepted(_) => write!(f, "Accepted"),
+            ProviderState::Agreeing(_) => write!(f, "Agreeing"),
+            ProviderState::Agreed(_) => write!(f, "Agreed"),
+            ProviderState::Verified(_) => write!(f, "Verified"),
+            ProviderState::Finalizing(_) => write!(f, "Finalizing"),
+            ProviderState::Finalized(_) => write!(f, "Finalized"),
+            ProviderState::Terminating(_) => write!(f, "Terminating"),
+            ProviderState::Terminated(_) => write!(f, "Terminated"),
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
