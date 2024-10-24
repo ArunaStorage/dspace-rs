@@ -115,7 +115,49 @@ async fn initiate_catalog() -> Catalog {
             }],
         }]),
     });
-    let datasets = Vec::from([first_dataset, second_dataset]);
+    let free_resource = Resource {
+        id: Some("FreeUseResource".to_string()),
+        keywords: Some(vec!["free".to_string()]),
+        themes: None,
+        conforms_to: None,
+        creator: Some("Aruna".to_string()),
+        descriptions: Some(vec![MultiLanguage { value: "Free use dataset for testing purposes".to_string(), language: "en".to_string() }]),
+        identifier: Some("FreeUseResource".to_string()),
+        issued: None,
+        modified: None,
+        title: None,
+    };
+    let offer_policy = Offer { message_offer: MessageOffer { policy_class: PolicyClass {
+        abstract_policy_rule: AbstractPolicyRule { assigner: Some("aruna-connector".to_string()), assignee: None },
+        id: "free-use-policy".to_string(),
+        profile: vec![],
+        permission: vec![Permission {
+            abstract_policy_rule: AbstractPolicyRule { assigner: Some("aruna-connector".to_string()), assignee: None },
+            action: Action::Use,
+            constraint: vec![],
+            duty: None,
+        }],
+        obligation: vec![],
+        target: Target { id: free_resource.clone().id.unwrap() },
+    }, odrl_type: "odrl:Offer".to_string() } };
+    let free_use_dataset = Dataset::new(AbstractDataset {
+        resource: free_resource.clone(),
+        policies: Some(vec![offer_policy.clone()]),
+        distributions: Some(vec![Distribution {
+            title: None,
+            descriptions: vec![MultiLanguage { value: "Free use dataset for testing purposes".to_string(), language: "en".to_string() }],
+            issued: None,
+            modified: None,
+            policy: vec![offer_policy.clone()],
+            access_services: vec![DataService {
+                resource: free_resource.clone(),
+                endpoint_description: None,
+                endpoint_url: Some("https://jsonplaceholder.typicode.com/users".to_string()),
+                serves_datasets: None,
+            }],
+        }]),
+    });
+    let datasets = Vec::from([first_dataset, second_dataset, free_use_dataset]);
 
     let data_service = vec![DataService {
         resource: Resource {
